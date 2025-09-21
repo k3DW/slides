@@ -1,0 +1,45 @@
+<section my-columns="100%">
+    <h2>Closure type names</h2>
+    <div style="width:100%;">
+        <pre class="cpp"><code data-trim hide-line-numbers data-line-numbers=""><script type="text/template">
+            constexpr auto curry = [](auto a) {
+                return [=](auto b) {
+                    return [=](auto c) {
+                        return a + b + c;
+                    };
+                };
+            };
+        </script></code></pre>
+        <pre class="cpp fragment"><code data-trim hide-line-numbers data-line-numbers=""><script type="text/template">
+            auto v = curry("")("")("");
+        </script></code></pre>
+        <pre class="text fragment"><code data-trim hide-line-numbers data-line-numbers="|2|"><script type="text/template">
+            none.cpp:14:19: note: in instantiation of function template specialization
+            '_1::(anonymous class)::operator()(const char *)::(anonymous class)::operator()<const char *>'
+            requested here
+               14 | auto v = curry("")("")("");
+                  |
+        </script></code></pre>
+    </div>
+</section>
+
+<section my-columns="100%">
+    <h2>Closure type names</h2>
+    <div style="width:100%;">
+        <pre class="cpp"><code data-trim hide-line-numbers data-line-numbers=""><script type="text/template">
+            #include "latt/optional.hpp"
+        </script></code></pre>
+        <pre class="cpp fragment"><code data-trim hide-line-numbers data-line-numbers=""><script type="text/template">
+            auto o = optional<int>(5);
+            auto v = o(get_memfn_tag{});
+        </script></code></pre>
+        <pre class="cpp fragment"><code data-trim hide-line-numbers data-line-numbers="|3|"><script type="text/template">
+            In file included from path/to/optional_ut.cpp:2:
+            path/to/optional.hpp:135:20: error: no matching function for call to
+            object of type 'Impl' (aka '(lambda at path/to/invoke.hpp:42:20)')
+              135 |             return Impl{}(forward<Self>(self), Tag{}, forward_like<Self>(_data.value)
+            (tget_memfn_tag<0>{}), forward_like<Self>(_data.value)(tget_memfn_tag<1>{}), forward<Args>(args)...);
+                  |                    ^~~~~~
+        </script></code></pre>
+    </div>
+</section>
