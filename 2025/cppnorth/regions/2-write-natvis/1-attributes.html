@@ -1,0 +1,95 @@
+<section my-columns>
+    <h2><code>&lt;AlternativeType&gt;</code> tag</h2>
+    <div style="width:100%;">
+        <pre class="xml fragment"><code data-trim hide-line-numbers data-line-numbers="|2|3-5|"><script type="text/template">
+            <!-- STL.natvis -->
+            <Type Name="std::unordered_map&lt;*&gt;" Priority="Medium">
+                <AlternativeType Name="std::unordered_multimap&lt;*&gt;" />
+                <AlternativeType Name="std::unordered_set&lt;*&gt;" />
+                <AlternativeType Name="std::unordered_multiset&lt;*&gt;" />
+                ...
+            </Type>
+        </script></code></pre>
+    </div>
+</section>
+
+<section my-columns>
+    <h2><code>Inheritable</code> attribute</h2>
+    <div style="width:100%;">
+        <pre class="cpp fragment"><code data-trim hide-line-numbers data-line-numbers=""><script type="text/template">
+            class B {
+                // ...
+            };
+        </script></code></pre>
+        <pre class="cpp fragment"><code data-trim hide-line-numbers data-line-numbers=""><script type="text/template">
+            class D : public B {
+                // ...
+            };
+        </script></code></pre>
+    </div>
+    <div style="width:100%;">
+        <pre class="xml fragment"><code data-trim hide-line-numbers data-line-numbers=""><script type="text/template">
+            <Type Name="B" Inheritable="false">
+                ...
+            </Type>
+        </script></code></pre>
+        <span class="fragment">
+            Note: defaults to <code>"true"</code>
+        </span>
+    </div>
+</section>
+
+<section my-columns>
+    <h2><code>IncludeView</code> and <code>ExcludeView</code></h2>
+    <div style="width:100%;">
+        <pre class="xml fragment"><code data-trim hide-line-numbers data-line-numbers=""><script type="text/template">
+            <Type Name="MyClass" IncludeView="foo">
+                ...
+            </Type>
+        </script></code></pre>
+        <pre class="xml fragment"><code data-trim hide-line-numbers data-line-numbers=""><script type="text/template">
+            <Type Name="MyClass" ExcludeView="bar">
+                ...
+            </Type>
+        </script></code></pre>
+    </div>
+    <div style="width:100%;">
+        <div style="margin-inline: auto;" class="fragment">
+            <img src="./img/natvis/1-views.png" width="100%" />
+        </div>
+    </div>
+</section>
+
+<section my-columns>
+    <h2><code>Priority</code> attribute</h2>
+    <div style="width:100%;">
+        <pre class="xml fragment"><code data-trim hide-line-numbers data-line-numbers=""><script type="text/template">
+            <Type Name="MyClass" Priority="Medium">
+                ...
+            </Type>
+        </script></code></pre>
+        <pre class="xml fragment"><code data-trim hide-line-numbers data-line-numbers=""><script type="text/template">
+            <Type Name="MyClass" Priority="MediumHigh">
+                ...
+            </Type>
+        </script></code></pre>
+    </div>
+</section>
+
+<section my-columns>
+    <h2><code>Priority</code> with views</h2>
+    <div style="width:100%;">
+        <pre class="xml fragment"><code data-trim hide-line-numbers data-line-numbers=""><script type="text/template">
+            <Type Name="std::unordered_map&lt;*&gt;" Priority="Medium">
+                ...
+            </Type>
+        </script></code></pre>
+        <pre class="xml fragment"><code data-trim hide-line-numbers data-line-numbers=""><script type="text/template">
+            <Type Name="std::unordered_map&lt;*&gt;" Priority="MediumHigh"
+                ExcludeView="ShowElementsByIndex"
+            >
+                ...
+            </Type>
+        </script></code></pre>
+    </div>
+</section>

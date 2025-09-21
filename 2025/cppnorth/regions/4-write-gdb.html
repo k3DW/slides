@@ -1,0 +1,54 @@
+<section data-markdown class="list-fade-in-then-semi-out">
+    <textarea data-template>
+        ## GDB pretty-printers
+        * Python
+        * Therefore, full power of a programming language
+        * E.g. external libraries
+        * Easier to write than Natvis (in my opinion)
+    </textarea>
+</section>
+
+<section data-markdown class="list-fade-in-then-semi-out">
+    <textarea data-template>
+        ## Writing GDB pretty-printers
+        * Constructor and `to_string()` method
+        * `children()` method
+        * Using GDB from VSCode
+    </textarea>
+</section>
+
+<include src="./regions/4-write-gdb/1-constructor-and-to-string.html"></include>
+<include src="./regions/4-write-gdb/2-children.html"></include>
+<include src="./regions/4-write-gdb/3-vscode.html"></include>
+
+<section my-columns my-columns-align="left">
+    <h2>Resources</h2>
+    <div style="width:100%; font-size:90%;">
+        <span class="fragment fade-in">
+            "Python API"
+        </span>
+        <br/>
+        <ul>
+            <li class="fragment fade-in"><a>https://sourceware.org/gdb/current/onlinedocs/gdb.html/Python-API.html</a></li>
+        </ul>
+        <br/>
+        <br/>
+        <span class="fragment fade-in">
+            "Visualizing boost::unordered_map in GDB, with pretty-printer customization points"
+        </span>
+        <br/>
+        <ul>
+            <li class="fragment fade-in"><a>https://blog.ganets.ky/PrettyPrinter/</a></li>
+        </ul>
+    </div>
+</section>
+
+<section data-markdown class="list-fade-in-then-semi-out">
+    <textarea data-template>
+        ## For a subsequent talk
+        * Go into `gdb.Value` and `gdb.Type`
+        * Writing pretty-printers to allow user-injected behaviour
+        * Xmethods
+        * Embedding pretty-printers in the binary itself
+    </textarea>
+</section>

@@ -1,0 +1,443 @@
+<section my-columns="62% 38%">
+    <h2>Basic expansions</h2>
+    <div style="width:100%;">
+        <pre class="xml fragment"><code data-trim hide-line-numbers data-line-numbers="|3-7"><script type="text/template">
+            <Type Name="Line">
+                <DisplayString>{{{left}, {right}}}</DisplayString>
+                <Expand>
+                    <Item Name="[length]">right - left</Item>
+
+
+                </Expand>
+            </Type>
+        </script></code></pre>
+    </div>
+    <div style="width:100%;">
+        <div style="margin-inline: auto;" class="fragment">
+            <img src="./img/natvis/3-line-1.png" width="100%" />
+        </div>
+    </div>
+</section>
+
+<section my-columns="62% 38%">
+    <h2>Basic expansions</h2>
+    <div style="width:100%;">
+        <pre class="xml"><code data-trim hide-line-numbers data-line-numbers="3-7|3"><script type="text/template">
+            <Type Name="Line">
+                <DisplayString>{{{left}, {right}}}</DisplayString>
+                <Expand>
+                    <Item Name="[length]">right - left</Item>
+                    <Item Name="dummy">123</Item>
+                    <Item Name="(other dummy)">456 + left</Item>
+                </Expand>
+            </Type>
+        </script></code></pre>
+    </div>
+    <div style="width:100%;">
+        <div style="margin-inline: auto;">
+            <img src="./img/natvis/3-line-2.png" width="100%" />
+        </div>
+    </div>
+</section>
+
+<section my-columns="62% 38%">
+    <h2>Basic expansions</h2>
+    <div style="width:100%;">
+        <pre class="xml"><code data-trim hide-line-numbers data-line-numbers="3|"><script type="text/template">
+            <Type Name="Line">
+                <DisplayString>{{{left}, {right}}}</DisplayString>
+                <Expand HideRawView="true">
+                    <Item Name="[length]">right - left</Item>
+                    <Item Name="dummy">123</Item>
+                    <Item Name="(other dummy)">456 + left</Item>
+                </Expand>
+            </Type>
+        </script></code></pre>
+    </div>
+    <div style="width:100%;">
+        <div style="margin-inline: auto;">
+            <img src="./img/natvis/3-line-3.png" width="100%" />
+        </div>
+    </div>
+</section>
+
+<section my-columns>
+    <h2><code>&lt;Item&gt;</code> tag</h2>
+    <div style="width:100%;">
+        <pre class="xml"><code data-trim hide-line-numbers data-line-numbers=""><script type="text/template">
+            <Item Name="[length]">right - left</Item>
+        </script></code></pre>
+    </div>
+</section>
+
+<section my-columns="30%">
+    <h2><code>&lt;Item&gt;</code> tag</h2>
+    <div style="width:100%;">
+        <pre class="xml"><code data-trim hide-line-numbers data-line-numbers=""><script type="text/template">
+            <Item
+                Name="[length]"
+
+
+            >
+                right - left
+            </Item>
+        </script></code></pre>
+    </div>
+</section>
+
+<section my-columns="30%">
+    <h2><code>&lt;Item&gt;</code> tag</h2>
+    <div style="width:100%;">
+        <pre class="xml"><code data-trim hide-line-numbers data-line-numbers="3"><script type="text/template">
+            <Item
+                Name="[length]"
+                Condition="right - left &gt;= 0"
+
+            >
+                right - left
+            </Item>
+        </script></code></pre>
+    </div>
+</section>
+
+<section my-columns="30%">
+    <h2><code>&lt;Item&gt;</code> tag</h2>
+    <div style="width:100%;">
+        <pre class="xml"><code data-trim hide-line-numbers data-line-numbers="4"><script type="text/template">
+            <Item
+                Name="[length]"
+                Condition="right - left &gt;= 0"
+                IncludeView="detailed;advanced"
+            >
+                right - left
+            </Item>
+        </script></code></pre>
+    </div>
+</section>
+
+<section my-columns="30%">
+    <h2><code>&lt;Item&gt;</code> tag</h2>
+    <div style="width:100%;">
+        <pre class="xml"><code data-trim hide-line-numbers data-line-numbers="4|"><script type="text/template">
+            <Item
+                Name="[length]"
+                Condition="right - left &gt;= 0"
+                ExcludeView="simple"
+            >
+                right - left
+            </Item>
+        </script></code></pre>
+    </div>
+</section>
+
+<section my-columns>
+    <h2><code>&lt;ArrayItems&gt;</code> tag</h2>
+    <div style="width:100%;">
+        <pre class="xml fragment"><code data-trim hide-line-numbers data-line-numbers="|2|3|"><script type="text/template">
+            <!-- STL.natvis -->
+            <Type Name="std::array&lt;*,*&gt;">
+                <DisplayString>{{ size={$T2} }}</DisplayString>
+                <Expand>
+
+
+
+
+                </Expand>
+            </Type>
+        </script></code></pre>
+    </div>
+</section>
+
+<section my-columns>
+    <h2><code>&lt;ArrayItems&gt;</code> tag</h2>
+    <div style="width:100%;">
+        <pre class="xml"><code data-trim hide-line-numbers data-line-numbers="5-8|"><script type="text/template">
+            <!-- STL.natvis -->
+            <Type Name="std::array&lt;*,*&gt;">
+                <DisplayString>{{ size={$T2} }}</DisplayString>
+                <Expand>
+                    <ArrayItems>
+                        <Size>$T2</Size>
+                        <ValuePointer>_Elems</ValuePointer>
+                    </ArrayItems>
+                </Expand>
+            </Type>
+        </script></code></pre>
+    </div>
+</section>
+
+<section my-columns="60% 40%">
+    <h2><code>&lt;ArrayItems&gt;</code> tag</h2>
+    <div style="width:100%;">
+        <pre class="xml"><code data-trim hide-line-numbers data-line-numbers=""><script type="text/template">
+            <Type Name="std::array&lt;*,*&gt;">
+                <DisplayString>{{ size={$T2} }}</DisplayString>
+                <Expand>
+                    <ArrayItems>
+                        <Size>$T2</Size>
+                        <ValuePointer>_Elems</ValuePointer>
+                    </ArrayItems>
+                </Expand>
+            </Type>
+        </script></code></pre>
+        <pre class="cpp fragment"><code data-trim hide-line-numbers data-line-numbers=""><script type="text/template">
+            std::array<Line, 2> lines{
+                Line{100, 600},
+                Line{2, 5},
+            };
+        </script></code></pre>
+    </div>
+    <div style="width:100%;">
+        <div style="margin-inline: auto;" class="fragment">
+            <img src="./img/natvis/3-line-array-1.png" width="100%" />
+        </div>
+    </div>
+</section>
+
+<section my-columns="60% 40%">
+    <h2><code>&lt;ArrayItems&gt;</code> tag</h2>
+    <div style="width:100%;">
+        <pre class="xml"><code data-trim hide-line-numbers data-line-numbers=""><script type="text/template">
+            <Type Name="std::array&lt;*,*&gt;">
+                <DisplayString>{{ size={$T2} }}</DisplayString>
+                <Expand>
+                    <ArrayItems>
+                        <Size>$T2</Size>
+                        <ValuePointer>_Elems</ValuePointer>
+                    </ArrayItems>
+                </Expand>
+            </Type>
+        </script></code></pre>
+        <pre class="cpp"><code data-trim hide-line-numbers data-line-numbers=""><script type="text/template">
+            std::array<Line, 2> lines{
+                Line{100, 600},
+                Line{2, 5},
+            };
+        </script></code></pre>
+    </div>
+    <div style="width:100%;">
+        <div style="margin-inline: auto;">
+            <img src="./img/natvis/3-line-array-2.png" width="100%" />
+        </div>
+    </div>
+</section>
+
+<section my-columns="60% 40%">
+    <h2><code>&lt;ArrayItems&gt;</code> tag</h2>
+    <div style="width:100%;">
+        <pre class="xml"><code data-trim hide-line-numbers data-line-numbers=""><script type="text/template">
+            <Type Name="std::array&lt;*,*&gt;">
+                <DisplayString>{{ size={$T2} }}</DisplayString>
+                <Expand>
+                    <ArrayItems>
+                        <Size>$T2</Size>
+                        <ValuePointer>_Elems</ValuePointer>
+                    </ArrayItems>
+                </Expand>
+            </Type>
+        </script></code></pre>
+        <pre class="cpp"><code data-trim hide-line-numbers data-line-numbers=""><script type="text/template">
+            std::array<Line, 2> lines{
+                Line{100, 600},
+                Line{2, 5},
+            };
+        </script></code></pre>
+    </div>
+    <div style="width:100%;">
+        <div style="margin-inline: auto;">
+            <img src="./img/natvis/3-line-array-3.png" width="100%" />
+        </div>
+    </div>
+</section>
+
+<section data-markdown full>
+    <textarea data-template>
+        ## Other "automatic" expansions
+        `<IndexListItems>` <!-- .element: class="fragment fade-in-then-semi-out" -->
+        * Expand sequences based on an index <!-- .element: class="fragment fade-in-then-semi-out" -->
+
+        `<LinkedListItems>` <!-- .element: class="fragment fade-in-then-semi-out" -->
+        * Expand linked list structures <!-- .element: class="fragment fade-in-then-semi-out" -->
+
+        `<TreeItems>` <!-- .element: class="fragment fade-in-then-semi-out" -->
+        * Expand certain shapes of tree structures <!-- .element: class="fragment fade-in-then-semi-out" -->
+    </textarea>
+</section>
+
+<section my-columns="60% 40%">
+    <h2><code>&lt;ExpandedItem&gt;</code> tag</h2>
+    <div style="width:100%;">
+        <pre class="cpp fragment"><code data-trim hide-line-numbers data-line-numbers=""><script type="text/template">
+            struct LineWrapper {
+                Line line;
+            };
+        </script></code></pre>
+        <pre class="xml fragment"><code data-trim hide-line-numbers data-line-numbers="|2|4|"><script type="text/template">
+            <Type Name="LineWrapper">
+                <DisplayString>{line}</DisplayString>
+                <Expand>
+                    <ExpandedItem>line</ExpandedItem>
+                </Expand>
+            </Type>
+        </script></code></pre>
+        <pre class="cpp fragment"><code data-trim hide-line-numbers data-line-numbers=""><script type="text/template">
+            Line line{ 100, 600 };
+            LineWrapper lw{ line };
+        </script></code></pre>
+    </div>
+    <div style="width:100%;">
+        <div style="margin-inline: auto;" class="fragment">
+            <img src="./img/natvis/3-line-wrapper.png" width="100%" />
+        </div>
+    </div>
+</section>
+
+<section my-columns="65% 35%">
+    <h2><code>&lt;Synthetic&gt;</code> tag</h2>
+    <div style="width:100%;">
+        <pre class="xml fragment"><code data-trim hide-line-numbers data-line-numbers=""><script type="text/template">
+            <Type Name="Line">
+                <DisplayString>{{{left}, {right}}}</DisplayString>
+                <Expand HideRawView="true">
+                    <Item Name="[left]">left</Item>
+                    <Item Name="[right]">right</Item>
+
+
+
+
+
+
+
+                </Expand>
+            </Type>
+        </script></code></pre>
+        <pre class="cpp fragment"><code data-trim hide-line-numbers data-line-numbers=""><script type="text/template">
+            Line line{ 100, 600 };
+        </script></code></pre>
+    </div>
+    <div style="width:100%;">
+        <div style="margin-inline: auto;" class="fragment">
+            <img src="./img/natvis/3-line-synthetic-1.png" width="100%" />
+        </div>
+    </div>
+</section>
+
+<section my-columns="65% 35%">
+    <h2><code>&lt;Synthetic&gt;</code> tag</h2>
+    <div style="width:100%;">
+        <pre class="xml"><code data-trim hide-line-numbers data-line-numbers="6-12"><script type="text/template">
+            <Type Name="Line">
+                <DisplayString>{{{left}, {right}}}</DisplayString>
+                <Expand HideRawView="true">
+                    <Item Name="[left]">left</Item>
+                    <Item Name="[right]">right</Item>
+                    <Synthetic Name="[calculated]">
+
+
+
+
+
+                    </Synthetic>
+                </Expand>
+            </Type>
+        </script></code></pre>
+        <pre class="cpp"><code data-trim hide-line-numbers data-line-numbers=""><script type="text/template">
+            Line line{ 100, 600 };
+        </script></code></pre>
+    </div>
+    <div style="width:100%;">
+        <div style="margin-inline: auto;">
+            <img src="./img/natvis/3-line-synthetic-2.png" width="100%" />
+        </div>
+    </div>
+</section>
+
+<section my-columns="65% 35%">
+    <h2><code>&lt;Synthetic&gt;</code> tag</h2>
+    <div style="width:100%;">
+        <pre class="xml"><code data-trim hide-line-numbers data-line-numbers="6-12"><script type="text/template">
+            <Type Name="Line">
+                <DisplayString>{{{left}, {right}}}</DisplayString>
+                <Expand HideRawView="true">
+                    <Item Name="[left]">left</Item>
+                    <Item Name="[right]">right</Item>
+                    <Synthetic Name="[calculated]">
+                        <DisplayString>Line properties</DisplayString>
+
+
+
+
+                    </Synthetic>
+                </Expand>
+            </Type>
+        </script></code></pre>
+        <pre class="cpp"><code data-trim hide-line-numbers data-line-numbers=""><script type="text/template">
+            Line line{ 100, 600 };
+        </script></code></pre>
+    </div>
+    <div style="width:100%;">
+        <div style="margin-inline: auto;">
+            <img src="./img/natvis/3-line-synthetic-3.png" width="100%" />
+        </div>
+    </div>
+</section>
+
+<section my-columns="65% 35%">
+    <h2><code>&lt;Synthetic&gt;</code> tag</h2>
+    <div style="width:100%;">
+        <pre class="xml"><code data-trim hide-line-numbers data-line-numbers="6-12"><script type="text/template">
+            <Type Name="Line">
+                <DisplayString>{{{left}, {right}}}</DisplayString>
+                <Expand HideRawView="true">
+                    <Item Name="[left]">left</Item>
+                    <Item Name="[right]">right</Item>
+                    <Synthetic Name="[calculated]">
+                        <DisplayString>Line properties</DisplayString>
+                        <Expand>
+                            <Item Name="[length]">right - left</Item>
+
+                        </Expand>
+                    </Synthetic>
+                </Expand>
+            </Type>
+        </script></code></pre>
+        <pre class="cpp"><code data-trim hide-line-numbers data-line-numbers=""><script type="text/template">
+            Line line{ 100, 600 };
+        </script></code></pre>
+    </div>
+    <div style="width:100%;">
+        <div style="margin-inline: auto;">
+            <img src="./img/natvis/3-line-synthetic-4.png" width="100%" />
+        </div>
+    </div>
+</section>
+
+<section my-columns="65% 35%">
+    <h2><code>&lt;Synthetic&gt;</code> tag</h2>
+    <div style="width:100%;">
+        <pre class="xml"><code data-trim hide-line-numbers data-line-numbers="6-12"><script type="text/template">
+            <Type Name="Line">
+                <DisplayString>{{{left}, {right}}}</DisplayString>
+                <Expand HideRawView="true">
+                    <Item Name="[left]">left</Item>
+                    <Item Name="[right]">right</Item>
+                    <Synthetic Name="[calculated]">
+                        <DisplayString>Line properties</DisplayString>
+                        <Expand>
+                            <Item Name="[length]">right - left</Item>
+                            <Item Name="[mid]">(left + right)/2</Item>
+                        </Expand>
+                    </Synthetic>
+                </Expand>
+            </Type>
+        </script></code></pre>
+        <pre class="cpp"><code data-trim hide-line-numbers data-line-numbers=""><script type="text/template">
+            Line line{ 100, 600 };
+        </script></code></pre>
+    </div>
+    <div style="width:100%;">
+        <div style="margin-inline: auto;">
+            <img src="./img/natvis/3-line-synthetic-5.png" width="100%" />
+        </div>
+    </div>
+</section>

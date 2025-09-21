@@ -1,0 +1,145 @@
+<section data-markdown class="list-fade-in-then-semi-out">
+    <textarea data-template>
+        ## Natvis files
+        * XML
+        * `.natvis` file extension
+    </textarea>
+</section>
+
+<section my-columns="90%">
+    <h2>Natvis files</h2>
+    <div style="width:100%;">
+        <pre class="xml"><code data-trim hide-line-numbers data-line-numbers=""><script type="text/template">
+            <?xml version="1.0" encoding="utf-8"?>
+            <AutoVisualizer xmlns="http://schemas.microsoft.com/vstudio/debugger/natvis/2010">
+
+
+
+
+
+
+
+
+
+            </AutoVisualizer>
+        </script></code></pre>
+    </div>
+</section>
+
+<section my-columns="90%">
+    <h2>Natvis files</h2>
+    <div style="width:100%;">
+        <pre class="xml"><code data-trim hide-line-numbers data-line-numbers=""><script type="text/template">
+            <?xml version="1.0" encoding="utf-8"?>
+            <AutoVisualizer xmlns="http://schemas.microsoft.com/vstudio/debugger/natvis/2010">
+
+                <Type Name="MyClass">
+                    ...
+                </Type>
+
+
+
+
+
+            </AutoVisualizer>
+        </script></code></pre>
+    </div>
+</section>
+
+<section my-columns="90%">
+    <h2>Natvis files</h2>
+    <div style="width:100%;">
+        <pre class="xml"><code data-trim hide-line-numbers data-line-numbers=""><script type="text/template">
+            <?xml version="1.0" encoding="utf-8"?>
+            <AutoVisualizer xmlns="http://schemas.microsoft.com/vstudio/debugger/natvis/2010">
+
+                <Type Name="MyClass">
+                    ...
+                </Type>
+
+                <Type Name="MyClassTemplate&lt;*&gt;">
+                    ...
+                </Type>
+
+            </AutoVisualizer>
+        </script></code></pre>
+    </div>
+</section>
+
+<section data-markdown class="list-fade-in-then-semi-out">
+    <textarea data-template>
+        ## Set up Natvis
+        * In Visual Studio
+        * In CMake
+    </textarea>
+</section>
+
+<section my-columns>
+    <h2>In Visual Studio</h2>
+    <div style="margin-inline: auto;">
+        <img src="./img/natvis/0-vs-project1.png" width="100%" />
+    </div>
+</section>
+
+<section my-columns>
+    <h2>In Visual Studio</h2>
+    <div style="margin-inline: auto;">
+        <img src="./img/natvis/0-vs-project1-right-click.png" width="100%" />
+    </div>
+</section>
+
+<section my-columns>
+    <h2>In Visual Studio</h2>
+    <div style="margin-inline: auto;">
+        <img src="./img/natvis/0-vs-project1-new-item.png" width="100%" />
+    </div>
+</section>
+
+<section my-columns>
+    <h2>In CMake</h2>
+    <div style="width:100%;">
+        <pre class="cmake fragment"><code data-trim hide-line-numbers data-line-numbers=""><script type="text/template">
+            add_executable(my_target
+                # ... all other args
+                path/to/my.natvis
+            )
+        </script></code></pre>
+        <br/>
+        <pre class="cmake fragment"><code data-trim hide-line-numbers data-line-numbers=""><script type="text/template">
+            target_sources(my_target
+                PUBLIC path/to/my.natvis
+            )
+        </script></code></pre>
+    </div>
+</section>
+
+<section my-columns="62% 38%">
+    <h2>Results</h2>
+    <div style="width:100%;">
+        <pre class="cpp fragment" data-fragment-index="1"><code data-trim hide-line-numbers data-line-numbers=""><script type="text/template">
+            struct Line {
+                int left;
+                int right;
+            };
+        </script></code></pre>
+        <pre class="xml fragment" data-fragment-index="4"><code data-trim hide-line-numbers data-line-numbers=""><script type="text/template">
+            <Type Name="Line">
+                <DisplayString>{{{left}, {right}}}</DisplayString>
+                <Expand>
+                    <Item Name="[length]">right - left</Item>
+                </Expand>
+            </Type>
+        </script></code></pre>
+    </div>
+    <div style="width:100%;">
+        <pre class="cpp fragment" data-fragment-index="2"><code data-trim hide-line-numbers data-line-numbers=""><script type="text/template">
+            Line line{ 100, 600 };
+        </script></code></pre>
+        <div style="margin-inline: auto;" class="fragment" data-fragment-index="3">
+            <img src="./img/natvis/0-new-result-before.png" width="100%" />
+        </div>
+        <div style="margin-inline: auto;" class="fragment" data-fragment-index="5">
+            <img src="./img/natvis/0-new-result-after.png" width="100%" />
+        </div>
+    </div>
+</section>

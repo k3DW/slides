@@ -1,0 +1,174 @@
+<section data-markdown class="list-fade-in-then-semi-out">
+    <textarea data-template>
+        ## Scenario: Your program hits an error and exits
+        * No knowledge of where it happened
+        * Logs are too sparse to determine what happened
+        * What do you do?
+    </textarea>
+</section>
+
+<!-- Maybe todo: Actually demonstrate printf debugging -->
+
+<section data-markdown class="list-fade-in-then-semi-out">
+    <textarea data-template>
+        ## "`printf` debugging"
+        * Modify the source code with a print statement
+        * Recompile the program
+        * Rerun the program, looking for the message
+        * Realize the print statement is wrong or insufficient
+        * Loop the above steps ad infinitum
+        * All the while, recompiling on every loop
+        * Big waste of time
+    </textarea>
+</section>
+
+<section data-markdown class="list-fade-in-then-semi-out">
+    <textarea data-template>
+        ## Possible alternatives
+        * Don't write bugs?
+        * Use sanitizers to reduce bugs?
+        * Others...?
+        * Use a debugger to explore and walk through the code!
+    </textarea>
+</section>
+
+<section data-markdown class="list-fade-in-then-semi-out">
+    <textarea data-template>
+        ## Using a debugger: The pros
+        * No recompiling
+        * Iterating is much faster
+        * As granular as you want, e.g. stepping into function calls
+        * Special features, e.g. time travel debugging
+    </textarea>
+</section>
+
+<section data-markdown class="list-fade-in-then-semi-out">
+    <textarea data-template>
+        ## Using a debugger: The cons
+        * More painful to set up
+        * Learning curve
+        * Less accessible to get started
+        * Incomprehensible data displayed
+    </textarea>
+</section>
+
+<section my-columns="40%">
+    <h2>Incomprehensible data</h2>
+    <div style="width:100%;">
+        <pre class="cpp fragment"><code data-trim hide-line-numbers data-line-numbers=""><script type="text/template">
+            #include <boost/unordered_set.hpp>
+            int main() {
+                boost::unordered_set<int> set{ 11, 22, 33 };
+            }
+        </script></code></pre>
+        <div style="margin-inline: auto;" class="fragment">
+            <img src="./img/boost-unordered-set-before.png" width="100%" />
+        </div>
+    </div>
+</section>
+
+<section my-columns="40%">
+    <h2>Incomprehensible data</h2>
+    <div style="width:100%;">
+        <pre class="cpp"><code data-trim hide-line-numbers data-line-numbers=""><script type="text/template">
+            #include <boost/unordered_set.hpp>
+            int main() {
+                boost::unordered_set<int> set{ 11, 22, 33 };
+            }
+        </script></code></pre>
+        <div style="margin-inline: auto;">
+            <img src="./img/boost-unordered-set-after.png" width="100%" />
+        </div>
+    </div>
+</section>
+</section>
+
+<section my-columns="40%">
+    <h2>Incomprehensible data</h2>
+    <div style="width:100%;">
+        <pre class="cpp"><code data-trim hide-line-numbers data-line-numbers=""><script type="text/template">
+            #include <boost/unordered_set.hpp>
+            int main() {
+                boost::unordered_set<int> set{ 11, 22, 33 };
+            }
+        </script></code></pre>
+        <pre class="text" style="font-size: 40%;"><code data-trim hide-line-numbers data-line-numbers=""><script type="text/template">
+            (gdb) print set
+            $1 = {
+              table_ = {
+                <boost::unordered::detail::functions<boost::hash<int>, std::equal_to<int> >> = {
+                  static nothrow_move_assignable = true,
+                  static nothrow_move_constructible = true,
+                  static nothrow_swappable = true,
+                  current_ = 0 '\000',
+                  funcs_ = {{
+                      t_ = {
+                        <boost::unordered::detail::compressed_base<boost::hash<int>, 1>> = {
+                          <boost::empty_::empty_value<boost::hash<int>, 0u, true>> = {
+                            <boost::hash<int>> = {<No data fields>}, <No data fields>}, <No data fields>},
+                        <boost::unordered::detail::compressed_base<std::equal_to<int>, 2>> = {
+                          <boost::empty_::empty_value<std::equal_to<int>, 0u, true>> = {
+                            <std::equal_to<int>> = {
+                              <std::binary_function<int, int, bool>> = {<No data fields>}, <No data fields>}, <No data fields>}, <No data fields>}, <No data fields>}
+                    }, {
+                      t_ = {
+                        <boost::unordered::detail::compressed_base<boost::hash<int>, 1>> = {
+                          <boost::empty_::empty_value<boost::hash<int>, 0u, true>> = {
+                            <boost::hash<int>> = {<No data fields>}, <No data fields>}, <No data fields>},
+                        <boost::unordered::detail::compressed_base<std::equal_to<int>, 2>> = {
+                          <boost::empty_::empty_value<std::equal_to<int>, 0u, true>> = {
+                            <std::equal_to<int>> = {
+                              <std::binary_function<int, int, bool>> = {<No data fields>}, <No data fields>}, <No data fields>}, <No data fields>}, <No data fields>}
+                    }}
+                },
+                members of boost::unordered::detail::table<boost::unordered::detail::set<std::allocator<int>, int, boost::hash<int>, std::equal_to<int> > >:
+                size_ = 3,
+                mlf_ = 1,
+                max_load_ = 13,
+                buckets_ = {
+                  <boost::empty_::empty_value<std::allocator<boost::unordered::detail::node<int, void*> >, 0u, true>> = {
+                    <std::allocator<boost::unordered::detail::node<int, void*> >> = {
+                      <__gnu_cxx::new_allocator<boost::unordered::detail::node<int, void*> >> = {<No data fields>}, <No data fields>}, <No data fields>},
+                  members of boost::unordered::detail::grouped_bucket_array<boost::unordered::detail::bucket<boost::unordered::detail::node<int, void*>, void*>, std::allocator<int>, boost::unordered::detail::prime_fmod_size<void> >:
+                  size_index_ = 0,
+                  size_ = 13,
+                  buckets = 0x55555556feb0,
+                  groups = 0x55555556ff30
+                }
+              }
+            }
+        </script></code></pre>
+    </div>
+</section>
+
+<section my-columns="40%">
+    <h2>Incomprehensible data</h2>
+    <div style="width:100%;">
+        <pre class="cpp"><code data-trim hide-line-numbers data-line-numbers=""><script type="text/template">
+            #include <boost/unordered_set.hpp>
+            int main() {
+                boost::unordered_set<int> set{ 11, 22, 33 };
+            }
+        </script></code></pre>
+        <pre class="text"><code data-trim hide-line-numbers data-line-numbers=""><script type="text/template">
+            (gdb) print set
+            $1 = boost::unordered_set with 3 elements = {
+              [0] = 33,
+              [1] = 22,
+              [2] = 11
+            }
+        </script></code></pre>
+    </div>
+</section>
+
+<section data-markdown class="list-fade-in-then-semi-out">
+    <textarea data-template>
+        ## In this talk
+        * Addressing the "cons" of debuggers
+        * Advocating for writing code with tooling and users in mind
+        * The "how" of Visual Studio Natvis
+        * The "how" of GDB pretty-printers
+        * Barely any C++
+        * Questions at any time!
+    </textarea>
+</section>

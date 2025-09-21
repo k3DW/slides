@@ -1,0 +1,122 @@
+<section my-columns="25% 75%">
+    <h2>.gdbinit file</h2>
+    <div style="width:100%;">
+        <pre class="cpp fragment"><code data-trim data-line-numbers="2-6" data-ln-start-from="0"><script type="text/template">
+            // main.cpp
+            int main() {
+                int x = 5;
+                int y = 6;
+                int z = x + y;
+            }
+        </script></code></pre>
+        <pre class="text fragment"><code data-trim hide-line-numbers data-line-numbers="2-4"><script type="text/template">
+            # .gdbinit
+            file a.out
+            break 5
+            run
+        </script></code></pre>
+    </div>
+    <div style="width:100%;">
+        <pre class="bash fragment"><code data-trim hide-line-numbers data-line-numbers=""><script type="text/template">
+            > gdb
+        </script></code></pre>
+        <pre class="text fragment"><code data-trim hide-line-numbers data-line-numbers="4-9"><script type="text/template">
+            GNU gdb (GDB) 14.0.50.20221220-git
+            Copyright (C) 2022 Free Software Foundation, Inc.
+            ...etc...
+            warning: File "path/to/.gdbinit" auto-loading has been
+            declined by your `auto-load safe-path' set to "...".
+            To enable execution of this file add
+                    add-auto-load-safe-path path/to/.gdbinit
+            line to your configuration file
+            "/home/braden/.config/gdb/gdbinit".
+            ...etc...
+        </script></code></pre>
+    </div>
+</section>
+
+<section my-columns="25% 75%">
+    <h2>.gdbinit file</h2>
+    <div style="width:100%;">
+        <pre class="text"><code hide-line-numbers data-trim data-line-numbers="2"><script type="text/template">
+            # /home/braden/.config/gdb/gdbinit
+            add-auto-load-safe-path path/to/.gdbinit
+        </script></code></pre>
+    </div>
+</section>
+
+<section my-columns="25% 75%">
+    <h2>.gdbinit file</h2>
+    <div style="width:100%;">
+        <pre class="cpp"><code data-trim data-line-numbers="2-6" data-ln-start-from="0"><script type="text/template">
+            // main.cpp
+            int main() {
+                int x = 5;
+                int y = 6;
+                int z = x + y;
+            }
+        </script></code></pre>
+        <pre class="text"><code data-trim hide-line-numbers data-line-numbers="2-4"><script type="text/template">
+            # .gdbinit
+            file a.out
+            break 5
+            run
+        </script></code></pre>
+    </div>
+    <div style="width:100%;">
+        <pre class="bash fragment"><code data-trim hide-line-numbers data-line-numbers=""><script type="text/template">
+            > gdb
+        </script></code></pre>
+        <pre class="text fragment"><code data-trim hide-line-numbers data-line-numbers="4-9"><script type="text/template">
+            GNU gdb (GDB) 14.0.50.20221220-git
+            Copyright (C) 2022 Free Software Foundation, Inc.
+            ...etc...
+            Breakpoint 1 at 0x114b: file main.cpp, line 5.
+            [Thread debugging using libthread_db enabled]
+            Using host libthread_db library "path/to/libthread_db.so.1".
+            
+            Breakpoint 1, main () at main.cpp:5
+            5       }
+
+             
+        </script></code></pre>
+    </div>
+</section>
+
+<section my-columns="25% 75%">
+    <h2>.gdbinit file</h2>
+    <div style="width:100%;">
+        <pre class="cpp"><code data-trim data-line-numbers="2-6" data-ln-start-from="0"><script type="text/template">
+            // main.cpp
+            int main() {
+                int x = 5;
+                int y = 6;
+                int z = x + y;
+            }
+        </script></code></pre>
+        <pre class="text"><code data-trim hide-line-numbers data-line-numbers="2-4"><script type="text/template">
+            # .gdbinit
+            file a.out
+            break 5
+            run
+        </script></code></pre>
+    </div>
+    <div style="width:100%;">
+        <pre class="bash"><code data-trim hide-line-numbers data-line-numbers=""><script type="text/template">
+            > gdb
+        </script></code></pre>
+        <pre class="text"><code data-trim hide-line-numbers data-line-numbers="10-11"><script type="text/template">
+            GNU gdb (GDB) 14.0.50.20221220-git
+            Copyright (C) 2022 Free Software Foundation, Inc.
+            ...etc...
+            Breakpoint 1 at 0x114b: file main.cpp, line 5.
+            [Thread debugging using libthread_db enabled]
+            Using host libthread_db library "path/to/libthread_db.so.1".
+            
+            Breakpoint 1, main () at main.cpp:5
+            5       }
+            (gdb) print z
+            $1 = 11
+        </script></code></pre>
+    </div>
+</section>

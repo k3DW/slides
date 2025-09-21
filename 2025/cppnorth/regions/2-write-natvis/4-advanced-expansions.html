@@ -1,0 +1,375 @@
+<section data-markdown class="list-fade-in-then-semi-out">
+    <textarea data-template>
+        ## `<CustomListItems>` tag
+        * A "manual" expansion
+        * Create variables
+        * Execute statements
+        * Branches and loops
+        * Output items
+        * Basically a DSL to iterate over your structure
+    </textarea>
+</section>
+
+<section my-columns="69% 31%">
+    <h2><code>&lt;CustomListItems&gt;</code> tag</h2>
+    <div style="width:100%;">
+        <pre class="xml fragment"><code data-trim hide-line-numbers data-line-numbers="|5-7"><script type="text/template">
+            <Type Name="Line">
+                <DisplayString>{{ length={right - left} }}</DisplayString>
+                <Expand HideRawView="true">
+                    <Item Name="[length]">right - left</Item>
+                    <CustomListItems>
+                        ...
+                    </CustomListItems>
+                </Expand>
+            </Type>
+        </script></code></pre>
+    </div>
+    <div style="width:100%;">
+        <div style="margin-inline: auto;" class="fragment">
+            <img src="./img/natvis/4-custom-1.png" width="100%" />
+        </div>
+    </div>
+</section>
+
+<section my-columns="69% 31%">
+    <h2><code>&lt;CustomListItems&gt;</code> tag</h2>
+    <div style="width:100%;">
+        <pre class="xml"><code data-trim hide-line-numbers data-line-numbers=""><script type="text/template">
+            <CustomListItems>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+            </CustomListItems>
+        </script></code></pre>
+    </div>
+    <div style="width:100%;">
+        <div style="margin-inline: auto;">
+            <img src="./img/natvis/4-custom-1.png" width="100%" />
+        </div>
+    </div>
+</section>
+
+<section my-columns="69% 31%">
+    <h2><code>&lt;CustomListItems&gt;</code> tag</h2>
+    <div style="width:100%;">
+        <pre class="xml"><code data-trim hide-line-numbers data-line-numbers="2"><script type="text/template">
+            <CustomListItems>
+                <Variable Name="steps" InitialValue="5"/>
+
+
+
+
+
+
+
+
+
+
+
+
+
+            </CustomListItems>
+        </script></code></pre>
+    </div>
+    <div style="width:100%;">
+        <div style="margin-inline: auto;">
+            <img src="./img/natvis/4-custom-1.png" width="100%" />
+        </div>
+    </div>
+</section>
+
+<section my-columns="69% 31%">
+    <h2><code>&lt;CustomListItems&gt;</code> tag</h2>
+    <div style="width:100%;">
+        <pre class="xml"><code data-trim hide-line-numbers data-line-numbers="3-4"><script type="text/template">
+            <CustomListItems>
+                <Variable Name="steps" InitialValue="5"/>
+                <Variable Name="step_size"
+                    InitialValue="(right - left) / (steps - 1)"/>
+
+
+
+
+
+
+
+
+
+
+
+            </CustomListItems>
+        </script></code></pre>
+    </div>
+    <div style="width:100%;">
+        <div style="margin-inline: auto;">
+            <img src="./img/natvis/4-custom-1.png" width="100%" />
+        </div>
+    </div>
+</section>
+
+<section my-columns="69% 31%">
+    <h2><code>&lt;CustomListItems&gt;</code> tag</h2>
+    <div style="width:100%;">
+        <pre class="xml"><code data-trim hide-line-numbers data-line-numbers="5"><script type="text/template">
+            <CustomListItems>
+                <Variable Name="steps" InitialValue="5"/>
+                <Variable Name="step_size"
+                    InitialValue="(right - left) / (steps - 1)"/>
+                <Variable Name="current" InitialValue="left"/>
+
+
+
+
+
+
+
+
+
+
+            </CustomListItems>
+        </script></code></pre>
+    </div>
+    <div style="width:100%;">
+        <div style="margin-inline: auto;">
+            <img src="./img/natvis/4-custom-1.png" width="100%" />
+        </div>
+    </div>
+</section>
+
+<section my-columns="69% 31%">
+    <h2><code>&lt;CustomListItems&gt;</code> tag</h2>
+    <div style="width:100%;">
+        <pre class="xml"><code data-trim hide-line-numbers data-line-numbers="6|2-6"><script type="text/template">
+            <CustomListItems>
+                <Variable Name="steps" InitialValue="5"/>
+                <Variable Name="step_size"
+                    InitialValue="(right - left) / (steps - 1)"/>
+                <Variable Name="current" InitialValue="left"/>
+                <Variable Name="index" InitialValue="0"/>
+
+
+
+
+
+
+
+
+
+            </CustomListItems>
+        </script></code></pre>
+    </div>
+    <div style="width:100%;">
+        <div style="margin-inline: auto;">
+            <img src="./img/natvis/4-custom-1.png" width="100%" />
+        </div>
+    </div>
+</section>
+
+<section my-columns="69% 31%">
+    <h2><code>&lt;CustomListItems&gt;</code> tag</h2>
+    <div style="width:100%;">
+        <pre class="xml"><code data-trim hide-line-numbers data-line-numbers="8-15|10-11|12-14"><script type="text/template">
+            <CustomListItems>
+                <Variable Name="steps" InitialValue="5"/>
+                <Variable Name="step_size"
+                    InitialValue="(right - left) / (steps - 1)"/>
+                <Variable Name="current" InitialValue="left"/>
+                <Variable Name="index" InitialValue="0"/>
+
+                <Loop>
+
+                    <Exec>++index</Exec>
+                    <Exec>current = left + index * step_size</Exec>
+                    <If Condition="current &gt; right">
+                      <Break/>
+                    </If>
+                </Loop>
+            </CustomListItems>
+        </script></code></pre>
+    </div>
+    <div style="width:100%;">
+        <div style="margin-inline: auto;">
+            <img src="./img/natvis/4-custom-1.png" width="100%" />
+        </div>
+    </div>
+</section>
+
+<section my-columns="69% 31%">
+    <h2><code>&lt;CustomListItems&gt;</code> tag</h2>
+    <div style="width:100%;">
+        <pre class="xml"><code data-trim hide-line-numbers data-line-numbers="9|12-14"><script type="text/template">
+            <CustomListItems>
+                <Variable Name="steps" InitialValue="5"/>
+                <Variable Name="step_size"
+                    InitialValue="(right - left) / (steps - 1)"/>
+                <Variable Name="current" InitialValue="left"/>
+                <Variable Name="index" InitialValue="0"/>
+
+                <Loop>
+                    <Item>current</Item>
+                    <Exec>++index</Exec>
+                    <Exec>current = left + index * step_size</Exec>
+                    <If Condition="current &gt; right">
+                      <Break/>
+                    </If>
+                </Loop>
+            </CustomListItems>
+        </script></code></pre>
+    </div>
+    <div style="width:100%;">
+        <div style="margin-inline: auto;">
+            <img src="./img/natvis/4-custom-2.png" width="100%" />
+        </div>
+    </div>
+</section>
+
+<section my-columns="69% 31%">
+    <h2><code>&lt;CustomListItems&gt;</code> tag</h2>
+    <div style="width:100%;">
+        <pre class="xml"><code data-trim hide-line-numbers data-line-numbers="12-14|8,12-15"><script type="text/template">
+            <CustomListItems>
+                <Variable Name="steps" InitialValue="5"/>
+                <Variable Name="step_size"
+                    InitialValue="(right - left) / (steps - 1)"/>
+                <Variable Name="current" InitialValue="left"/>
+                <Variable Name="index" InitialValue="0"/>
+
+                <Loop>
+                    <Item>current</Item>
+                    <Exec>++index</Exec>
+                    <Exec>current = left + index * step_size</Exec>
+
+                    <Break Condition="current &gt; right"/>
+
+                </Loop>
+            </CustomListItems>
+        </script></code></pre>
+    </div>
+    <div style="width:100%;">
+        <div style="margin-inline: auto;">
+            <img src="./img/natvis/4-custom-2.png" width="100%" />
+        </div>
+    </div>
+</section>
+
+<section my-columns="69% 31%">
+    <h2><code>&lt;CustomListItems&gt;</code> tag</h2>
+    <div style="width:100%;">
+        <pre class="xml"><code data-trim hide-line-numbers data-line-numbers="8,12-15|"><script type="text/template">
+            <CustomListItems>
+                <Variable Name="steps" InitialValue="5"/>
+                <Variable Name="step_size"
+                    InitialValue="(right - left) / (steps - 1)"/>
+                <Variable Name="current" InitialValue="left"/>
+                <Variable Name="index" InitialValue="0"/>
+
+                <Loop Condition="current &lt;= right">
+                    <Item>current</Item>
+                    <Exec>++index</Exec>
+                    <Exec>current = left + index * step_size</Exec>
+
+
+
+                </Loop>
+            </CustomListItems>
+        </script></code></pre>
+    </div>
+    <div style="width:100%;">
+        <div style="margin-inline: auto;">
+            <img src="./img/natvis/4-custom-2.png" width="100%" />
+        </div>
+    </div>
+</section>
+
+<section my-columns="69% 31%">
+    <h2><code>&lt;CustomListItems&gt;</code> tag</h2>
+    <div style="width:100%;">
+        <pre class="xml"><code data-trim hide-line-numbers data-line-numbers=""><script type="text/template">
+            <CustomListItems>
+                <Variable Name="steps" InitialValue="5"/>
+                <Variable Name="step_size"
+                    InitialValue="(right - left) / (steps - 1)"/>
+                <Variable Name="current" InitialValue="left"/>
+                <Variable Name="index" InitialValue="0"/>
+
+
+                <Loop Condition="current &lt;= right">
+                    <Item>current</Item>
+                    <Exec>++index</Exec>
+                    <Exec>current = left + index * step_size</Exec>
+                </Loop>
+            </CustomListItems>
+        </script></code></pre>
+    </div>
+    <div style="width:100%;">
+        <div style="margin-inline: auto;">
+            <img src="./img/natvis/4-custom-2.png" width="100%" />
+        </div>
+    </div>
+</section>
+
+<section my-columns="69% 31%">
+    <h2><code>&lt;CustomListItems&gt;</code> tag</h2>
+    <div style="width:100%;">
+        <pre class="xml"><code data-trim hide-line-numbers data-line-numbers="8||10"><script type="text/template">
+            <CustomListItems>
+                <Variable Name="steps" InitialValue="5"/>
+                <Variable Name="step_size"
+                    InitialValue="(right - left) / (steps - 1)"/>
+                <Variable Name="current" InitialValue="left"/>
+                <Variable Name="index" InitialValue="0"/>
+
+                <Item Name="[steps]">steps</Item>
+                <Loop Condition="current &lt;= right">
+                    <Item>current</Item>
+                    <Exec>++index</Exec>
+                    <Exec>current = left + index * step_size</Exec>
+                </Loop>
+            </CustomListItems>
+        </script></code></pre>
+    </div>
+    <div style="width:100%;">
+        <div style="margin-inline: auto;">
+            <img src="./img/natvis/4-custom-3.png" width="100%" />
+        </div>
+    </div>
+</section>
+
+<section my-columns="69% 31%">
+    <h2><code>&lt;CustomListItems&gt;</code> tag</h2>
+    <div style="width:100%;">
+        <pre class="xml"><code data-trim hide-line-numbers data-line-numbers="10|"><script type="text/template">
+            <CustomListItems>
+                <Variable Name="steps" InitialValue="5"/>
+                <Variable Name="step_size"
+                    InitialValue="(right - left) / (steps - 1)"/>
+                <Variable Name="current" InitialValue="left"/>
+                <Variable Name="index" InitialValue="0"/>
+
+                <Item Name="[steps]">steps</Item>
+                <Loop Condition="current &lt;= right">
+                    <Item Name="[{index}]">current</Item>
+                    <Exec>++index</Exec>
+                    <Exec>current = left + index * step_size</Exec>
+                </Loop>
+            </CustomListItems>
+        </script></code></pre>
+    </div>
+    <div style="width:100%;">
+        <div style="margin-inline: auto;">
+            <img src="./img/natvis/4-custom-4.png" width="100%" />
+        </div>
+    </div>
+</section>
