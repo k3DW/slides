@@ -22,6 +22,12 @@
         <div class="reveal">
             <div class="slides">
                 {{ content }}
+
+                {% if page.thank-you %}
+                    {% if page.thank-you.version == 1 %}
+                        {% include slides/thank-you-1.html %}
+                    {% endif %}
+                {% endif %}
             </div>
         </div>
 
