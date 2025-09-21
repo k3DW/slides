@@ -1,0 +1,119 @@
+
+
+<section data-markdown class="list-fade-in-then-semi-out">
+    <textarea data-template>
+        ## Forwarding
+        * A special mention in the deduction rules
+        * "An rvalue reference to a cv-unqualified template parameter"
+        * i.e. `T&&`
+        * Must be a template parameter of the function itself
+    </textarea>
+</section>
+
+<!-- 
+    [temp.deduct.call]
+    [temp.deduct.type]
+ -->
+
+<section my-columns>
+    <h2>Forwarding</h2>
+    <div style="width:100%;">
+        <pre class="cpp"><code data-trim hide-line-numbers data-line-numbers="|3|"><script type="text/template">
+            // [temp.deduct.call]/3
+            template <class T>
+            int f(T&& heisenreference);
+        </script></code></pre>
+        <pre class="cpp fragment"><code data-trim hide-line-numbers data-line-numbers="|1|2|"><script type="text/template">
+            int i = 0;
+            f(i); // calls f<int&>(int&)
+        </script></code></pre>
+        <pre class="cpp fragment"><code data-trim hide-line-numbers data-line-numbers=""><script type="text/template">
+            f(0); // calls f<int>(int&&)
+        </script></code></pre>
+    </div>
+</section>
+
+<section data-markdown class="list-fade-in-then-semi-out">
+    <textarea data-template>
+        ## Reference collapsing
+        * `T&` `&` is `T&`
+        * `T&` `&&` is `T&`
+        * `T&&` `&` is `T&`
+        * `T&&` `&&` is `T&&`
+    </textarea>
+</section>
+
+<section my-columns>
+    <h2>Reference collapsing</h2>
+    <div style="width:100%;">
+        <pre class="cpp"><code data-trim hide-line-numbers data-line-numbers="|1|2|3|"><script type="text/template">
+            using R1 = int&;
+            using R2 = R1&;
+            static_assert(std::same_as<R2, int&>);
+        </script></code></pre>
+        <pre class="cpp fragment"><code data-trim hide-line-numbers data-line-numbers="|1|2|3|"><script type="text/template">
+            using R1 = int&;
+            using R2 = R1&&;
+            static_assert(std::same_as<R2, int&>);
+        </script></code></pre>
+    </div>
+</section>
+
+<section my-columns>
+    <h2>Reference collapsing</h2>
+    <div style="width:100%;">
+        <pre class="cpp"><code data-trim hide-line-numbers data-line-numbers="|1|2|3|"><script type="text/template">
+            using R1 = int&&;
+            using R2 = R1&;
+            static_assert(std::same_as<R2, int&>);
+        </script></code></pre>
+        <pre class="cpp fragment"><code data-trim hide-line-numbers data-line-numbers="|1|2|3|"><script type="text/template">
+            using R1 = int&&;
+            using R2 = R1&&;
+            static_assert(std::same_as<R2, int&&>);
+        </script></code></pre>
+    </div>
+</section>
+
+<section my-columns>
+    <h2>Forwarding</h2>
+    <div style="width:100%;">
+        <pre class="cpp"><code data-trim hide-line-numbers data-line-numbers=""><script type="text/template">
+            template <class T>
+            void foo(T&&);
+        </script></code></pre>
+        <pre class="cpp fragment"><code data-trim hide-line-numbers data-line-numbers=""><script type="text/template">
+            int i = 0;
+            foo(i);
+        </script></code></pre>
+        <br/>
+        <ul style="font-size: 75%;">
+            <li class="fragment">Parameter <code>T&amp;&amp;</code>, argument <code>int&amp;</code></li>
+            <li class="fragment">Match the form <code>T&amp;&amp;</code></li>
+            <li class="fragment">Remember, <code>int&amp;</code> is <code>int&amp; &amp;&amp;</code></li>
+            <li class="fragment">Therefore <code>T&amp;&amp;</code> is <code>int&amp; &amp;&amp;</code></li>
+            <li class="fragment">Therefore <code>T</code> is <code>int&amp;</code></li>
+            <li class="fragment"><code>foo&lt;int&amp;&gt;(int&amp;)</code></li>
+        </ul>
+    </div>
+</section>
+
+<section my-columns>
+    <h2>Forwarding</h2>
+    <div style="width:100%;">
+        <pre class="cpp"><code data-trim hide-line-numbers data-line-numbers=""><script type="text/template">
+            template <class T>
+            void foo(T&&);
+        </script></code></pre>
+        <pre class="cpp fragment"><code data-trim hide-line-numbers data-line-numbers=""><script type="text/template">
+            foo(0);
+        </script></code></pre>
+        <br/>
+        <ul style="font-size: 75%;">
+            <li class="fragment">Parameter <code>T&amp;&amp;</code>, argument <code>int&amp;&amp;</code></li>
+            <li class="fragment">Match the form <code>T&amp;&amp;</code></li>
+            <li class="fragment">Therefore <code>T</code> is <code>int</code></li>
+            <li class="fragment"><code>foo&lt;int&gt;(int&amp;&amp;)</code></li>
+        </ul>
+    </div>
+</section>

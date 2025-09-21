@@ -1,0 +1,61 @@
+<section data-markdown class="list-fade-in-then-semi-out">
+    <textarea data-template>
+        ## Class template argument deduction
+        * Since C++17
+        * "CTAD" ("see-tad")
+        * Same as template argument deduction
+        * ...but for classes (shocking)
+        * "resolving a placeholder for a deduced class type"
+    </textarea>
+</section>
+
+<!--
+    [over.match.class.deduct]
+    [dcl.type.class.deduct]
+    [temp.deduct.guide]
+ -->
+
+<section my-columns>
+    <h2>Class template argument deduction</h2>
+    <div style="width:100%;">
+        <pre class="cpp fragment"><code data-trim hide-line-numbers data-line-numbers=""><script type="text/template">
+            std::pair p{ 1, 2.0 };
+        </script></code></pre>
+        <pre class="cpp fragment"><code data-trim hide-line-numbers data-line-numbers=""><script type="text/template">
+            // Deduced as std::pair<int, double>
+        </script></code></pre>
+        <br/>
+        <pre class="cpp fragment"><code data-trim hide-line-numbers data-line-numbers=""><script type="text/template">
+            std::vector<int> foo() {
+                // ...
+            }
+        </script></code></pre>
+        <pre class="cpp fragment"><code data-trim hide-line-numbers data-line-numbers=""><script type="text/template">
+            std::vector v = foo();
+        </script></code></pre>
+        <pre class="cpp fragment"><code data-trim hide-line-numbers data-line-numbers=""><script type="text/template">
+            // Deduced as std::vector<int>
+        </script></code></pre>
+    </div>
+</section>
+
+<section data-markdown class="list-fade-in-then-semi-out">
+    <textarea data-template>
+        ## Class template argument deduction
+        * General mechanism
+        * Deduction guides
+    </textarea>
+</section>
+
+<!-- <section data-markdown class="list-fade-in-then-semi-out">
+    <textarea data-template>
+        ## Out of scope
+        * Aggregates types
+        * CTAD for aliases
+        * `explicit`
+    </textarea>
+</section> -->
+
+<include src="./regions/4-class-template-argument-deduction/4.1-general-mechanism.html"></include>
+
+<include src="./regions/4-class-template-argument-deduction/4.2-deduction-guides.html"></include>

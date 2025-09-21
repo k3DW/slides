@@ -1,0 +1,100 @@
+<section data-markdown class="list-fade-in-then-semi-out">
+    <textarea data-template>
+        ## General mechanism
+        * Create a theoretical set of function templates, the "guides"
+        * One for each constructor
+        * One for each deduction guide*
+        * Then do overload resolution and template argument deduction
+        * The winning function's return type is chosen
+    </textarea>
+</section>
+
+<section my-columns>
+    <h2>General mechanism</h2>
+    <div style="width:100%;">
+        <pre class="cpp fragment"><code data-trim hide-line-numbers data-line-numbers="|1-2|3|4-5|"><script type="text/template">
+            template <class T, class U>
+            struct MyStruct {
+                MyStruct(std::vector<T>, U);
+                template <class V>
+                MyStruct(T, std::pair<U, V>);
+            };
+        </script></code></pre>
+        <pre class="cpp fragment"><code data-trim hide-line-numbers data-line-numbers="|1|2|"><script type="text/template">
+            template <class T, class U>
+            MyStruct<T, U> __imaginary_function(std::vector<T>, U);
+        </script></code></pre>
+        <pre class="cpp fragment"><code data-trim hide-line-numbers data-line-numbers="|1|2|"><script type="text/template">
+            template <class T, class U, class V>
+            MyStruct<T, U> __imaginary_function(T, std::pair<U, V>);
+        </script></code></pre>
+        <pre class="cpp fragment"><code data-trim hide-line-numbers data-line-numbers="|2|3|"><script type="text/template">
+            std::vector<int> vec;
+            MyStruct s1{ vec, 1.0 };
+            // Deduced as MyStruct<int, double>
+        </script></code></pre>
+        <pre class="cpp fragment"><code data-trim hide-line-numbers data-line-numbers="|2|3|"><script type="text/template">
+            std::pair<char, double> p;
+            MyStruct s2{ 123, p };
+            // Deduced as MyStruct<int, char>
+        </script></code></pre>
+    </div>
+</section>
+
+<section my-columns>
+    <h2>General mechanism</h2>
+    <div style="width:100%;">
+        <pre class="cpp"><code data-trim hide-line-numbers data-line-numbers=""><script type="text/template">
+            template <class T, class U>
+            struct MyStruct {
+                MyStruct(std::vector<T>, U);
+                template <class V>
+                MyStruct(T, std::pair<U, V>);
+            };
+        </script></code></pre>
+        <pre class="cpp"><code data-trim hide-line-numbers data-line-numbers=""><script type="text/template">
+            template <class T, class U>
+            MyStruct<T, U> __imaginary_function(std::vector<T>, U);
+        </script></code></pre>
+        <pre class="cpp"><code data-trim hide-line-numbers data-line-numbers=""><script type="text/template">
+            template <class T, class U, class V>
+            MyStruct<T, U> __imaginary_function(T, std::pair<U, V>);
+        </script></code></pre>
+        <br/>
+        <pre class="cpp fragment"><code data-trim hide-line-numbers data-line-numbers="|1|2|3|4|"><script type="text/template">
+            std::vector<int> vec;
+            std::pair<char, double> p;
+            MyStruct s{ vec, p };
+            // Deduced as MyStruct<int, std::pair<char, double>>
+        </script></code></pre>
+    </div>
+</section>
+
+<section my-columns>
+    <h2>General mechanism</h2>
+    <div style="width:100%;">
+        <pre class="cpp"><code data-trim hide-line-numbers data-line-numbers="|3-4|"><script type="text/template">
+            template <class T, class U>
+            struct MyStruct {
+                template <class A>
+                MyStruct(std::vector<T, A>, U);
+                template <class V>
+                MyStruct(T, std::pair<U, V>);
+            };
+        </script></code></pre>
+        <pre class="cpp"><code data-trim hide-line-numbers data-line-numbers="|1|2|"><script type="text/template">
+            template <class T, class U, class A>
+            MyStruct<T, U> __imaginary_function(std::vector<T, A>, U);
+        </script></code></pre>
+        <pre class="cpp"><code data-trim hide-line-numbers data-line-numbers=""><script type="text/template">
+            template <class T, class U, class V>
+            MyStruct<T, U> __imaginary_function(T, std::pair<U, V>);
+        </script></code></pre>
+        <pre class="cpp fragment"><code data-trim hide-line-numbers data-line-numbers="|4"><script type="text/template">
+            std::vector<int> vec;
+            std::pair<char, double> p;
+            MyStruct s{ vec, p };
+            // Ambiguous!
+        </script></code></pre>
+    </div>
+</section>

@@ -1,0 +1,188 @@
+<!--
+Question archetype
+    <div>
+        <span class="fragment fade-out" data-fragment-index="1">redeclaration</span><span class="fragment fade-out" data-fragment-index="1">,</span>
+        <span class="fragment fade-out" data-fragment-index="1">overload</span><span class="fragment fade-out" data-fragment-index="1">, or</span>
+        <span class="fragment fade-out" data-fragment-index="1">ill-formed</span><span class="fragment fade-out" data-fragment-index="1">?</span>
+    </div>
+-->
+
+<section my-columns>
+    <h2>Examples of function overloading</h2>
+    <div style="width:100%;">
+        <pre class="cpp"><code data-trim data-line-numbers=""><script type="text/template">
+            // From C++ standard [basic.scope.scope]
+            using Int = int;
+            void f(int);
+            void f(Int);
+        </script></code></pre>
+        <div>
+            <span>redeclaration</span><span class="fragment fade-out" data-fragment-index="1">,</span>
+            <span class="fragment fade-out" data-fragment-index="1">overload</span><span class="fragment fade-out" data-fragment-index="1">, or</span>
+            <span class="fragment fade-out" data-fragment-index="1">ill-formed</span><span class="fragment fade-out" data-fragment-index="1">?</span>
+        </div>
+    </div>
+</section>
+
+<section my-columns>
+    <h2>Examples of function overloading</h2>
+    <div style="width:100%;">
+        <pre class="cpp"><code data-trim data-line-numbers=""><script type="text/template">
+            // From C++ standard [basic.scope.scope]
+            enum E : int {};
+            void f(int);
+            void f(E);
+        </script></code></pre>
+        <div>
+            <span class="fragment fade-out" data-fragment-index="1">redeclaration</span><span class="fragment fade-out" data-fragment-index="1">,</span>
+            <span>overload</span><span class="fragment fade-out" data-fragment-index="1">, or</span>
+            <span class="fragment fade-out" data-fragment-index="1">ill-formed</span><span class="fragment fade-out" data-fragment-index="1">?</span>
+        </div>
+    </div>
+</section>
+
+<section my-columns>
+    <h2>Examples of function overloading</h2>
+    <div style="width:100%;">
+        <pre class="cpp"><code data-trim data-line-numbers=""><script type="text/template">
+            // From C++98 standard [over.load]
+            void f(int);
+            void f(const int);
+        </script></code></pre>
+        <div>
+            <span>redeclaration</span><span class="fragment fade-out" data-fragment-index="1">,</span>
+            <span class="fragment fade-out" data-fragment-index="1">overload</span><span class="fragment fade-out" data-fragment-index="1">, or</span>
+            <span class="fragment fade-out" data-fragment-index="1">ill-formed</span><span class="fragment fade-out" data-fragment-index="1">?</span>
+        </div>
+    </div>
+</section>
+
+<section my-columns>
+    <h2>Examples of function overloading</h2>
+    <div style="width:100%;">
+        <pre class="cpp"><code data-trim data-line-numbers=""><script type="text/template">
+            void f(int*);
+            void f(const int*);
+        </script></code></pre>
+        <div>
+            <span class="fragment fade-out" data-fragment-index="1">redeclaration</span><span class="fragment fade-out" data-fragment-index="1">,</span>
+            <span>overload</span><span class="fragment fade-out" data-fragment-index="1">, or</span>
+            <span class="fragment fade-out" data-fragment-index="1">ill-formed</span><span class="fragment fade-out" data-fragment-index="1">?</span>
+        </div>
+    </div>
+</section>
+
+<section my-columns>
+    <h2>Examples of function overloading</h2>
+    <div style="width:100%;">
+        <pre class="cpp"><code data-trim data-line-numbers=""><script type="text/template">
+            // From C++98 standard [over.load]
+            int f(char*);
+            int f(char[]);
+            int f(char[7]);
+        </script></code></pre>
+        <div>
+            <span>redeclaration</span><span class="fragment fade-out" data-fragment-index="1">,</span>
+            <span class="fragment fade-out" data-fragment-index="1">overload</span><span class="fragment fade-out" data-fragment-index="1">, or</span>
+            <span class="fragment fade-out" data-fragment-index="1">ill-formed</span><span class="fragment fade-out" data-fragment-index="1">?</span>
+        </div>
+    </div>
+</section>
+
+<section my-columns>
+    <h2>Examples of function overloading</h2>
+    <div style="width:100%;">
+        <pre class="cpp"><code data-trim data-line-numbers="|2-4|6|2-4,10|2-4,11|12|"><script type="text/template">
+            // From C++98 standard [over.load]
+            void f(int i, int j);
+            void f(int i, int j = 99); // OK: redeclaration of f(int, int)
+            void f(int i = 88, int j); // OK: redeclaration of f(int, int)
+
+            void f(); // OK: overloaded declaration of f
+
+            void prog ()
+            {
+                f(1, 2); // OK: call f(int, int)
+                f(1); // OK: call f(int, int)
+                f(); // Error: f(int, int) or f()?
+            }
+        </script></code></pre>
+    </div>
+</section>
+
+<section my-columns>
+    <h2>Examples of function overloading</h2>
+    <div style="width:100%;">
+        <pre class="cpp"><code data-trim data-line-numbers=""><script type="text/template">
+            // From C++ standard [basic.scope.scope]
+            struct X {
+                static void f();
+                void f();
+            };
+        </script></code></pre>
+        <div>
+            <span class="fragment fade-out" data-fragment-index="1">redeclaration</span><span class="fragment fade-out" data-fragment-index="1">,</span>
+            <span class="fragment fade-out" data-fragment-index="1">overload</span><span class="fragment fade-out" data-fragment-index="1">, or</span>
+            <span>ill-formed</span><span class="fragment fade-out" data-fragment-index="1">?</span>
+        </div>
+    </div>
+</section>
+
+<section my-columns>
+    <h2>Examples of function overloading</h2>
+    <div style="width:100%;">
+        <pre class="cpp"><code data-trim data-line-numbers=""><script type="text/template">
+            // From C++ standard [basic.scope.scope]
+            struct X {
+                void g();
+                void g() const;
+            };
+        </script></code></pre>
+        <div>
+            <span class="fragment fade-out" data-fragment-index="1">redeclaration</span><span class="fragment fade-out" data-fragment-index="1">,</span>
+            <span>overload</span><span class="fragment fade-out" data-fragment-index="1">, or</span>
+            <span class="fragment fade-out" data-fragment-index="1">ill-formed</span><span class="fragment fade-out" data-fragment-index="1">?</span>
+        </div>
+    </div>
+</section>
+
+<section my-columns>
+    <h2>Examples of function overloading</h2>
+    <div style="width:100%;">
+        <pre class="cpp"><code data-trim data-line-numbers=""><script type="text/template">
+            // From C++ standard [basic.scope.scope]
+            struct X {
+                void g();
+                void g() &;
+            };
+        </script></code></pre>
+        <div>
+            <span class="fragment fade-out" data-fragment-index="1">redeclaration</span><span class="fragment fade-out" data-fragment-index="1">,</span>
+            <span class="fragment fade-out" data-fragment-index="1">overload</span><span class="fragment fade-out" data-fragment-index="1">, or</span>
+            <span>ill-formed</span><span class="fragment fade-out" data-fragment-index="1">?</span>
+        </div>
+    </div>
+</section>
+
+<section my-columns>
+    <h2>Examples of function overloading</h2>
+    <div style="width:100%;">
+        <pre class="cpp"><code data-trim data-line-numbers=""><script type="text/template">
+            struct X {
+                void g() &;
+                void g() &&;
+                void g() const &;
+                void g() const &&;
+                void g() volatile &;
+                void g() volatile &&;
+                void g() const volatile &;
+                void g() const volatile &&;
+            };
+        </script></code></pre>
+        <div>
+            <span class="fragment fade-out" data-fragment-index="1">redeclaration</span><span class="fragment fade-out" data-fragment-index="1">,</span>
+            <span>overload</span><span class="fragment fade-out" data-fragment-index="1">, or</span>
+            <span class="fragment fade-out" data-fragment-index="1">ill-formed</span><span class="fragment fade-out" data-fragment-index="1">?</span>
+        </div>
+    </div>
+</section>
