@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html>
+
+    <head>
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+
+        <title>Braden Ganetsky - {{ page.title }}</title>
+
+        <link rel="icon" href="/img/profile-picture.png">
+
+        <link rel="stylesheet" href="/_reveal.js/dist/reset.css">
+        <link rel="stylesheet" href="/_reveal.js/dist/reveal.css">
+
+        <link rel="stylesheet" href="/_reveal.js.ext/theme/custom-white.css">
+
+        <!-- Theme used for syntax highlighted code -->
+        <link rel="stylesheet" href="/_reveal.js.ext/plugin/highlight/vs.css">
+    </head>
+
+    <body>
+        <div class="reveal">
+            <div class="slides">
+                {{ content }}
+            </div>
+        </div>
+
+		<script type="module">
+		import * as k3DW from "/_reveal.js.ext/js.js";
+		const initObject = {
+			scripts : [
+				"/_reveal.js/dist/reveal.js",
+				"/_reveal.js/plugin/notes/notes.js",
+				"/_reveal.js/plugin/markdown/markdown.js",
+				"/_reveal.js/plugin/highlight/highlight.js",
+			],
+
+            {% if page.layout-version == 1 %}
+                width : 1280,
+                height : 720,
+                backgroundImage : "/img/background/logo-with-binary-3840-2160.png",
+                leftSideFooter : "{{ page.footer.left }}",
+                rightSideFooter : "{{ page.footer.right }}",
+                useSubFooter : {{ page.footer.sub }},
+            {% endif %}
+		};
+
+		(async () => {
+
+			await k3DW.preInitSlides(initObject);
+
+			// More info about initialization & config:
+			// - https://revealjs.com/initialization/
+			// - https://revealjs.com/config/
+			Reveal.initialize({
+				slideNumber: true,
+				hash: true,
+
+				width: initObject.width,
+				height: initObject.height,
+
+				margin: 0.1,
+
+				controls: false,
+				progress: false,
+
+				overview: true,
+
+				center: false,
+
+				help: false,
+				pause: false,
+
+				transition: 'none',
+				backgroundTransition: 'none',
+
+				pdfSeparateFragments: false,
+
+				//autoAnimateDuration: 0,
+
+				// Learn about plugins: https://revealjs.com/plugins/
+				plugins: [ RevealMarkdown, RevealHighlight, RevealNotes ]
+			});
+
+			Reveal.on("ready", () => {
+				k3DW.postInitSlides(initObject);
+			});
+
+		})();
+		</script>
+    </body>
+
+</html>
