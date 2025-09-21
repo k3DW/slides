@@ -1,0 +1,3366 @@
+---
+layout: reveal.js
+title: "C++Now 2024"
+layout-version: 1
+footer:
+    left: "Compile-time unit testing"
+    right: "Braden Ganetsky - C++Now 2024"
+    sub: true
+---
+
+<!-- #region Intro -->
+
+<section full data-background-image="./thumbnails/cppnow_2024_title_card.png" no-footer>
+</section>
+
+<section full data-background-color="#FFFFFF" no-footer change-footer="Introduction">
+	<div style="display: flex; flex-flow: column; height: 100%;">
+
+		<div style="flex: 0 1 75%; display: flex; flex-flow: row;">
+			<div style="font-size:200%; display: flex; flex-flow: column; flex: 0 1 auto;">
+				<div style="flex: 1 1 auto;"></div>
+				<div>Unit testing an</div>
+				<div style="margin-top:-10px;">expression template</div>
+				<div style="margin-top:-10px;">library in C++20</div>
+				<div style="flex: 1 1 auto;"></div>
+				<div style="flex: 0 1 0.5em;"></div>
+			</div>
+			<div style="flex: 50 1 auto;"></div>
+			<div style="display: flex; flex-flow: column; flex: 0 1 36%;">
+				<div style="flex: 1 1 auto;"></div>
+				<div style="display: flex; flex-flow: row; flex: 0 1 auto;">
+					<div style="flex: 1 1 auto;"></div>
+					<img src="/img/profile-picture.png"></img>
+				</div>
+				<div style="flex: 3 1 auto;"></div>
+			</div>
+			<div style="flex: 1 1 auto;"></div>
+		</div>
+
+		<div style="flex: 1 1 auto; padding:1.8% 3% 2% 3%; background-color: #DDDDDD; display: flex; flex-flow: column;">
+			<div style="font-size:125%; ">Braden Ganetsky</div>
+			<div style="flex: 1 1 auto;"></div>
+			<div style="font-size:100%; ">C++Now 2024</div>
+		</div>
+
+	</div>
+</section>
+
+<section data-markdown class="list-fade-in-then-semi-out">
+	<textarea data-template>
+		## About me
+		* Canadian
+		* Mechanical engineering degree
+		* I like twisty puzzles
+		![test](/img/NEP7570939.jpg) <!-- .element style="position:absolute; height:75%; right:0; top:12%;"-->
+		* Working in C++ for 3 years
+		* On WG21 since late 2023
+		* Importantly for this talk, parsing!
+	</textarea>
+</section>
+
+<section my-columns>
+	<div>
+		<img src="./thumbnails/constexpr-all-the-things.jpg" width="50%" />
+		<br/>
+		"constexpr ALL the things!"
+		<br/>
+		<a href="https://www.youtube.com/watch?v=HMB9oXFobJc" style="font-size: 50%;">https://www.youtube.com/watch?v=HMB9oXFobJc</a>
+	</div>
+</section>
+
+<section my-columns>
+	<h2>Unit testing</h2>
+	<div class="fragment">
+		<img src="./screenshots/components_1.png" width="100%" />
+	</div>
+</section>
+
+<section my-columns>
+	<h2>Unit testing</h2>
+	<div>
+		<img src="./screenshots/components_2.png" width="100%" />
+	</div>
+</section>
+
+<section my-columns>
+	<h2>Unit testing</h2>
+	<div>
+		<img src="./screenshots/components_3.png" width="100%" />
+	</div>
+</section>
+
+<section data-markdown class="list-fade-in-then-semi-out">
+	<textarea data-template>
+		## Overview
+		* Demo my `tok3n` library
+		* Test at compile-time in multiple frameworks
+		* Show my own framework
+		* Upcoming C++ features
+	</textarea>
+</section>
+
+<section my-columns>
+	<h2>Compile-time versus run-time</h2>
+	<pre class="fragment"><code data-trim data-line-numbers="|1-5|7-8|10-16|"><script type="text/template">
+		struct Structural {
+			int i;
+			constexpr Structural(int i)
+				: i(i) {}
+		};
+
+		template <auto val>
+		concept True = true;
+
+		template <Structural st>
+		requires True<st>
+		struct Checker {
+			constexpr bool check(int i) {
+				return i == st.i;
+			}
+		};
+	</script></code></pre>
+	<pre class="fragment"><code data-trim data-line-numbers="|1,5|2|3|4|">
+		[] {
+			Checker<1> chk;
+			static_assert(chk.check(1));
+			assert(chk.check(0));
+		}();
+	</code></pre>
+</section>
+
+<section data-markdown class="list-fade-in-then-semi-out">
+	<textarea data-template>
+		## Compile-time versus run-time
+		* I claim `tok3n` is fully capable at compile-time
+		* Therefore it should be tested at compile-time
+	</textarea>
+</section>
+
+<section data-markdown class="list-fade-in-then-semi-out">
+	<textarea data-template>
+		## Goals of this talk
+
+		Need
+		* Test features at compile-time and run-time
+		* Helpful error messages at run-time
+
+		Want
+		* Write test only once, compile-time and run-time together
+		* Equally helpful error messages from compile-time cases
+	</textarea>
+</section>
+
+<!-- #endregion Intro -->
+
+
+
+<!-- #region tok3n library -->
+
+<section data-markdown signpost change-footer="tok3n library">
+	`tok3n` library
+</section>
+
+<section data-markdown class="list-fade-in-then-semi-out">
+	<textarea data-template>
+		## `tok3n` library
+		* Parser combinators
+		* Expression templates in C++20 (empty types)
+		* Fully capable at compile-time
+		* Parses span of anything, not just char
+	</textarea>
+</section>
+
+<!-- #region Basic usage -->
+
+<section my-columns="50%">
+	<h2>Basic usage</h2>
+	<div style="width:100%;">
+		<pre class="cpp"><code data-trim><script type="text/template">
+			auto parser = "abc"_any_of >> "123"_all_of;
+		</script></code></pre>
+		<pre class="cpp fragment"><code data-trim><script type="text/template">
+			auto result = parser.parse("b1234");
+		</script></code></pre>
+		<pre class="cpp fragment"><code data-trim><script type="text/template">
+			assert(result.has_value());
+			assert(*result == std::tuple("b", "123"));
+			assert(result.remaining() == "4");
+		</script></code></pre>
+	</div>
+</section>
+
+<section my-columns="50%">
+	<h2>Basic usage</h2>
+	<div style="width:100%;">
+		<pre class="cpp"><code data-trim><script type="text/template">
+			auto parser = any_of<'a','b','c'> >> all_of<'1','2','3'>;
+		</script></code></pre>
+		<pre class="cpp"><code data-trim><script type="text/template">
+			auto result = parser.parse("b1234");
+		</script></code></pre>
+		<pre class="cpp"><code data-trim><script type="text/template">
+			assert(result.has_value());
+			assert(*result == std::tuple("b", "123"));
+			assert(result.remaining() == "4");
+		</script></code></pre>
+	</div>
+</section>
+
+<section my-columns="50%">
+	<h2>Basic usage</h2>
+	<div style="width:100%;">
+		<pre class="cpp"><code data-trim><script type="text/template">
+			auto parser = "abc"_any_of >> "123"_all_of;
+		</script></code></pre>
+		<pre class="cpp"><code data-trim><script type="text/template">
+			auto result = parser.parse("b1234");
+		</script></code></pre>
+		<pre class="cpp"><code data-trim><script type="text/template">
+			assert(result.has_value());
+			assert(*result == std::tuple("b", "123"));
+			assert(result.remaining() == "4");
+		</script></code></pre>
+	</div>
+</section>
+
+<section my-columns="50%">
+	<h2>Basic usage</h2>
+	<div style="width:100%;">
+		<pre class="cpp"><code data-trim><script type="text/template">
+			auto parser = "abc"_any_of >> "123"_all_of;
+		</script></code></pre>
+		<pre class="cpp"><code data-trim><script type="text/template">
+			constexpr auto result = parser.parse("b1234");
+		</script></code></pre>
+		<pre class="cpp"><code data-trim><script type="text/template">
+			static_assert(result.has_value());
+			static_assert(*result == std::tuple("b", "123"));
+			static_assert(result.remaining() == "4");
+		</script></code></pre>
+	</div>
+</section>
+
+<section my-columns="50%">
+	<h2>Basic usage</h2>
+	<div style="width:100%;">
+		<pre class="cpp"><code data-trim><script type="text/template">
+			auto parser = "abc"_any_of | "123"_all_of;
+		</script></code></pre>
+		<pre class="cpp"><code data-trim><script type="text/template">
+			constexpr auto result = parser.parse("b1234");
+		</script></code></pre>
+		<pre class="cpp"><code data-trim><script type="text/template">
+			static_assert(result.has_value());
+			static_assert(*result == "b");
+			static_assert(result.remaining() == "1234");
+		</script></code></pre>
+	</div>
+</section>
+
+<section my-columns="50%">
+	<h2>Basic usage</h2>
+	<div style="width:100%;">
+		<pre class="cpp"><code data-trim><script type="text/template">
+			auto parser = "abc"_any_of | "123"_all_of;
+		</script></code></pre>
+		<pre class="cpp"><code data-trim><script type="text/template">
+			constexpr auto result = parser.parse("1234b");
+		</script></code></pre>
+		<pre class="cpp"><code data-trim><script type="text/template">
+			static_assert(result.has_value());
+			static_assert(*result == "123");
+			static_assert(result.remaining() == "4b");
+		</script></code></pre>
+	</div>
+</section>
+
+<section my-columns="70%">
+	<h2>Basic usage</h2>
+	<div style="width:100%;">
+		<pre class="cpp"><code data-trim><script type="text/template">
+			auto parser = +"abc"_any_of;
+		</script></code></pre>
+		<pre class="cpp"><code data-trim><script type="text/template">
+			auto result = parser.parse("abcbad");
+		</script></code></pre>
+		<pre class="cpp fragment"><code data-trim><script type="text/template">
+			assert(result.has_value());
+			assert((*result == std::vector<Output<char>>{"a", "b", "c", "b", "a"}));
+			assert(result.remaining() == "d");
+		</script></code></pre>
+	</div>
+</section>
+
+<section my-columns="70%">
+	<h2>Basic usage</h2>
+	<div style="width:100%;">
+		<pre class="cpp"><code data-trim><script type="text/template">
+			auto parser = *"abc"_any_of;
+		</script></code></pre>
+		<pre class="cpp"><code data-trim><script type="text/template">
+			auto result = parser.parse("abcbad");
+		</script></code></pre>
+		<pre class="cpp"><code data-trim><script type="text/template">
+			assert(result.has_value());
+			assert((*result == std::vector<Output<char>>{"a", "b", "c", "b", "a"}));
+			assert(result.remaining() == "d");
+		</script></code></pre>
+	</div>
+</section>
+
+<section my-columns="70%">
+	<h2>Basic usage</h2>
+	<div style="width:100%;">
+		<pre class="cpp"><code data-trim><script type="text/template">
+			auto parser = ~"abc"_any_of;
+		</script></code></pre>
+		<pre class="cpp"><code data-trim><script type="text/template">
+			constexpr auto result = parser.parse("abc");
+		</script></code></pre>
+		<pre class="cpp fragment"><code data-trim><script type="text/template">
+			static_assert(result.has_value());
+			static_assert(*result == std::optional<Output<char>>("a"));
+			static_assert(result.remaining() == "bc");
+		</script></code></pre>
+	</div>
+</section>
+
+<section my-columns="70%">
+	<h2>Basic usage</h2>
+	<div style="width:100%;">
+		<pre class="cpp"><code data-trim><script type="text/template">
+			auto parser = ~"abc"_any_of;
+		</script></code></pre>
+		<pre class="cpp"><code data-trim><script type="text/template">
+			constexpr auto result = parser.parse("xyz");
+		</script></code></pre>
+		<pre class="cpp fragment"><code data-trim><script type="text/template">
+			static_assert(result.has_value());
+			static_assert(*result == std::nullopt);
+			static_assert(result.remaining() == "xyz");
+		</script></code></pre>
+	</div>
+</section>
+
+<!-- #endregion Basic usage -->
+
+<!-- #region Modifiers -->
+
+<section my-columns="50%">
+	<h2>Modifiers</h2>
+	<div style="width:100%;">
+		<pre class="cpp"><code data-trim><script type="text/template">
+			auto parser = join("abc"_any_of >> "123"_all_of);
+		</script></code></pre>
+		<pre class="cpp fragment"><code data-trim><script type="text/template">
+			constexpr auto result = parser.parse("b1234");
+		</script></code></pre>
+		<pre class="cpp fragment"><code data-trim><script type="text/template">
+			static_assert(result.has_value());
+			static_assert(*result == "b123");
+			static_assert(result.remaining() == "4");
+		</script></code></pre>
+	</div>
+</section>
+
+<section my-columns="50%">
+	<h2>Modifiers</h2>
+	<div style="width:100%;">
+		<pre class="cpp"><code data-trim><script type="text/template">
+			auto parser = ("abc"_any_of >> "123"_all_of) % join;
+		</script></code></pre>
+		<pre class="cpp"><code data-trim><script type="text/template">
+			constexpr auto result = parser.parse("b1234");
+		</script></code></pre>
+		<pre class="cpp"><code data-trim><script type="text/template">
+			static_assert(result.has_value());
+			static_assert(*result == "b123");
+			static_assert(result.remaining() == "4");
+		</script></code></pre>
+	</div>
+</section>
+
+<section my-columns="60%">
+	<h2>Modifiers</h2>
+	<div style="width:100%;">
+		<pre class="cpp"><code data-trim><script type="text/template">
+			auto parser = join(exactly<3>("abc"_any_of) >> "123"_all_of);
+		</script></code></pre>
+		<pre class="cpp"><code data-trim><script type="text/template">
+			constexpr auto result = parser.parse("cba123");
+		</script></code></pre>
+		<pre class="cpp fragment"><code data-trim><script type="text/template">
+			static_assert(result.has_value());
+			static_assert(*result == "cba123");
+			static_assert(result.remaining() == "");
+		</script></code></pre>
+	</div>
+</section>
+
+<section my-columns="60%">
+	<h2>Modifiers</h2>
+	<div style="width:100%;">
+		<pre class="cpp"><code data-trim><script type="text/template">
+			auto parser = ignore("abc"_any_of) >> "123"_all_of;
+		</script></code></pre>
+		<pre class="cpp"><code data-trim><script type="text/template">
+			constexpr auto result = parser.parse("b1234");
+		</script></code></pre>
+		<pre class="cpp fragment"><code data-trim><script type="text/template">
+			static_assert(result.has_value());
+			static_assert(*result == "123");
+			static_assert(result.remaining() == "4");
+		</script></code></pre>
+	</div>
+</section>
+
+<section my-columns="60%">
+	<h2>Modifiers</h2>
+	<div style="width:100%;">
+		<pre class="cpp"><code data-trim><script type="text/template">
+			auto digit = "0123456789"_any_of;
+			auto dot = ignore("."_all_of);
+			auto parser = digit >> dot >> digit >> dot >> digit;
+		</script></code></pre>
+		<pre class="cpp fragment"><code data-trim><script type="text/template">
+			constexpr auto result = parser.parse("1.2.3");
+		</script></code></pre>
+		<pre class="cpp fragment"><code data-trim><script type="text/template">
+			static_assert(result.has_value());
+			static_assert(*result == std::tuple("1", "2", "3"));
+			static_assert(result.remaining() == "");
+		</script></code></pre>
+	</div>
+</section>
+
+<section my-columns="70%">
+	<h2>Modifiers</h2>
+	<div style="width:100%;">
+		<pre class="cpp"><code data-trim><script type="text/template">
+			constexpr auto is_one = [](auto span) { return span.front() == '1'; };
+		</script></code></pre>
+		<pre class="cpp fragment"><code data-trim><script type="text/template">
+			auto parser = "01"_any_of % fn<is_one> % exactly<3>;
+		</script></code></pre>
+		<pre class="cpp fragment"><code data-trim><script type="text/template">
+			constexpr auto result = parser.parse("1010");
+		</script></code></pre>
+		<pre class="cpp fragment"><code data-trim><script type="text/template">
+			static_assert(result.has_value());
+			static_assert(*result == std::array{ true, false, true });
+			static_assert(result.remaining() == "0");
+		</script></code></pre>
+	</div>
+</section>
+
+<!-- #endregion Modifiers -->
+
+<!-- #region Non-char spans -->
+
+<section my-columns="75%">
+	<h2>Non-char spans</h2>
+	<div style="width:100%;">
+		<pre class="cpp"><code data-trim><script type="text/template">
+			std::vector<int> vec{ 2, 5, 1, 3, 1, 4, 7, 1, 9, 3 };
+		</script></code></pre>
+		<pre class="cpp fragment"><code data-trim hide-line-numbers data-line-numbers="|1|2|3|"><script type="text/template">
+			auto even = any_of<0,2,4,6,8>;
+			auto odd = any_of<1,3,5,7,9>;
+			auto parser = ignore(*even) >> join(+odd);
+		</script></code></pre>
+		<pre class="cpp fragment"><code data-trim><script type="text/template">
+			auto result = parser.parse(vec);
+		</script></code></pre>
+		<pre class="cpp fragment"><code data-trim hide-line-numbers data-line-numbers=""><script type="text/template">
+			assert(result.has_value());
+			assert(*result == std::vector{ 5, 1, 3, 1 });
+			assert(result.remaining() == std::vector{ 4, 7, 1, 9, 3 });
+		</script></code></pre>
+	</div>
+</section>
+
+<section my-columns="75%">
+	<h2>Non-char spans</h2>
+	<div style="width:100%;">
+		<pre class="cpp"><code data-trim hide-line-numbers data-line-numbers="1|3-5,10|7-9|"><script type="text/template">
+			enum class TokenKind { ident, num, lbrace, ... };
+
+			class Token {
+				TokenKind kind;
+				... // other members
+
+				constexpr bool operator==(TokenKind other) {
+					return kind == other;
+				}
+			}
+		</script></code></pre>
+		<pre class="cpp fragment"><code data-trim hide-line-numbers data-line-numbers><script type="text/template">
+			std::vector<Token> tokens = call_tokenizer(...);
+		</script></code></pre>
+		<pre class="cpp fragment"><code data-trim hide-line-numbers data-line-numbers="|1-2|3|4|6|"><script type="text/template">
+			auto qualified_name = all_of<TokenKind::ident>
+								% delimit(all_of<TokenKind::double_colon>);
+			...
+			auto function_declaration = qualified_name >> ...;
+
+			auto result = function_declaration.parse(tokens);
+		</script></code></pre>
+	</div>
+</section>
+
+<!-- #endregion Non-char spans -->
+
+<!-- #region Recursion with JSON -->
+
+<section my-columns="80%">
+	<h2>Recursion with JSON</h2>
+	<iframe src="https://www.json.org/json-en.html" style="width:100%; height:100%">
+	</iframe>
+</section>
+
+<section my-columns>
+	<img my-hori-center src="https://www.json.org/img/object.png" width="75%" />
+</section>
+<section my-columns>
+	<img my-hori-center src="https://www.json.org/img/array.png" width="75%" />
+</section>
+<section my-columns>
+	<img my-hori-center src="https://www.json.org/img/value.png" width="75%" />
+</section>
+
+<section my-columns="100%">
+	<pre class="cpp"><code data-trim data-line-numbers="1-5|7-11|13-17|3,19-24|7-11"><script type="text/template">
+		struct JsonValue : Custom<JsonValue>
+		{
+			struct result_type;
+			static consteval auto get_parser();
+		};
+
+		struct JsonObject : Custom<JsonObject>
+		{
+			using result_type = std::vector<std::tuple<std::string, JsonValue::result_type>>;
+			static consteval auto get_parser();
+		};
+
+		struct JsonArray : Custom<JsonArray>
+		{
+			using result_type = std::vector<JsonValue::result_type>;
+			static consteval auto get_parser();
+		};
+
+		struct JsonValue::result_type
+		{
+			using variant_t = std::variant<std::string, number_type, JsonObject::result_type,
+											JsonArray::result_type, bool, nullptr_t>;
+			variant_t variant;
+		};
+	</script></code></pre>
+</section>
+
+<section my-columns="60% 40%">
+	<pre class="cpp"><code data-trim data-line-numbers="1,2,14|5-6|5-7|9|11-13|"><script type="text/template">
+		consteval auto JsonObject::get_parser()
+		{
+			auto colon = ":"_ign;
+
+			auto pair =
+				(ws >> string >> ws >> colon >> JsonValue{});
+				// tuple<string, JsonValue::result_type>
+
+			auto object = pair % delimit(","_all);
+
+			auto parser =
+				"{"_ign >> (object | ws) >> "}"_ign;
+			return parser;
+		}
+	</script></code></pre>
+	<img src="https://www.json.org/img/object.png" />
+</section>
+
+<section my-columns="100%">
+	<pre class="cpp"><code data-trim data-line-numbers="13-17"><script type="text/template">
+		struct JsonValue : Custom<JsonValue>
+		{
+			struct result_type;
+			static consteval auto get_parser();
+		};
+
+		struct JsonObject : Custom<JsonObject>
+		{
+			using result_type = std::vector<std::tuple<std::string, JsonValue::result_type>>;
+			static consteval auto get_parser();
+		};
+
+		struct JsonArray : Custom<JsonArray>
+		{
+			using result_type = std::vector<JsonValue::result_type>;
+			static consteval auto get_parser();
+		};
+
+		struct JsonValue::result_type
+		{
+			using variant_t = std::variant<std::string, number_type, JsonObject::result_type,
+											JsonArray::result_type, bool, nullptr_t>;
+			variant_t variant;
+		};
+	</script></code></pre>
+</section>
+
+<section my-columns="60% 40%">
+	<pre class="cpp"><code data-trim data-line-numbers="1,2,8|3|5-7|"><script type="text/template">
+		consteval auto JsonArray::get_parser()
+		{
+			auto array = JsonValue{} % delimit(","_all);
+
+			auto parser =
+				"["_ign >> (array | ws) >> "]"_ign;
+			return parser;
+		}
+	</script></code></pre>
+	<img src="https://www.json.org/img/array.png" />
+</section>
+
+<section my-columns="100%">
+	<pre class="cpp"><code data-trim data-line-numbers="1-5,19-24"><script type="text/template">
+		struct JsonValue : Custom<JsonValue>
+		{
+			struct result_type;
+			static consteval auto get_parser();
+		};
+
+		struct JsonObject : Custom<JsonObject>
+		{
+			using result_type = std::vector<std::tuple<std::string, JsonValue::result_type>>;
+			static consteval auto get_parser();
+		};
+
+		struct JsonArray : Custom<JsonArray>
+		{
+			using result_type = std::vector<JsonValue::result_type>;
+			static consteval auto get_parser();
+		};
+
+		struct JsonValue::result_type
+		{
+			using variant_t = std::variant<std::string, number_type, JsonObject::result_type,
+											JsonArray::result_type, bool, nullptr_t>;
+			variant_t variant;
+		};
+	</script></code></pre>
+</section>
+
+<section my-columns="60% 40%">
+	<pre class="cpp"><code data-trim data-line-numbers="1,2,15|5-11|3-12|14|"><script type="text/template">
+		consteval auto JsonValue::get_parser()
+		{
+			auto parser = into<result_type>
+			(
+				string |
+				number |
+				JsonObject{} |
+				JsonArray{} |
+				"true"_all  % constant<true> |
+				"false"_all % constant<false> |
+				"null"_all  % constant<nullptr>
+			);
+
+			return ws >> parser >> ws;
+		}
+	</script></code></pre>
+	<img src="https://www.json.org/img/value.png" />
+</section>
+
+<section my-columns="50% 50%">
+	<div style="width:100%;">
+		<pre class="cpp"><code data-trim><script type="text/template">
+			auto input = R"-({"menu": {
+				"id": "file",
+				"value": "File",
+				"popup": {
+					"menuitem": [
+						{"value": "New",
+							"onclick": "CreateNewDoc()"},
+						{"value": "Open",
+							"onclick": "OpenDoc()"},
+						{"value": "Close",
+							"onclick": "CloseDoc()"}
+					]
+				}
+			}})-";
+
+			auto result = JsonObject::parse(input);
+		</script></code></pre>
+	</div>
+
+	<div style="width:100%;">
+		<img src="./screenshots/json_parse_result.png" />
+	</div>
+</section>
+
+<!-- #endregion Recursion with JSON -->
+
+<!-- #endregion tok3n library -->
+
+
+
+<!-- #region Unit testing frameworks -->
+
+<section data-markdown signpost change-footer="Frameworks">
+	Unit testing frameworks
+</section>
+
+<section data-markdown class="list-fade-in-then-semi-out">
+	<textarea data-template>
+		## Frameworks
+		* GoogleTest
+		* Boost.Test
+		* Catch2
+		* doctest
+		* snitch
+		* UT
+	</textarea>
+</section>
+
+<section data-markdown class="list-fade-in-then-semi-out">
+	<textarea data-template>
+		## Steps
+		0. Set up a test case, same for each framework
+		1. Basic run-time test
+		2. Custom error messages at run-time
+		3. Basic compile-time test
+		4. Custom error messages at compile-time 🤞
+	</textarea>
+</section>
+
+<section my-columns="45% 55%">
+	<h2>Test setup</h2>
+	<div style="width:100%;">
+		<pre class="cpp"><code data-trim hide-line-numbers data-line-numbers="|1|2|3|4|"><script type="text/template">
+			auto digit = "0123456789"_any_of;
+			auto year = exactly<4>(digit) % join;
+			auto month = exactly<2>(digit) % join;
+			auto day = digit % exactly<2> % join;
+		</script></code></pre>
+		<pre class="cpp fragment"><code data-trim><script type="text/template">
+			// ISO-8601 YYYY-MM-DD
+			auto parser = year >> "-"_ign >>
+							month >> "-"_ign >> day;
+		</script></code></pre>
+	</div>
+	<div style="width:100%;" class="list-fade-in-then-semi-out">
+		<ul>
+			<li>Test parse result</li>
+			<li>Test combinator operations</li>
+			<li>Test parser equality</li>
+			<li>Test parser properties</li>
+		</ul>
+	</div>
+</section>
+
+<!-- #region Run-time testing -->
+
+<!-- #region Run-time testing with GoogleTest -->
+
+<section my-columns>
+	<h2>Run-time testing with GoogleTest</h2>
+	<div style="width:100%;">
+		<pre class="cpp"><code data-trim hide-line-numbers data-line-numbers="|1|3|5-6|5|6|"><script type="text/template">
+			TEST(ISO8601, parse_result)
+			{
+				auto result = parser.parse("2024-01-01");
+
+				ASSERT_TRUE(result.has_value());
+				EXPECT_EQ(*result, std::tuple("2024", "01", "01"));
+			}
+		</script></code></pre>
+		<pre class="text fragment"><code data-trim><script type="text/template">
+			[==========] Running 1 test from 1 test suite.
+			[----------] Global test environment set-up.
+			[----------] 1 test from ISO8601
+			[ RUN      ] ISO8601.parse_result
+			[       OK ] ISO8601.parse_result (0 ms)
+			[----------] 1 test from ISO8601 (0 ms total)
+
+			[----------] Global test environment tear-down
+			[==========] 1 test from 1 test suite ran. (1 ms total)
+			[  PASSED  ] 1 test.
+		</script></code></pre>
+	</div>
+</section>
+
+<section my-columns>
+	<h2>Run-time testing with GoogleTest</h2>
+	<div style="width:100%;">
+		<pre class="text"><code data-trim><script type="text/template">
+			[==========] Running 1 test from 1 test suite.
+			[----------] Global test environment set-up.
+			[----------] 1 test from ISO8601
+			[ RUN      ] ISO8601.parse_result
+			path\to\main.cpp(17): error: Value of: result.has_value()
+				Actual: false
+			Expected: true
+
+			[  FAILED  ] ISO8601.parse_result (0 ms)
+			[----------] 1 test from ISO8601 (1 ms total)
+
+			[----------] Global test environment tear-down
+			[==========] 1 test from 1 test suite ran. (5110 ms total)
+			[  PASSED  ] 0 tests.
+			[  FAILED  ] 1 test, listed below:
+			[  FAILED  ] ISO8601.parse_result
+
+				1 FAILED TEST
+		</script></code></pre>
+	</div>
+</section>
+
+<section my-columns="60%">
+	<h2>Run-time testing with GoogleTest</h2>
+	<div style="width:100%;">
+		<pre data-id="frameworks-1-GoogleTest" class="cpp"><code data-trim hide-line-numbers data-line-numbers="|4"><script type="text/template">
+			TEST(ISO8601, parse_result)
+			{
+
+				auto result = parser.parse("bad");
+
+				ASSERT_TRUE(result.has_value());
+
+
+				EXPECT_EQ(*result, std::tuple("2024", "01", "01"));
+			}
+		</script></code></pre>
+	</div>
+</section>
+
+<section my-columns="60%">
+	<h2>Run-time testing with GoogleTest</h2>
+	<div style="width:100%;">
+		<pre data-id="frameworks-1-GoogleTest" class="cpp"><code data-trim hide-line-numbers data-line-numbers="3-4|6"><script type="text/template">
+			TEST(ISO8601, parse_result)
+			{
+				std::string_view input = "bad";
+				auto result = parser.parse(input);
+
+				ASSERT_TRUE(result.has_value());
+
+
+				EXPECT_EQ(*result, std::tuple("2024", "01", "01"));
+			}
+		</script></code></pre>
+	</div>
+</section>
+
+<section my-columns="60%">
+	<h2>Run-time testing with GoogleTest</h2>
+	<div style="width:100%;">
+		<pre data-id="frameworks-1-GoogleTest" class="cpp"><code data-trim hide-line-numbers data-line-numbers="6-8|"><script type="text/template">
+			TEST(ISO8601, parse_result)
+			{
+				std::string_view input = "bad";
+				auto result = parser.parse(input);
+
+				ASSERT_TRUE(result.has_value())
+					<< std::format("Input could not be parsed.\nInput = \"{}\"\n"
+					"Parser = {}", input, k3::tok3n::pretty(p).view());
+				EXPECT_EQ(*result, std::tuple("2024", "01", "01"));
+			}
+		</script></code></pre>
+	</div>
+</section>
+
+<section my-columns="60%">
+	<h2>Run-time testing with GoogleTest</h2>
+	<div style="width:100%;">
+		<pre class="text"><code data-trim><script type="text/template">
+			[==========] Running 1 test from 1 test suite.
+			[----------] Global test environment set-up.
+			[----------] 1 test from ISO8601
+			[ RUN      ] ISO8601.parse_result
+			path\to\main.cpp(19): error: Value of: result.has_value()
+				Actual: false
+			Expected: true
+			Input could not be parsed.
+			Input = "bad"
+			Parser = Sequence<
+				Join<Exactly<AnyOf<"0123456789">,4>>,
+				Ignore<AllOf<"-">>,
+				Join<Exactly<AnyOf<"0123456789">,2>>,
+				Ignore<AllOf<"-">>,
+				Join<Exactly<AnyOf<"0123456789">,2>>
+			>
+
+			[...]
+		</script></code></pre>
+	</div>
+</section>
+
+<section my-columns>
+	<h2>Run-time testing with GoogleTest</h2>
+	<div style="width:100%;">
+		<pre class="cpp"><code data-trim><script type="text/template">
+			auto digit = "0123456789"_any_of;
+			auto year = exactly<4>(digit) % join;
+			auto month = exactly<2>(digit) % join;
+			auto day = digit % exactly<2> % join;
+
+			auto parser = year >> "-"_ign >>
+							month >> "-"_ign >> day;
+		</script></code></pre>
+		<pre class="cpp"><code data-trim><script type="text/template">
+			TEST(ISO8601, parse_result)
+			{
+				std::string_view input = "2024-02-29";
+				auto result = parser.parse(input);
+
+				ASSERT_TRUE(result.has_value());
+				EXPECT_EQ(*result, std::tuple("2024", "02", "29"));
+			}
+		</script></code></pre>
+	</div>
+</section>
+
+<section my-columns>
+	<h2>Run-time testing with GoogleTest</h2>
+	<div style="width:100%;">
+		<pre class="text"><code data-trim><script type="text/template">
+			[==========] Running 1 test from 1 test suite.
+			[----------] Global test environment set-up.
+			[----------] 1 test from ISO8601
+			[ RUN      ] ISO8601.parse_result
+			path\to\main.cpp(18): error: Value of: result.has_value()
+				Actual: false
+			Expected: true
+
+			[...]
+		</script></code></pre>
+	</div>
+</section>
+
+<section my-columns="60%">
+	<h2>Run-time testing with GoogleTest</h2>
+	<div style="width:100%;">
+		<pre class="text"><code data-trim><script type="text/template">
+			[==========] Running 1 test from 1 test suite.
+			[----------] Global test environment set-up.
+			[----------] 1 test from ISO8601
+			[ RUN      ] ISO8601.parse_result
+			path\to\main.cpp(18): error: Value of: result.has_value()
+				Actual: false
+			Expected: true
+			Input could not be parsed.
+			Input = "2024-02-29"
+			Parser = Sequence<
+				Join<Exactly<AnyOf<"012345678">,4>>,
+				Ignore<AllOf<"-">>,
+				Join<Exactly<AnyOf<"012345678">,2>>,
+				Ignore<AllOf<"-">>,
+				Join<Exactly<AnyOf<"012345678">,2>>
+			>
+
+			[...]
+		</script></code></pre>
+		<div class="fragment" style="position:absolute; top:10%; left:27%; font-size:1000%;">
+			✔️
+		</div>
+	</div>
+</section>
+
+<!-- #endregion 1. Run-time testing with GoogleTest -->
+
+<!-- #region Run-time testing with Boost.Test -->
+
+<section my-columns="100%">
+	<h2>Run-time testing with Boost.Test</h2>
+	<div style="width:100%;">
+		<pre class="cpp"><code data-trim hide-line-numbers data-line-numbers="|5-6|"><script type="text/template">
+			BOOST_AUTO_TEST_CASE(ISO8601)
+			{
+				auto result = parser.parse("2024-01-01");
+
+				BOOST_REQUIRE(result.has_value());
+				BOOST_CHECK(*result == std::tuple("2024", "01", "01"));
+			}
+		</script></code></pre>
+		<pre class="text fragment"><code data-trim><script type="text/template">
+			static_assert failed: 'Type has to implement operator<< to be printable'
+		</script></code></pre>
+	</div>
+</section>
+
+<section my-columns="100%">
+	<h2>Run-time testing with Boost.Test</h2>
+	<div style="width:100%;">
+		<pre class="cpp"><code data-trim><script type="text/template">
+			BOOST_AUTO_TEST_CASE(ISO8601)
+			{
+				auto result = parser.parse("2024-01-01");
+
+				BOOST_REQUIRE(result.has_value());
+				BOOST_CHECK((*result == std::tuple("2024", "01", "01")));
+			}
+		</script></code></pre>
+		<pre class="text fragment"><code data-trim><script type="text/template">
+			Running 1 test case...
+
+			*** No errors detected
+		</script></code></pre>
+	</div>
+</section>
+
+<section my-columns="100%">
+	<h2>Run-time testing with Boost.Test</h2>
+	<div style="width:100%;">
+		<pre class="cpp"><code data-trim><script type="text/template">
+			BOOST_AUTO_TEST_CASE(ISO8601)
+			{
+				auto result = parser.parse("bad");
+
+				BOOST_REQUIRE(result.has_value());
+				BOOST_CHECK((*result == std::tuple("2024", "01", "01")));
+			}
+		</script></code></pre>
+		<pre class="text fragment"><code data-trim><script type="text/template">
+			Running 1 test case...
+			main.cpp(49): fatal error: in "ISO8601": critical check result.has_value() has failed
+
+			*** 1 failure is detected in the test module "TestModule"
+		</script></code></pre>
+	</div>
+</section>
+
+<section my-columns="100%">
+	<h2>Run-time testing with Boost.Test</h2>
+	<div style="width:100%;">
+		<pre class="cpp"><code data-trim hide-line-numbers data-line-numbers="|6-8|"><script type="text/template">
+			BOOST_AUTO_TEST_CASE(ISO8601)
+			{
+				std::string_view input = "bad";
+				auto result = parser.parse(input);
+
+				BOOST_REQUIRE_MESSAGE(result.has_value(),
+					std::format("\nInput could not be parsed.\nInput = \"{}\"\n"
+					"Parser = {}", input, k3::tok3n::pretty(parser).view()));
+				BOOST_CHECK((*result == std::tuple("2024", "01", "01")));
+			}
+		</script></code></pre>
+	</div>
+</section>
+
+<section my-columns>
+	<h2>Run-time testing with Boost.Test</h2>
+	<div style="width:100%;">
+		<pre class="text"><code data-trim hide-line-numbers data-line-numbers><script type="text/template">
+			Running 1 test case...
+			main.cpp(52): fatal error: in "ISO8601":
+			Input could not be parsed.
+			Input = "bad"
+			Parser = Sequence<
+				Join<Exactly<AnyOf<"0123456789">,4>>,
+				Ignore<AllOf<"-">>,
+				Join<Exactly<AnyOf<"0123456789">,2>>,
+				Ignore<AllOf<"-">>,
+				Join<Exactly<AnyOf<"0123456789">,2>>
+			>
+
+			*** 1 failure is detected in the test module "TestModule"
+		</script></code></pre>
+	</div>
+</section>
+
+<section my-columns>
+	<h2>Run-time testing with Boost.Test</h2>
+	<div style="width:100%;">
+		<pre class="text"><code data-trim hide-line-numbers data-line-numbers><script type="text/template">
+			Running 1 test case...
+			main.cpp(52): fatal error: in "ISO8601":
+			Input could not be parsed.
+			Input = "2024-02-29"
+			Parser = Sequence<
+				Join<Exactly<AnyOf<"012345678">,4>>,
+				Ignore<AllOf<"-">>,
+				Join<Exactly<AnyOf<"012345678">,2>>,
+				Ignore<AllOf<"-">>,
+				Join<Exactly<AnyOf<"012345678">,2>>
+			>
+
+			*** 1 failure is detected in the test module "TestModule"
+		</script></code></pre>
+		<div class="fragment" style="position:absolute; top:10%; left:27%; font-size:1000%;">
+			✔️
+		</div>
+	</div>
+</section>
+
+<!-- #endregion Run-time testing with Boost.Test -->
+
+<!-- #region Run-time testing with Catch2 -->
+
+<section my-columns="90%">
+	<h2>Run-time testing with Catch2</h2>
+	<div style="width:100%;">
+		<pre class="cpp"><code data-trim hide-line-numbers data-line-numbers="|6|7|"><script type="text/template">
+			TEST_CASE("ISO8601")
+			{
+				std::string_view input = "2024-01-01";
+				auto result = parser.parse(input);
+
+				REQUIRE(result.has_value());
+				CHECK(*result == std::tuple("2024", "01", "01"));
+			}
+		</script></code></pre>
+		<pre class="text fragment"><code data-trim><script type="text/template">
+			Randomness seeded to: 1038544898
+			===============================================================================
+			All tests passed (2 assertions in 1 test case)
+		</script></code></pre>
+	</div>
+</section>
+
+<section my-columns="90%">
+	<h2>Run-time testing with Catch2</h2>
+	<div style="width:100%;">
+		<pre class="cpp"><code data-trim hide-line-numbers data-line-numbers><script type="text/template">
+			TEST_CASE("ISO8601")
+			{
+				std::string_view input = "bad";
+				auto result = parser.parse(input);
+
+				REQUIRE(result.has_value());
+				CHECK(*result == std::tuple("2024", "01", "01"));
+			}
+		</script></code></pre>
+		<pre class="text fragment"><code data-trim><script type="text/template">
+			[...]
+
+			main.cpp(56): FAILED:
+				REQUIRE( result.has_value() )
+			with expansion:
+				false
+
+			===============================================================================
+			test cases: 1 | 1 failed
+			assertions: 1 | 1 failed
+		</script></code></pre>
+	</div>
+</section>
+
+<section my-columns="90%">
+	<h2>Run-time testing with Catch2</h2>
+	<div style="width:100%;">
+		<pre class="cpp"><code data-trim hide-line-numbers data-line-numbers><script type="text/template">
+			TEST_CASE("ISO8601")
+			{
+				std::string_view input = "bad";
+				auto result = parser.parse(input);
+
+				INFO(std::format("Input could not be parsed.\nInput = \"{}\"\n"
+					"Parser = {}", input, k3::tok3n::pretty(parser).view()));
+
+				REQUIRE(result.has_value());
+				CHECK(*result == std::tuple("2024", "01", "01"));
+			}
+		</script></code></pre>
+	</div>
+</section>
+
+<section my-columns="90%">
+	<h2>Run-time testing with Catch2</h2>
+	<div style="width:100%;">
+		<pre class="text"><code data-trim hide-line-numbers data-line-numbers><script type="text/template">
+			[...]
+
+			main.cpp(59): FAILED:
+				REQUIRE( result.has_value() )
+			with expansion:
+				false
+			with message:
+				Input could not be parsed.
+				Input = "bad"
+				Parser = Sequence<
+					Join<Exactly<AnyOf<"0123456789">,4>>,
+					Ignore<AllOf<"-">>,
+					Join<Exactly<AnyOf<"0123456789">,2>>,
+					Ignore<AllOf<"-">>,
+					Join<Exactly<AnyOf<"0123456789">,2>>
+				>
+
+			===============================================================================
+			test cases: 1 | 1 failed
+			assertions: 1 | 1 failed
+		</script></code></pre>
+	</div>
+</section>
+
+<section my-columns="90%">
+	<h2>Run-time testing with Catch2</h2>
+	<div style="width:100%;">
+		<pre class="text"><code data-trim hide-line-numbers data-line-numbers><script type="text/template">
+			[...]
+
+			main.cpp(59): FAILED:
+				REQUIRE( result.has_value() )
+			with expansion:
+				false
+			with message:
+				Input could not be parsed.
+				Input = "2024-02-29"
+				Parser = Sequence<
+					Join<Exactly<AnyOf<"012345678">,4>>,
+					Ignore<AllOf<"-">>,
+					Join<Exactly<AnyOf<"012345678">,2>>,
+					Ignore<AllOf<"-">>,
+					Join<Exactly<AnyOf<"012345678">,2>>
+				>
+
+			===============================================================================
+			test cases: 1 | 1 failed
+			assertions: 1 | 1 failed
+		</script></code></pre>
+		<div class="fragment" style="position:absolute; top:10%; left:27%; font-size:1000%;">
+			✔️
+		</div>
+	</div>
+</section>
+
+<!-- #endregion Run-time testing with Catch2 -->
+
+<!-- #region Run-time testing with doctest -->
+
+<section my-columns="90%">
+	<h2>Run-time testing with doctest</h2>
+	<div style="width:100%;">
+		<pre class="cpp"><code data-trim hide-line-numbers data-line-numbers><script type="text/template">
+			TEST_CASE("ISO8601")
+			{
+				std::string_view input = "2024-01-01";
+				auto result = parser.parse(input);
+
+				REQUIRE(result.has_value());
+				CHECK(*result == std::tuple("2024", "01", "01"));
+			}
+		</script></code></pre>
+		<pre class="text fragment"><code data-trim><script type="text/template">
+			[doctest] doctest version is "2.4.11"
+			[doctest] run with "--help" for options
+			===============================================================================
+			[doctest] test cases: 1 | 1 passed | 0 failed | 0 skipped
+			[doctest] assertions: 2 | 2 passed | 0 failed |
+			[doctest] Status: SUCCESS!
+		</script></code></pre>
+	</div>
+</section>
+
+<section my-columns="90%">
+	<h2>Run-time testing with doctest</h2>
+	<div style="width:100%;">
+		<pre class="cpp"><code data-trim hide-line-numbers data-line-numbers><script type="text/template">
+			TEST_CASE("ISO8601")
+			{
+				std::string_view input = "bad";
+				auto result = parser.parse(input);
+
+				REQUIRE(result.has_value());
+				CHECK(*result == std::tuple("2024", "01", "01"));
+			}
+		</script></code></pre>
+		<pre class="text fragment"><code data-trim><script type="text/template">
+			[...]
+			===============================================================================
+			\main.cpp(25):
+			TEST CASE:  ISO8601
+
+			\main.cpp(33): FATAL ERROR: REQUIRE( result.has_value() ) is NOT correct!
+				values: REQUIRE( false )
+
+			===============================================================================
+			[...]
+		</script></code></pre>
+	</div>
+</section>
+
+<section my-columns="90%">
+	<h2>Run-time testing with doctest</h2>
+	<div style="width:100%;">
+		<pre class="cpp"><code data-trim hide-line-numbers data-line-numbers><script type="text/template">
+			TEST_CASE("ISO8601")
+			{
+				std::string_view input = "bad";
+				auto result = parser.parse(input);
+
+				INFO(std::format("Input could not be parsed.\nInput = \"{}\"\n"
+					"Parser = {}", input, k3::tok3n::pretty(parser).view()));
+
+				REQUIRE(result.has_value());
+				CHECK(*result == std::tuple("2024", "01", "01"));
+			}
+		</script></code></pre>
+	</div>
+</section>
+
+<section my-columns="90%">
+	<h2>Run-time testing with doctest</h2>
+	<div style="width:100%;">
+		<pre class="text"><code data-trim hide-line-numbers data-line-numbers><script type="text/template">
+			[...]
+			===============================================================================
+			main.cpp(25):
+			TEST CASE:  ISO8601
+
+			main.cpp(33): FATAL ERROR: REQUIRE( result.has_value() ) is NOT correct!
+				values: REQUIRE( false )
+				logged: Input could not be parsed.
+			Input = "bad"
+			Parser = Sequence<
+				Join<Exactly<AnyOf<"0123456789">,4>>,
+				Ignore<AllOf<"-">>,
+				Join<Exactly<AnyOf<"0123456789">,2>>,
+				Ignore<AllOf<"-">>,
+				Join<Exactly<AnyOf<"0123456789">,2>>
+			>
+
+			===============================================================================
+			[...]
+		</script></code></pre>
+	</div>
+</section>
+
+<section my-columns="90%">
+	<h2>Run-time testing with doctest</h2>
+	<div style="width:100%;">
+		<pre class="text"><code data-trim hide-line-numbers data-line-numbers><script type="text/template">
+			[...]
+			===============================================================================
+			main.cpp(25):
+			TEST CASE:  ISO8601
+
+			main.cpp(33): FATAL ERROR: REQUIRE( result.has_value() ) is NOT correct!
+				values: REQUIRE( false )
+				logged: Input could not be parsed.
+			Input = "2024-02-29"
+			Parser = Sequence<
+				Join<Exactly<AnyOf<"012345678">,4>>,
+				Ignore<AllOf<"-">>,
+				Join<Exactly<AnyOf<"012345678">,2>>,
+				Ignore<AllOf<"-">>,
+				Join<Exactly<AnyOf<"012345678">,2>>
+			>
+
+			===============================================================================
+			[...]
+		</script></code></pre>
+		<div class="fragment" style="position:absolute; top:10%; left:27%; font-size:1000%;">
+			✔️
+		</div>
+	</div>
+</section>
+
+<!-- #endregion Run-time testing with doctest -->
+
+<!-- #region Run-time testing with snitch -->
+
+<section my-columns="90%">
+	<h2>Run-time testing with snitch</h2>
+	<div style="width:100%;">
+		<pre class="cpp"><code data-trim hide-line-numbers data-line-numbers><script type="text/template">
+			TEST_CASE("ISO8601")
+			{
+				std::string_view input = "2024-01-01";
+				auto result = parser.parse(input);
+
+				REQUIRE(result.has_value());
+				CHECK(*result == std::tuple("2024", "01", "01"));
+			}
+		</script></code></pre>
+		<pre class="text fragment"><code data-trim><script type="text/template">
+			starting dev_snitch with snitch v1.2.4.2f62308
+			==========================================
+			==========================================
+			success: all tests passed (1 test cases, 3 assertions, 3.830000e-05 seconds)
+		</script></code></pre>
+	</div>
+</section>
+
+<section my-columns="90%">
+	<h2>Run-time testing with snitch</h2>
+	<div style="width:100%;">
+		<pre class="cpp"><code data-trim hide-line-numbers data-line-numbers><script type="text/template">
+			TEST_CASE("ISO8601")
+			{
+				std::string_view input = "bad";
+				auto result = parser.parse(input);
+
+				REQUIRE(result.has_value());
+				CHECK(*result == std::tuple("2024", "01", "01"));
+			}
+		</script></code></pre>
+		<pre class="text fragment"><code data-trim><script type="text/template">
+			starting dev_snitch with snitch v1.2.4.2f62308
+			==========================================
+			failed: running test case "ISO8601"
+						at main.cpp:21
+						REQUIRE(result.has_value()), got: false
+			==========================================
+			error: all tests failed (1 out of 1 test cases, 1 assertions, 1.359400e-03 seconds)
+		</script></code></pre>
+	</div>
+</section>
+
+<section my-columns="90%">
+	<h2>Run-time testing with snitch</h2>
+	<div style="width:100%;">
+		<pre class="cpp"><code data-trim hide-line-numbers data-line-numbers><script type="text/template">
+			TEST_CASE("ISO8601")
+			{
+				std::string_view input = "bad";
+				auto result = parser.parse(input);
+
+				INFO(std::format("Input could not be parsed.\nInput = \"{}\"\n"
+					"Parser = {}", input, k3::tok3n::pretty(parser).view()));
+
+				REQUIRE(result.has_value());
+				CHECK(*result == std::tuple("2024", "01", "01"));
+			}
+		</script></code></pre>
+	</div>
+</section>
+
+<section my-columns="90%">
+	<h2>Run-time testing with snitch</h2>
+	<div style="width:100%;">
+		<pre class="text"><code data-trim hide-line-numbers data-line-numbers><script type="text/template">
+			starting dev_snitch with snitch v1.2.4.2f62308
+			==========================================
+			failed: running test case "ISO8601"
+						at main.cpp:33
+						with Input could not be parsed.
+			Input = "bad"
+			Parser = Sequence<
+				Join<Exactly<AnyOf<"0123456789">,4>>,
+				Ignore<AllOf<"-">>,
+				Join<Exactly<AnyOf<"0123456789">,2>>,
+				Ignore<AllOf<"-">>,
+				Join<Exactly<AnyOf<"0123456789">,2>>
+			>
+						REQUIRE(result.has_value()), got: false
+			==========================================
+			error: all tests failed (1 out of 1 test cases, 1 assertions, 1.729600e-03 seconds)
+		</script></code></pre>
+	</div>
+</section>
+
+<section my-columns="90%">
+	<h2>Run-time testing with snitch</h2>
+	<div style="width:100%;">
+		<pre class="text"><code data-trim hide-line-numbers data-line-numbers><script type="text/template">
+			starting dev_snitch with snitch v1.2.4.2f62308
+			==========================================
+			failed: running test case "ISO8601"
+						at main.cpp:33
+						with Input could not be parsed.
+			Input = "2024-02-29"
+			Parser = Sequence<
+				Join<Exactly<AnyOf<"012345678">,4>>,
+				Ignore<AllOf<"-">>,
+				Join<Exactly<AnyOf<"012345678">,2>>,
+				Ignore<AllOf<"-">>,
+				Join<Exactly<AnyOf<"012345678">,2>>
+			>
+						REQUIRE(result.has_value()), got: false
+			==========================================
+			error: all tests failed (1 out of 1 test cases, 1 assertions, 1.729600e-03 seconds)
+		</script></code></pre>
+		<div class="fragment" style="position:absolute; top:10%; left:27%; font-size:1000%;">
+			✔️
+		</div>
+	</div>
+</section>
+
+<!-- #endregion Run-time testing with snitch -->
+
+<!-- #region Run-time testing with UT -->
+
+<section my-columns="90%">
+	<h2>Run-time testing with UT</h2>
+	<div style="width:100%;">
+		<pre class="cpp"><code data-trim hide-line-numbers data-line-numbers="|1|6-7|"><script type="text/template">
+			"ISO8601"_test = []
+			{
+				std::string_view input = "2024-01-01";
+				auto result = parser.parse(input);
+
+				expect(result.has_value()) << fatal;
+				expect(*result == std::tuple("2024", "01", "01"));
+			};
+		</script></code></pre>
+		<pre class="text fragment"><code data-trim><script type="text/template">
+			Suite 'global': all tests passed (2 asserts in 1 tests)
+		</script></code></pre>
+	</div>
+</section>
+
+<section my-columns="90%">
+	<h2>Run-time testing with UT</h2>
+	<div style="width:100%;">
+		<pre class="cpp"><code data-trim hide-line-numbers data-line-numbers><script type="text/template">
+			"ISO8601"_test = []
+			{
+				std::string_view input = "bad";
+				auto result = parser.parse(input);
+
+				expect(result.has_value()) << fatal;
+				expect(*result == std::tuple("2024", "01", "01"));
+			};
+		</script></code></pre>
+		<pre class="text fragment"><code data-trim><script type="text/template">
+			Running test "ISO8601"... FAILED
+			in: :0 - test condition:  [false]
+
+
+			===============================================================================
+			Suite globaltests:   1 | 2 failed
+			asserts: 2 | 0 passed | 2 failed
+		</script></code></pre>
+	</div>
+</section>
+
+<section my-columns="90%">
+	<h2>Run-time testing with UT</h2>
+	<div style="width:100%;">
+		<pre class="cpp"><code data-trim hide-line-numbers data-line-numbers><script type="text/template">
+			"ISO8601"_test = []
+			{
+				std::string_view input = "bad";
+				auto result = parser.parse(input);
+
+				expect(result.has_value())
+					<< std::format("Input could not be parsed.\nInput = \"{}\"\n"
+						"Parser = {}", input, k3::tok3n::pretty(parser).view())
+					<< fatal;
+				expect(*result == std::tuple("2024", "01", "01"));
+			};
+		</script></code></pre>
+	</div>
+</section>
+
+<section my-columns="90%">
+	<h2>Run-time testing with UT</h2>
+	<div style="width:100%;">
+		<pre class="text"><code data-trim hide-line-numbers data-line-numbers><script type="text/template">
+			Running test "ISO8601"... FAILED
+			in: main.cpp:34 - test condition:  [false]
+
+				Input could not be parsed.
+			Input = "bad"
+			Parser = Sequence<
+				Join<Exactly<AnyOf<"0123456789">,4>>,
+				Ignore<AllOf<"-">>,
+				Join<Exactly<AnyOf<"0123456789">,2>>,
+				Ignore<AllOf<"-">>,
+				Join<Exactly<AnyOf<"0123456789">,2>>
+			>
+			===============================================================================
+			Suite globaltests:   1 | 2 failed
+			asserts: 2 | 0 passed | 2 failed
+		</script></code></pre>
+	</div>
+</section>
+
+<section my-columns="90%">
+	<h2>Run-time testing with UT</h2>
+	<div style="width:100%;">
+		<pre class="text"><code data-trim hide-line-numbers data-line-numbers><script type="text/template">
+			Running test "ISO8601"... FAILED
+			in: main.cpp:34 - test condition:  [false]
+
+				Input could not be parsed.
+			Input = "2024-02-29"
+			Parser = Sequence<
+				Join<Exactly<AnyOf<"012345678">,4>>,
+				Ignore<AllOf<"-">>,
+				Join<Exactly<AnyOf<"012345678">,2>>,
+				Ignore<AllOf<"-">>,
+				Join<Exactly<AnyOf<"012345678">,2>>
+			>
+			===============================================================================
+			Suite globaltests:   1 | 2 failed
+			asserts: 2 | 0 passed | 2 failed
+		</script></code></pre>
+		<div class="fragment" style="position:absolute; top:10%; left:27%; font-size:1000%;">
+			✔️
+		</div>
+	</div>
+</section>
+
+<!-- #endregion Run-time testing with UT -->
+
+<!-- #endregion Run-time testing -->
+
+<section data-markdown class="list-fade-in-then-semi-out">
+	<textarea data-template>
+		## Compile-time testing
+		* Level 1 - One at a time
+		* Level 2 - Parametrized
+	</textarea>
+</section>
+
+<!-- #region Compile-time testing -->
+
+<section my-columns>
+	<h2>Compile-time testing</h2>
+	<div style="width:100%;">
+		<pre class="cpp"><code data-trim hide-line-numbers data-line-numbers><script type="text/template">
+			auto digit = "0123456789"_any_of;
+			auto year = exactly<4>(digit) % join;
+			auto month = exactly<2>(digit) % join;
+			auto day = digit % exactly<2> % join;
+			auto parser = year >> "-"_ign >>
+							month >> "-"_ign >> day;
+		</script></code></pre>
+		<pre class="cpp fragment"><code data-trim><script type="text/template">
+			// Test properties like `value_type`, `ParserFor<P, V>`, `family`
+		</script></code></pre>
+		<pre class="cpp fragment"><code data-trim><script type="text/template">
+			// Test which of these parsers are equal to each other
+		</script></code></pre>
+		<pre class="cpp fragment"><code data-trim><script type="text/template">
+			// Test combinator operations on the parsers
+		</script></code></pre>
+		<pre class="cpp fragment"><code data-trim><script type="text/template">
+			// Test the parsing
+		</script></code></pre>
+	</div>
+</section>
+
+<section my-columns>
+	<h2>Compile-time testing</h2>
+	<div style="width:100%;">
+		<pre class="cpp"><code data-trim><script type="text/template">
+			using Digit   = decltype(digit);
+			using Year    = decltype(year);
+			using Month   = decltype(month);
+			using Day     = decltype(day);
+			using ISODate = decltype(parser);
+		</script></code></pre>
+	</div>
+</section>
+
+<!-- #region Compile-time testing with GoogleTest -->
+
+<section my-columns="90%">
+	<h2>Compile-time testing with GoogleTest</h2>
+	<div style="width:100%;">
+		<pre class="cpp"><code data-trim hide-line-numbers data-line-numbers="|6|"><script type="text/template">
+			TEST(ISO8601, value_type)
+			{
+				::testing::StaticAssertTypeEq<Digit::value_type, char>();
+				::testing::StaticAssertTypeEq<Year::value_type, char>();
+				::testing::StaticAssertTypeEq<Month::value_type, char>();
+				::testing::StaticAssertTypeEq<Day::value_type, int>();
+				::testing::StaticAssertTypeEq<ISODate::value_type, char>();
+			}
+		</script></code></pre>
+		<pre class="text fragment"><code data-trim><script type="text/template">
+			gtest/gtest.h(2156,17): error C2338: static_assert failed:
+				'T1 and T2 are not the same type'
+			main.cpp(33,13): message : see reference to function template instantiation
+				'bool testing::StaticAssertTypeEq<char,int>(void) noexcept' being compiled
+		</script></code></pre>
+	</div>
+</section>
+
+<section my-columns="90%">
+	<h2>Compile-time testing with GoogleTest</h2>
+	<div style="width:100%;">
+		<pre class="cpp"><code data-trim hide-line-numbers data-line-numbers="|6|"><script type="text/template">
+			TEST(ISO8601, value_type)
+			{
+				static_assert(std::same_as<Digit::value_type, char>);
+				static_assert(std::same_as<Year::value_type, char>);
+				static_assert(std::same_as<Month::value_type, char>);
+				static_assert(std::same_as<Day::value_type, int>);
+				static_assert(std::same_as<ISODate::value_type, char>);
+			}
+		</script></code></pre>
+		<pre class="text fragment"><code data-trim><script type="text/template">
+			main.cpp(33,21): error C2607: static assertion failed
+			main.cpp(33,21): message : the concept 'std::same_as<char,int>' evaluated to false
+			concepts(36,9): message : 'char' and 'int' are different types
+		</script></code></pre>
+	</div>
+</section>
+
+<section my-columns>
+	<h2>Compile-time testing with GoogleTest</h2>
+	<div style="width:100%;">
+		<pre class="cpp"><code data-trim hide-line-numbers data-line-numbers><script type="text/template">
+			TEST(ISO8601, equality)
+			{
+				static_assert(std::same_as<Month, Day>);
+				static_assert(!std::same_as<Year, Day>);
+			}
+		</script></code></pre>
+	</div>
+</section>
+
+<section my-columns>
+	<h2>Compile-time testing with GoogleTest</h2>
+	<div style="width:100%;">
+		<pre class="cpp"><code data-trim hide-line-numbers data-line-numbers><script type="text/template">
+			TEST(ISO8601, combinators)
+			{
+				static_assert(std::same_as<decltype(Day{} >> Month{}),
+								Sequence<Day, Month>>);
+			}
+		</script></code></pre>
+	</div>
+</section>
+
+<section my-columns>
+	<h2>Compile-time testing with GoogleTest</h2>
+	<div style="width:100%;">
+		<pre class="cpp"><code data-trim hide-line-numbers data-line-numbers="|3-5|7-8|10-13||10-12"><script type="text/template">
+			TEST(ISO8601, full_date)
+			{
+				static_assert(Parser<ISODate>);
+				static_assert(ISODate::family == ParserFamily::Sequence);
+				static_assert(ParserFor<ISODate, char>);
+
+				static_assert(std::same_as<ISODate::result_for<char>,
+								std::tuple<Output<char>, Output<char>, Output<char>>>);
+
+				static_assert(ISODate::parse("2024-01-01").has_value());
+				static_assert(*ISODate::parse("2024-01-01")
+								== std::tuple("2024", "01", "01"));
+				static_assert(!ISODate::parse("bad").has_value());
+			}
+		</script></code></pre>
+	</div>
+</section>
+
+<section my-columns="80%">
+	<h2>Compile-time testing with GoogleTest</h2>
+	<div style="width:100%;">
+		<pre class="cpp"><code data-trim hide-line-numbers data-line-numbers="|1|2|3|4|5|"><script type="text/template">
+			#define ASSERT_PARSE_SUCCESS(P, INPUT, RESULT) \
+				static_assert(P::parse(INPUT).has_value());  \
+				ASSERT_TRUE(P::parse(INPUT).has_value());    \
+				static_assert(*P::parse(INPUT) == (RESULT)); \
+				EXPECT_EQ(*P::parse(INPUT), (RESULT))
+		</script></code></pre>
+		<pre class="cpp fragment"><code data-trim hide-line-numbers data-line-numbers><script type="text/template">
+			TEST(ISO8601, full_date)
+			{
+				ASSERT_PARSE_SUCCESS(ISODate, "2024-01-01", std::tuple("2024", "01", "01"));
+			}
+		</script></code></pre>
+	</div>
+</section>
+
+<section my-columns="80%">
+	<h2>Compile-time testing with GoogleTest</h2>
+	<div style="width:100%;">
+		<pre class="cpp"><code data-trim hide-line-numbers data-line-numbers><script type="text/template">
+			#define ASSERT_PARSE_SUCCESS(P, INPUT, RESULT) \
+				static_assert(P::parse(INPUT).has_value());  \
+				ASSERT_TRUE(P::parse(INPUT).has_value());    \
+				static_assert(*P::parse(INPUT) == (RESULT)); \
+				EXPECT_EQ(*P::parse(INPUT), (RESULT))
+		</script></code></pre>
+		<pre class="cpp fragment"><code data-trim hide-line-numbers data-line-numbers><script type="text/template">
+			TEST(ISO8601, full_date)
+			{
+				ASSERT_PARSE_SUCCESS(ISODate, "bad", std::tuple("b", "a", "d"));
+			}
+		</script></code></pre>
+		<pre class="text fragment"><code data-trim hide-line-numbers data-line-numbers><script type="text/template">
+			main.cpp(55,2): error C2607: static assertion failed
+			main.cpp(55,2): error C2131: expression did not evaluate to a constant
+			optional(200,9): message : failure was caused by call of
+				undefined function or one not declared 'constexpr'
+			optional(200,9): message : see usage of '_CrtDbgReport'
+		</script></code></pre>
+	</div>
+</section>
+
+<section my-columns="80%">
+	<h2>Compile-time testing with GoogleTest?</h2>
+	<div style="width:100%;">
+		<pre class="cpp"><code data-trim hide-line-numbers data-line-numbers><script type="text/template">
+			#define ASSERT_PARSE_SUCCESS(P, INPUT, RESULT) \
+				static_assert(P::parse(INPUT).has_value());  \
+				ASSERT_TRUE(P::parse(INPUT).has_value());    \
+				static_assert(*P::parse(INPUT) == (RESULT)); \
+				EXPECT_EQ(*P::parse(INPUT), (RESULT))
+		</script></code></pre>
+		<pre class="cpp"><code data-trim hide-line-numbers data-line-numbers><script type="text/template">
+			TEST(ISO8601, full_date)
+			{
+				ASSERT_PARSE_SUCCESS(ISODate, "bad", std::tuple("b", "a", "d"));
+			}
+		</script></code></pre>
+		<pre class="text"><code data-trim hide-line-numbers data-line-numbers><script type="text/template">
+			main.cpp(55,2): error C2607: static assertion failed
+			main.cpp(55,2): error C2131: expression did not evaluate to a constant
+			optional(200,9): message : failure was caused by call of
+				undefined function or one not declared 'constexpr'
+			optional(200,9): message : see usage of '_CrtDbgReport'
+		</script></code></pre>
+		<div class="fragment" style="position:absolute; top:10%; left:27%; font-size:1000%;">
+			❌
+		</div>
+	</div>
+</section>
+
+<!-- #endregion Compile-time testing with GoogleTest -->
+
+<!-- #region Compile-time testing with Boost.Test -->
+
+<section my-columns="80%">
+	<h2>Compile-time testing with Boost.Test</h2>
+	<div style="width:100%;">
+		<pre class="cpp fragment"><code data-trim hide-line-numbers data-line-numbers><script type="text/template">
+			BOOST_AUTO_TEST_CASE(ISO8601_properties)
+			{
+				static_assert(Parser<ISODate>);
+				static_assert(ISODate::family == ParserFamily::Sequence);
+				static_assert(ParserFor<ISODate, char>);
+			}
+		</script></code></pre>
+	</div>
+</section>
+
+<section my-columns="80%">
+	<h2>Compile-time testing with Boost.Test</h2>
+	<div style="width:100%;">
+		<pre class="cpp"><code data-trim hide-line-numbers data-line-numbers><script type="text/template">
+			#define ASSERT_PARSE_SUCCESS(P, INPUT, RESULT) \
+				static_assert(P::parse(INPUT).has_value());  \
+				BOOST_REQUIRE(P::parse(INPUT).has_value());  \
+				static_assert(*P::parse(INPUT) == (RESULT)); \
+				BOOST_CHECK((*P::parse(INPUT) == (RESULT)))
+		</script></code></pre>
+		<pre class="cpp fragment"><code data-trim hide-line-numbers data-line-numbers><script type="text/template">
+			BOOST_AUTO_TEST_CASE(ISO8601_parsing)
+			{
+				ASSERT_PARSE_SUCCESS(ISODate, "2024-01-01", std::tuple("2024", "01", "01"));
+			}
+		</script></code></pre>
+	</div>
+</section>
+
+<section my-columns="80%">
+	<h2>Compile-time testing with Boost.Test</h2>
+	<div style="width:100%;">
+		<pre class="cpp"><code data-trim hide-line-numbers data-line-numbers><script type="text/template">
+			#define ASSERT_PARSE_SUCCESS(P, INPUT, RESULT) \
+				static_assert(P::parse(INPUT).has_value());  \
+				BOOST_REQUIRE(P::parse(INPUT).has_value());  \
+				static_assert(*P::parse(INPUT) == (RESULT)); \
+				BOOST_CHECK((*P::parse(INPUT) == (RESULT)))
+		</script></code></pre>
+		<pre class="cpp fragment"><code data-trim hide-line-numbers data-line-numbers><script type="text/template">
+			BOOST_AUTO_TEST_CASE(ISO8601_parsing)
+			{
+				ASSERT_PARSE_SUCCESS(ISODate, "bad", std::tuple("b", "a", "d"));
+			}
+		</script></code></pre>
+		<pre class="text fragment"><code data-trim hide-line-numbers data-line-numbers><script type="text/template">
+			main.cpp(62,2): error C2607: static assertion failed
+			main.cpp(62,2): error C2131: expression did not evaluate to a constant
+			optional(200,9): message : failure was caused by call of
+				undefined function or one not declared 'constexpr'
+			optional(200,9): message : see usage of '_CrtDbgReport'
+		</script></code></pre>
+		<div class="fragment" style="position:absolute; top:10%; left:27%; font-size:1000%;">
+			❌
+		</div>
+	</div>
+</section>
+
+<!-- #endregion Compile-time testing with Boost.Test -->
+
+<!-- #region Compile-time testing with Catch2 -->
+
+<section my-columns="85%">
+	<h2>Compile-time testing with Catch2</h2>
+	<div style="width:100%;">
+		<pre class="cpp fragment" data-fragment-index="2"><code data-trim hide-line-numbers data-line-numbers><script type="text/template">
+			// #define CATCH_CONFIG_RUNTIME_STATIC_REQUIRE
+			#include <catch2/catch_test_macros.hpp>
+			#include <catch2/catch_session.hpp>
+		</script></code></pre>
+		<pre class="cpp fragment" data-fragment-index="1"><code data-trim hide-line-numbers data-line-numbers><script type="text/template">
+			TEST_CASE("ISO8601 properties")
+			{
+				STATIC_REQUIRE(Parser<ISODate>);
+				STATIC_REQUIRE(ISODate::family == ParserFamily::Sequence);
+				STATIC_REQUIRE(ParserFor<ISODate, char>);
+			}
+		</script></code></pre>
+		<pre class="text fragment" data-fragment-index="3"><code data-trim hide-line-numbers data-line-numbers><script type="text/template">
+			Randomness seeded to: 391083004
+			===============================================================================
+			All tests passed (3 assertions in 1 test case)
+		</script></code></pre>
+	</div>
+</section>
+
+<section my-columns="85%">
+	<h2>Compile-time testing with Catch2</h2>
+	<div style="width:100%;">
+		<pre class="cpp"><code data-trim hide-line-numbers data-line-numbers><script type="text/template">
+			TEST_CASE("ISO8601 parsing")
+			{
+				STATIC_REQUIRE(ISODate::parse("2024-01-01").has_value());
+				STATIC_CHECK(*ISODate::parse("2024-01-01") == std::tuple("2024", "01", "01"));
+			}
+		</script></code></pre>
+	</div>
+</section>
+
+<section my-columns="85%">
+	<h2>Compile-time testing with Catch2</h2>
+	<div style="width:100%;">
+		<pre class="cpp"><code data-trim hide-line-numbers data-line-numbers><script type="text/template">
+			#define ASSERT_PARSE_SUCCESS(P, INPUT, RESULT) \
+				STATIC_REQUIRE(P::parse(INPUT).has_value()); \
+				STATIC_CHECK(*P::parse(INPUT) == (RESULT))
+		</script></code></pre>
+		<pre class="cpp"><code data-trim hide-line-numbers data-line-numbers><script type="text/template">
+			TEST_CASE("ISO8601 parsing")
+			{
+				ASSERT_PARSE_SUCCESS(ISODate, "2024-01-01", std::tuple("2024", "01", "01"));
+			}
+		</script></code></pre>
+	</div>
+</section>
+
+<section my-columns="95%">
+	<h2>Compile-time testing with Catch2</h2>
+	<div style="width:100%;">
+		<pre class="cpp"><code data-trim hide-line-numbers data-line-numbers><script type="text/template">
+			#define ASSERT_PARSE_SUCCESS(P, INPUT, RESULT) \
+				STATIC_REQUIRE(P::parse(INPUT).has_value()); \
+				STATIC_CHECK(*P::parse(INPUT) == (RESULT))
+		</script></code></pre>
+		<pre class="cpp"><code data-trim hide-line-numbers data-line-numbers><script type="text/template">
+			TEST_CASE("ISO8601 parsing")
+			{
+				ASSERT_PARSE_SUCCESS(ISODate, "bad", std::tuple("b", "a", "d"));
+			}
+		</script></code></pre>
+		<pre class="text fragment"><code data-trim hide-line-numbers data-line-numbers="|1"><script type="text/template">
+			main.cpp(92,2): error C2338: static_assert failed: 'ISODate::parse("bad").has_value()'
+			main.cpp(92,2): error C2131: expression did not evaluate to a constant
+			optional(200,9): message : failure was caused by call of
+				undefined function or one not declared 'constexpr'
+			optional(200,9): message : see usage of '_CrtDbgReport'
+		</script></code></pre>
+	</div>
+</section>
+
+<!-- #endregion Compile-time testing with Catch2 -->
+
+<!-- #region Compile-time testing with doctest -->
+
+<section my-columns="85%">
+	<h2>Compile-time testing with doctest</h2>
+	<div style="width:100%;">
+		<pre class="cpp fragment"><code data-trim hide-line-numbers data-line-numbers><script type="text/template">
+			TEST_CASE("ISO8601 properties")
+			{
+				static_assert(Parser<ISODate>);
+				static_assert(ISODate::family == ParserFamily::Sequence);
+				static_assert(ParserFor<ISODate, char>);
+			}
+		</script></code></pre>
+		<pre class="cpp fragment"><code data-trim hide-line-numbers data-line-numbers><script type="text/template">
+			TEST_CASE("ISO8601 parsing")
+			{
+				static_assert(ISODate::parse("2024-01-01").has_value());
+				static_assert(*ISODate::parse("2024-01-01") == std::tuple("2024", "01", "01"));
+			}
+		</script></code></pre>
+		<div class="fragment" style="position:absolute; top:10%; left:27%; font-size:1000%;">
+			❌
+		</div>
+	</div>
+</section>
+
+<!-- #endregion Compile-time testing with doctest -->
+
+<!-- #region Compile-time testing with snitch -->
+
+<section my-columns="90%">
+	<h2>Compile-time testing with snitch</h2>
+	<div style="width:100%;">
+		<pre class="cpp fragment"><code data-trim hide-line-numbers data-line-numbers><script type="text/template">
+			TEST_CASE("ISO8601 properties")
+			{
+				CONSTEVAL_REQUIRE(Parser<ISODate>);
+				CONSTEVAL_REQUIRE(ISODate::family == ParserFamily::Sequence);
+				CONSTEVAL_REQUIRE(ParserFor<ISODate, char>);
+			}
+		</script></code></pre>
+		<pre class="text fragment"><code data-trim hide-line-numbers data-line-numbers><script type="text/template">
+			starting dev_snitch with snitch v1.2.4.2f62308
+			==========================================
+			==========================================
+			success: all tests passed (1 test cases, 4 assertions, 4.970000e-05 seconds)
+		</script></code></pre>
+	</div>
+</section>
+
+<section my-columns="90%">
+	<h2>Compile-time testing with snitch</h2>
+	<div style="width:100%;">
+		<pre class="cpp"><code data-trim hide-line-numbers data-line-numbers><script type="text/template">
+			TEST_CASE("ISO8601 parsing")
+			{
+				CONSTEXPR_REQUIRE(ISODate::parse("2024-01-01").has_value());
+				CONSTEXPR_CHECK(*ISODate::parse("2024-01-01") == std::tuple("2024", "01", "01"));
+			}
+		</script></code></pre>
+	</div>
+</section>
+
+<section my-columns="90%">
+	<h2>Compile-time testing with snitch</h2>
+	<div style="width:100%;">
+		<pre class="cpp"><code data-trim hide-line-numbers data-line-numbers><script type="text/template">
+			#define ASSERT_PARSE_SUCCESS(P, INPUT, RESULT)    \
+				CONSTEXPR_REQUIRE(P::parse(INPUT).has_value()); \
+				CONSTEXPR_CHECK(*P::parse(INPUT) == (RESULT))
+		</script></code></pre>
+		<pre class="cpp"><code data-trim hide-line-numbers data-line-numbers><script type="text/template">
+			TEST_CASE("ISO8601 parsing")
+			{
+				ASSERT_PARSE_SUCCESS(ISODate, "2024-01-01", std::tuple("2024", "01", "01"));
+			}
+		</script></code></pre>
+		<pre class="text fragment"><code data-trim hide-line-numbers data-line-numbers><script type="text/template">
+			starting dev_snitch with snitch v1.2.4.2f62308
+			==========================================
+			==========================================
+			success: all tests passed (1 test cases, 5 assertions, 7.280000e-05 seconds)
+		</script></code></pre>
+	</div>
+</section>
+
+<section my-columns="100%">
+	<h2>Compile-time testing with snitch</h2>
+	<div style="width:100%;">
+		<pre class="cpp"><code data-trim hide-line-numbers data-line-numbers><script type="text/template">
+			TEST_CASE("ISO8601 parsing")
+			{
+				ASSERT_PARSE_SUCCESS(ISODate, "2024-01-01", std::tuple("2024", "01", "02"));
+			}
+		</script></code></pre>
+		<pre class="text fragment"><code data-trim hide-line-numbers data-line-numbers="|5,10|"><script type="text/template">
+			starting dev_snitch with snitch v1.2.4.2f62308
+			==========================================
+			failed: running test case "ISO8601 parsing"
+						at main.cpp:66
+						CONSTEXPR_CHECK[compile-time]
+						(*ISODate::parse("2024-01-01") == (std::tuple("2024", "01", "02")))
+						got: ? != ?
+			failed: running test case "ISO8601 parsing"
+						at main.cpp:66
+						CONSTEXPR_CHECK[run-time]
+						(*ISODate::parse("2024-01-01") == (std::tuple("2024", "01", "02")))
+						got: ? != ?
+			==========================================
+			error: all tests failed (1 out of 1 test cases, 5 assertions, 7.613000e-04 seconds)
+		</script></code></pre>
+	</div>
+</section>
+
+<section my-columns="100%">
+	<h2>Compile-time testing with snitch</h2>
+	<div style="width:100%;">
+		<pre class="cpp"><code data-trim hide-line-numbers data-line-numbers><script type="text/template">
+			TEST_CASE("ISO8601 parsing")
+			{
+				ASSERT_PARSE_SUCCESS(ISODate, "bad", std::tuple("b", "a", "d"));
+			}
+		</script></code></pre>
+		<pre class="text fragment" style="font-size:39%;"><code data-trim hide-line-numbers data-line-numbers><script type="text/template">
+			main.cpp(89,5): error C2131: expression did not evaluate to a constant
+			optional(200,9): message : failure was caused by call of undefined function or one not declared 'constexpr'
+			optional(200,9): message : see usage of '_CrtDbgReport'
+			main.cpp(89,5): message : the call stack of the evaluation (the oldest call first) is
+			main.cpp(89,5): message : while evaluating function 'T &&k3::tok3n::Result<T,char>::operator *(void) &&'
+				with
+				[
+					T=std::tuple<k3::tok3n::Output<char>,k3::tok3n::Output<char>,k3::tok3n::Output<char>>
+				]
+			Result.h(34,51): message : while evaluating function '_Ty &&std::_Optional_construct_base<_Ty>::operator *(void) noexcept &&'
+				with
+				[
+					_Ty=std::tuple<k3::tok3n::Output<char>,k3::tok3n::Output<char>,k3::tok3n::Output<char>>
+				]
+			optional(200,9): message : while evaluating function 'int _CrtDbgReport(int,const char *,int,const char *,const char *,...)'
+		</script></code></pre>
+	</div>
+</section>
+
+<section my-columns="100%">
+	<h2>Compile-time testing with snitch</h2>
+	<div style="width:100%;">
+		<pre class="cpp"><code data-trim hide-line-numbers data-line-numbers><script type="text/template">
+			#define ASSERT_PARSE_SUCCESS(P, INPUT, RESULT)      \
+				CONSTEXPR_REQUIRE(P::parse(INPUT).has_value());   \
+				if constexpr (P::parse(INPUT).has_value()) {      \
+				CONSTEXPR_CHECK(*P::parse(INPUT) == (RESULT));  \
+				} else {                                          \
+				CHECK(*P::parse(INPUT) == (RESULT));            \
+				}
+		</script></code></pre>
+		<pre class="text fragment" style="font-size:39%;"><code data-trim hide-line-numbers data-line-numbers><script type="text/template">
+			main.cpp(89,5): error C2131: expression did not evaluate to a constant
+			optional(200,9): message : failure was caused by call of undefined function or one not declared 'constexpr'
+			optional(200,9): message : see usage of '_CrtDbgReport'
+			main.cpp(89,5): message : the call stack of the evaluation (the oldest call first) is
+			main.cpp(89,5): message : while evaluating function 'T &&k3::tok3n::Result<T,char>::operator *(void) &&'
+				with
+				[
+					T=std::tuple<k3::tok3n::Output<char>,k3::tok3n::Output<char>,k3::tok3n::Output<char>>
+				]
+			[...]
+		</script></code></pre>
+	</div>
+</section>
+
+<section my-columns="100%">
+	<h2>Compile-time testing with snitch</h2>
+	<div style="width:100%;">
+		<pre class="cpp"><code data-trim hide-line-numbers data-line-numbers><script type="text/template">
+			#define ASSERT_PARSE_SUCCESS(P, INPUT, RESULT)       \
+				[](auto) {                                         \
+				CONSTEXPR_REQUIRE(P::parse(INPUT).has_value());  \
+				if constexpr (P::parse(INPUT).has_value())  {    \
+					CONSTEXPR_CHECK(*P::parse(INPUT) == (RESULT)); \
+				} else {                                         \
+					CHECK(*P::parse(INPUT) == (RESULT));           \
+				}                                                \
+				}(int{})
+		</script></code></pre>
+		<pre class="text fragment"><code data-trim hide-line-numbers data-line-numbers><script type="text/template">
+			starting dev_snitch with snitch v1.2.4.2f62308
+			==========================================
+			failed: running test case "ISO8601 parsing"
+						at main.cpp:125
+						CONSTEXPR_REQUIRE[compile-time](ISODate::parse("bad").has_value())
+						got: false
+			==========================================
+			error: all tests failed (1 out of 1 test cases, 1 assertions, 1.432300e-03 seconds)
+		</script></code></pre>
+	</div>
+</section>
+
+<section my-columns="100%">
+	<h2>Compile-time testing with Catch2</h2>
+	<div style="width:100%;">
+		<pre class="cpp"><code data-trim hide-line-numbers data-line-numbers><script type="text/template">
+			#define ASSERT_PARSE_SUCCESS(P, INPUT, RESULT)    \
+				[](auto) {                                      \
+				STATIC_REQUIRE(P::parse(INPUT).has_value());  \
+				if constexpr (P::parse(INPUT).has_value()) {  \
+					STATIC_CHECK(*P::parse(INPUT) == (RESULT)); \
+				} else {                                      \
+					CHECK(*P::parse(INPUT) == (RESULT));        \
+				}                                             \
+				}(int{})
+		</script></code></pre>
+		<pre class="text fragment"><code data-trim hide-line-numbers data-line-numbers><script type="text/template">
+			main.cpp(106,5): error C2338: static_assert failed: 'ISODate::parse("bad").has_value()'
+			main.cpp(106,5): message : This diagnostic occurred in the compiler generated
+				function 'auto CATCH2_INTERNAL_TEST_0::<lambda_1>::operator ()(_T1) const'
+		</script></code></pre>
+		<div class="fragment" style="position:absolute; top:10%; left:27%; font-size:1000%;">
+			❌
+		</div>
+	</div>
+</section>
+
+<section my-columns="100%">
+	<h2>Compile-time testing with snitch</h2>
+	<div style="width:100%;">
+		<pre class="cpp"><code data-trim hide-line-numbers data-line-numbers><script type="text/template">
+			#define ASSERT_PARSE_SUCCESS(P, INPUT, RESULT)       \
+				[](auto) {                                         \
+				CONSTEXPR_REQUIRE(P::parse(INPUT).has_value());  \
+				if constexpr (P::parse(INPUT).has_value())  {    \
+					CONSTEXPR_CHECK(*P::parse(INPUT) == (RESULT)); \
+				} else {                                         \
+					CHECK(*P::parse(INPUT) == (RESULT));           \
+				}                                                \
+				}(int{})
+		</script></code></pre>
+		<pre class="text"><code data-trim hide-line-numbers data-line-numbers><script type="text/template">
+			starting dev_snitch with snitch v1.2.4.2f62308
+			==========================================
+			failed: running test case "ISO8601 parsing"
+						at main.cpp:125
+						CONSTEXPR_REQUIRE[compile-time](ISODate::parse("bad").has_value())
+						got: false
+			==========================================
+			error: all tests failed (1 out of 1 test cases, 1 assertions, 1.432300e-03 seconds)
+		</script></code></pre>
+	</div>
+</section>
+
+<section my-columns="100%">
+	<h2>Compile-time testing with snitch</h2>
+	<div style="width:100%;">
+		<pre class="cpp"><code data-trim hide-line-numbers data-line-numbers><script type="text/template">
+			#define ASSERT_PARSE_SUCCESS(P, INPUT, RESULT)                        \
+				[](auto) {                                                          \
+				{                                                                 \
+					INFO(std::format("Input could not be parsed.\nInput = \"{}\"\n" \
+					"Parser = {}", (INPUT), k3::tok3n::pretty(P{}).view()));      \
+					CONSTEXPR_REQUIRE(P::parse(INPUT).has_value());                 \
+				}                                                                 \
+				if constexpr (P::parse(INPUT).has_value())  {                     \
+					CONSTEXPR_CHECK(*P::parse(INPUT) == (RESULT));                  \
+				} else {                                                          \
+					CHECK(*P::parse(INPUT) == (RESULT));                            \
+				}                                                                 \
+				}(int{})
+		</script></code></pre>
+		<pre class="cpp fragment"><code data-trim hide-line-numbers data-line-numbers><script type="text/template">
+			TEST_CASE("ISO8601 parsing")
+			{
+				ASSERT_PARSE_SUCCESS(ISODate, "bad", std::tuple("b", "a", "d"));
+			}
+		</script></code></pre>
+	</div>
+</section>
+
+<section my-columns="100%">
+	<h2>Compile-time testing with snitch</h2>
+	<div style="width:100%;">
+		<pre class="text"><code data-trim hide-line-numbers data-line-numbers><script type="text/template">
+			starting dev_snitch with snitch v1.2.4.2f62308
+			==========================================
+			failed: running test case "ISO8601 parsing"
+						at main.cpp:125
+						with Input could not be parsed.
+			Input = "bad"
+			Parser = Sequence<
+				Join<Exactly<AnyOf<"0123456789">,4>>,
+				Ignore<AllOf<"-">>,
+				Join<Exactly<AnyOf<"0123456789">,2>>,
+				Ignore<AllOf<"-">>,
+				Join<Exactly<AnyOf<"0123456789">,2>>
+			>
+						CONSTEXPR_REQUIRE[compile-time](ISODate::parse("bad").has_value())
+						got: false
+			==========================================
+			error: all tests failed (1 out of 1 test cases, 1 assertions, 1.862600e-03 seconds)
+		</script></code></pre>
+	</div>
+</section>
+
+<section my-columns="100%">
+	<h2>Compile-time testing with snitch</h2>
+	<div style="width:100%;">
+		<pre class="text"><code data-trim hide-line-numbers data-line-numbers><script type="text/template">
+			starting dev_snitch with snitch v1.2.4.2f62308
+			==========================================
+			failed: running test case "ISO8601 parsing"
+						at main.cpp:125
+						with Input could not be parsed.
+			Input = "2024-02-29"
+			Parser = Sequence<
+				Join<Exactly<AnyOf<"012345678">,4>>,
+				Ignore<AllOf<"-">>,
+				Join<Exactly<AnyOf<"012345678">,2>>,
+				Ignore<AllOf<"-">>,
+				Join<Exactly<AnyOf<"012345678">,2>>
+			>
+						CONSTEXPR_REQUIRE[compile-time](ISODate::parse("2024-02-29").has_value())
+						got: false
+			==========================================
+			error: all tests failed (1 out of 1 test cases, 1 assertions, 1.862600e-03 seconds)
+		</script></code></pre>
+		<div class="fragment" style="position:absolute; top:10%; left:27%; font-size:1000%;">
+			✔️
+		</div>
+	</div>
+</section>
+
+<!-- #endregion Compile-time testing with snitch -->
+
+<!-- #region Compile-time testing with UT -->
+
+<section my-columns="90%">
+	<h2>Compile-time testing with UT</h2>
+	<div style="width:100%;">
+		<pre class="cpp fragment"><code data-trim hide-line-numbers data-line-numbers="|3|"><script type="text/template">
+			"ISO8601 properties"_test = []
+			{
+				expect(constant<Parser<ISODate>>);
+				expect(constant<ISODate::family == ParserFamily::Sequence>);
+				expect(constant<ParserFor<ISODate, char>>);
+			};
+		</script></code></pre>
+		<pre class="text fragment"><code data-trim hide-line-numbers data-line-numbers><script type="text/template">
+			Suite 'global': all tests passed (3 asserts in 1 tests)
+		</script></code></pre>
+	</div>
+</section>
+
+<section my-columns="90%">
+	<h2>Compile-time testing with UT</h2>
+	<div style="width:100%;">
+		<pre class="cpp"><code data-trim hide-line-numbers data-line-numbers><script type="text/template">
+			"ISO8601 parsing"_test = []
+			{
+				expect(constant<ISODate::parse("2024-01-01").has_value()>) << fatal;
+				expect(constant<*ISODate::parse("2024-01-01") == std::tuple("2024", "01", "01")>);
+			};
+		</script></code></pre>
+	</div>
+</section>
+
+<section my-columns="90%">
+	<h2>Compile-time testing with UT</h2>
+	<div style="width:100%;">
+		<pre class="cpp"><code data-trim hide-line-numbers data-line-numbers><script type="text/template">
+			#define ASSERT_PARSE_SUCCESS(P, INPUT, RESULT)    \
+				expect(constant<P::parse(INPUT).has_value()>);  \
+				expect(P::parse(INPUT).has_value()) << fatal;   \
+				expect(constant<*P::parse(INPUT) == (RESULT)>); \
+				expect(*P::parse(INPUT) == (RESULT))
+		</script></code></pre>
+		<pre class="cpp fragment"><code data-trim hide-line-numbers data-line-numbers><script type="text/template">
+			"ISO8601 parsing"_test = []
+			{
+				ASSERT_PARSE_SUCCESS(ISODate, "2024-01-01", std::tuple("2024", "01", "01"));
+			};
+		</script></code></pre>
+		<pre class="text fragment"><code data-trim hide-line-numbers data-line-numbers><script type="text/template">
+			Suite 'global': all tests passed (4 asserts in 1 tests)
+		</script></code></pre>
+	</div>
+</section>
+
+<section my-columns="90%">
+	<h2>Compile-time testing with UT</h2>
+	<div style="width:100%;">
+		<pre class="cpp"><code data-trim hide-line-numbers data-line-numbers><script type="text/template">
+			"ISO8601 parsing"_test = []
+			{
+				ASSERT_PARSE_SUCCESS(ISODate, "2024-01-01", std::tuple("2024", "01", "02"));
+			};
+		</script></code></pre>
+		<pre class="text fragment"><code data-trim hide-line-numbers data-line-numbers><script type="text/template">
+			Running test "ISO8601 parsing"... FAILED
+			in: main.cpp:76 - test condition:  [false]
+
+			Running test "ISO8601 parsing"... FAILED
+			in: main.cpp:76 - test condition:  [false]FAILED
+			in: main.cpp:76 - test condition:  [false]
+
+			===============================================================================
+			Suite globaltests:   1 | 2 failed
+			asserts: 4 | 0 passed | 2 failed
+		</script></code></pre>
+	</div>
+</section>
+
+<section my-columns="90%">
+	<h2>Compile-time testing with UT</h2>
+	<div style="width:100%;">
+		<pre class="cpp"><code data-trim hide-line-numbers data-line-numbers><script type="text/template">
+			"ISO8601 parsing"_test = []
+			{
+				ASSERT_PARSE_SUCCESS(ISODate, "bad", std::tuple("b", "a", "d"));
+			};
+		</script></code></pre>
+		<pre class="text fragment"><code data-trim hide-line-numbers data-line-numbers><script type="text/template">
+			main.cpp(77,3): error C2975: 'Constant': invalid template argument for
+				'boost::ext::ut::v2_0_1::constant', expected compile-time constant expression
+			ut.hpp(2982,11): message : see declaration of 'Constant'
+		</script></code></pre>
+	</div>
+</section>
+
+<section my-columns="90%">
+	<h2>Compile-time testing with UT</h2>
+	<div style="width:100%;">
+		<pre class="cpp"><code data-trim hide-line-numbers data-line-numbers><script type="text/template">
+			#define ASSERT_PARSE_SUCCESS(P, INPUT, RESULT)            \
+				expect(constant<P::parse(INPUT).has_value()>) << fatal; \
+				expect(P::parse(INPUT).has_value()) << fatal;           \
+				if constexpr (P::parse(INPUT).has_value()) {            \
+				expect(constant<*P::parse(INPUT) == (RESULT)>);       \
+				}                                                       \
+				expect(*P::parse(INPUT) == (RESULT))
+		</script></code></pre>
+		<pre class="cpp"><code data-trim hide-line-numbers data-line-numbers><script type="text/template">
+			"ISO8601 parsing"_test = []
+			{
+				ASSERT_PARSE_SUCCESS(ISODate, "bad", std::tuple("b", "a", "d"));
+			};
+		</script></code></pre>
+		<pre class="text fragment"><code data-trim hide-line-numbers data-line-numbers><script type="text/template">
+			Running test "ISO8601 parsing"... FAILED
+			[...]
+
+			===============================================================================
+			Suite globaltests:   1 | 3 failed
+			asserts: 3 | 0 passed | 3 failed
+		</script></code></pre>
+	</div>
+</section>
+
+<section my-columns="90%">
+	<h2>Compile-time testing with UT</h2>
+	<div style="width:100%;">
+		<pre class="cpp"><code data-trim hide-line-numbers data-line-numbers="|1-3|5-7|8-15|"><script type="text/template">
+			#define EXPECT_CT_AND_RT_FATAL(COND, MESSAGE)     \
+			expect(constant<(COND)>) << (MESSAGE) << fatal; \
+			expect(COND) << (MESSAGE) << fatal
+
+			#define EXPECT_CT_AND_RT_NONFATAL(COND) \
+			expect(constant<(COND)>);             \
+			expect(COND)
+
+			#define ASSERT_PARSE_SUCCESS(P, INPUT, RESULT)                 \
+			EXPECT_CT_AND_RT_FATAL(P::parse(INPUT).has_value(),          \
+				std::format("Input could not be parsed.\nInput = \"{}\"\n" \
+				"Parser = {}", (INPUT), k3::tok3n::pretty(P{}).view()));   \
+			if constexpr (P::parse(INPUT).has_value()) {                 \
+				EXPECT_CT_AND_RT_NONFATAL(*P::parse(INPUT) == (RESULT));   \
+			}
+		</script></code></pre>
+	</div>
+</section>
+
+<section my-columns="90%">
+	<h2>Compile-time testing with UT</h2>
+	<div style="width:100%;">
+		<pre class="cpp"><code data-trim hide-line-numbers data-line-numbers><script type="text/template">
+			"ISO8601 parsing"_test = []
+			{
+				ASSERT_PARSE_SUCCESS(ISODate, "bad", std::tuple("b", "a", "d"));
+			};
+		</script></code></pre>
+		<pre class="text fragment"><code data-trim hide-line-numbers data-line-numbers><script type="text/template">
+			Running test "ISO8601 parsing"... FAILED
+			in: main.cpp:103 - test condition:  [false]
+
+				Input could not be parsed.
+			Input = "bad"
+			Parser = Sequence<
+				Join<Exactly<AnyOf<"0123456789">,4>>,
+				Ignore<AllOf<"-">>,
+				Join<Exactly<AnyOf<"0123456789">,2>>,
+				Ignore<AllOf<"-">>,
+				Join<Exactly<AnyOf<"0123456789">,2>>
+			>
+			===============================================================================
+			Suite globaltests:   1 | 2 failed
+			asserts: 2 | 0 passed | 2 failed
+		</script></code></pre>
+	</div>
+</section>
+
+<section my-columns="90%">
+	<h2>Compile-time testing with UT</h2>
+	<div style="width:100%;">
+		<pre class="text"><code data-trim hide-line-numbers data-line-numbers><script type="text/template">
+			Running test "ISO8601 parsing"... FAILED
+			in: main.cpp:103 - test condition:  [false]
+
+				Input could not be parsed.
+			Input = "2024-02-29"
+			Parser = Sequence<
+				Join<Exactly<AnyOf<"012345678">,4>>,
+				Ignore<AllOf<"-">>,
+				Join<Exactly<AnyOf<"012345678">,2>>,
+				Ignore<AllOf<"-">>,
+				Join<Exactly<AnyOf<"012345678">,2>>
+			>
+			===============================================================================
+			Suite globaltests:   1 | 2 failed
+			asserts: 2 | 0 passed | 2 failed
+		</script></code></pre>
+		<div class="fragment" style="position:absolute; top:10%; left:27%; font-size:1000%;">
+			✔️
+		</div>
+	</div>
+</section>
+
+<!-- #endregion Compile-time testing with UT -->
+
+<!-- #region Compile-time testing level 2 -->
+
+<section my-columns="90%">
+	<h2>Parametrized compile-time testing with snitch</h2>
+	<div style="width:100%;">
+		<pre class="cpp"><code data-trim hide-line-numbers data-line-numbers><script type="text/template">
+			template <class L, class R>
+			concept can_sequence = requires { L{} >> R{}; };
+		</script></code></pre>
+		<pre class="cpp fragment"><code data-trim hide-line-numbers data-line-numbers="|4|6-8|12-14|"><script type="text/template">
+			template <Parser L, Parser R>
+			void sequence_tester(L, R)
+			{
+				if (std::same_as<typename L::value_type, typename R::value_type>)
+				{
+					INFO(std::format("`L >> R` did not compile.\nL = {}\nR = {}",
+						k3::tok3n::pretty(L{}).view(), k3::tok3n::pretty(R{}).view()));
+					CONSTEXPR_CHECK(can_sequence<L, R>);
+				}
+				else
+				{
+					INFO(std::format("`L >> R` compiled but it shouldn't.\nL = {}\nR = {}",
+						k3::tok3n::pretty(L{}).view(), k3::tok3n::pretty(R{}).view()));
+					CONSTEXPR_CHECK(!can_sequence<L, R>);
+				}
+			}
+		</script></code></pre>
+	</div>
+</section>
+
+<section my-columns="90%">
+	<h2>Parametrized compile-time testing with snitch</h2>
+	<div style="width:100%;">
+		<pre class="cpp"><code data-trim hide-line-numbers data-line-numbers><script type="text/template">
+			template <Parser... Ps>
+			void pairwise_sequence_tester(type_list<Ps...>)
+			{
+				constexpr auto impl = []<Parser R>(R)
+				{
+					(..., sequence_tester(Ps{}, R{}));
+				};
+				(..., impl(Ps{}));
+			}
+		</script></code></pre>
+		<pre class="cpp fragment"><code data-trim hide-line-numbers data-line-numbers="|3-6|7|8|"><script type="text/template">
+			TEST_CASE("Combinable with sequence")
+			{
+				using P1 = decltype("123"_any_of); // value_type is char
+				using P2 = decltype("456"_all_of);
+				using P3 = decltype(L"123"_any_of); // value_type is wchar_t
+				using P4 = decltype(L"456"_all_of);
+				using List = type_list<P1, P2, P3, P4>;
+				pairwise_sequence_tester(List{});
+			}
+		</script></code></pre>
+	</div>
+</section>
+
+<section my-columns="90%">
+	<h2>Parametrized compile-time testing with snitch</h2>
+	<div style="width:100%;">
+		<pre class="cpp"><code data-trim hide-line-numbers data-line-numbers><script type="text/template">
+			starting dev_snitch with snitch v1.2.4.2f62308
+			==========================================
+			failed: running test case "Combinable with sequence"
+						at main.cpp:104
+						with `L >> R` did not compile.
+			L = AnyOf<"123">
+			R = AnyOf<"456">
+						CONSTEXPR_CHECK[compile-time](can_sequence<L, R>)
+						got: false
+			failed: running test case "Combinable with sequence"
+						at main.cpp:110
+						with `L >> R` compiled but it shouldn't.
+			L = AnyOf<"123">
+			R = AnyOf<L"123">
+						CONSTEXPR_CHECK[compile-time](!can_sequence<L, R>)
+						got: false
+			...
+		</script></code></pre>
+	</div>
+</section>
+
+<!-- #endregion Compile-time testing level 2 -->
+
+<!-- #endregion Compile-time testing -->
+
+<!-- #endregion Unit testing frameworks -->
+
+
+
+<!-- #region My solution -->
+
+<section signpost change-footer="My framework">
+	My solution
+</section>
+
+<section data-markdown class="list-fade-in-then-semi-out">
+	<textarea data-template>
+		## My prior assumptions
+		* Compile-time test failure must fail the compile
+		* Similarly, error messages must be in the `static_assert`
+		* So, working with these assumptions...
+	</textarea>
+</section>
+
+<section my-columns="50%">
+	<h2><code>static_assert</code> messages in C++20</h2>
+	<div style="text-align: left;">
+		<div>[dcl.pre]</div>
+		<br/>
+		<div style="font-weight: normal !important;">
+			<span class="fragment semi-fade-out" data-fragment-index="1">
+			In a <i style="font-style: italic !important;">static_assert-declaration</i>,
+			the <i style="font-style: italic !important;">constant-expression</i> shall be a contextually converted constant expression
+			of type <code>bool</code> [...] the resulting diagnostic message (4.1) shall include the text of
+			the</span>
+			<i style="font-style: italic !important;">string-literal</i><span class="fragment semi-fade-out" data-fragment-index="1">, if one is supplied, [...]</span>
+		</div>
+	</div>
+</section>
+
+<!-- #region Intro -->
+
+<section my-columns="42%">
+	<h2>Mini testing library</h2>
+	<div style="width:100%;">
+		<pre class="cpp"><code data-trim hide-line-numbers data-line-numbers="|3"><script type="text/template">
+			#define ASSERT(CONDITION, MESSAGE)                  \
+				{                                                 \
+				STATIC_ASSERT(CONDITION, MESSAGE);              \
+				if (!TestResultContext::check(CONDITION))       \
+					return TestResultContext::add_error(MESSAGE); \
+				}
+		</script></code></pre>
+	</div>
+</section>
+
+<section my-columns="42%">
+	<h2>Mini testing library</h2>
+	<div style="width:100%;">
+		<pre class="cpp"><code data-trim hide-line-numbers data-line-numbers="|4|2|"><script type="text/template">
+			#ifdef DISABLE_STATIC_ASSERT
+			#define STATIC_ASSERT(...)
+			#else
+			#define STATIC_ASSERT(...) static_assert(__VA_ARGS__)
+			#endif
+		</script></code></pre>
+	</div>
+</section>
+
+<section my-columns="42%">
+	<h2>Mini testing library</h2>
+	<div style="width:100%;">
+		<pre class="cpp"><code data-trim hide-line-numbers data-line-numbers="|4|5"><script type="text/template">
+			#define ASSERT(CONDITION, MESSAGE)                  \
+				{                                                 \
+				STATIC_ASSERT(CONDITION, MESSAGE);              \
+				if (!TestResultContext::check(CONDITION))       \
+					return TestResultContext::add_error(MESSAGE); \
+				}
+		</script></code></pre>
+	</div>
+</section>
+
+<section my-columns="65%">
+	<h2>Mini testing library</h2>
+	<div style="width:100%;">
+		<pre class="cpp"><code data-trim hide-line-numbers data-line-numbers="5"><script type="text/template">
+			#define ASSERT(CONDITION, MESSAGE)                  \
+				{                                                 \
+				STATIC_ASSERT(CONDITION, MESSAGE);              \
+				if (!TestResultContext::check(CONDITION))       \
+					return TestResultContext::add_error(MESSAGE); \
+				}
+		</script></code></pre>
+		<pre class="cpp"><code data-trim hide-line-numbers><script type="text/template">
+			void TestResultContext::add_error(std::string_view message,
+				std::source_location location = std::source_location::current());
+		</script></code></pre>
+	</div>
+</section>
+
+<section my-columns="80%">
+	<h2>Simple test</h2>
+	<div style="width:100%;">
+		<pre class="cpp"><code data-trim hide-line-numbers data-line-numbers="1-4,20|7|9-10|11-12|13-14|9-14|16-17|18-19|16-19|"><script type="text/template">
+			FIXTURE("AnyOf");
+
+			TEST("AnyOf", "Parse single 'a'")
+			{
+				using P = AnyOf<'a'>;
+
+				ASSERT(Parser<P>, "AnyOf<'a'> does not satisfy the Parser concept");
+
+				ASSERT(P::parse("ab").has_value(),
+					R"(`AnyOf<'a'>::parse("ab")` does not give a valid result)");
+				ASSERT(*(P::parse("ab")) == "a",
+					R"(`*(AnyOf<'a'>::parse("ab"))` does not equal `"a"`)");
+				ASSERT(P::parse("ab").remaining() == "b",
+					R"(`AnyOf<'a'>::parse("ab").remaining()` does not equal `"b"`)");
+
+				ASSERT(not P::parse("ba").has_value(),
+					R"(`AnyOf<'a'>::parse("ba")` gives a valid result but it should not)");
+				ASSERT(P::parse("ba").remaining() == "ba",
+					R"(`AnyOf<'a'>::parse("ba").remaining()` does not equal `"ba"`)");
+			}
+		</script></code></pre>
+	</div>
+</section>
+
+<section my-columns="20%">
+	<h2>Simple test</h2>
+	<div style="width:100%;">
+		<pre class="text"><code data-trim hide-line-numbers data-line-numbers=""><script type="text/template">
+			Displaying all fixture results, 1 total.
+
+			Fixture "AnyOf" - 1 tests / 0 failures.
+		</script></code></pre>
+	</div>
+</section>
+
+<section my-columns="80%">
+	<h2>Simple test</h2>
+	<div style="width:100%;">
+		<pre class="cpp"><code data-trim hide-line-numbers data-line-numbers="|9-12"><script type="text/template">
+			FIXTURE("AnyOf");
+
+			TEST("AnyOf", "Parse single 'a'")
+			{
+				using P = AnyOf<'a'>;
+
+				// ...
+
+				ASSERT(P::parse("Ab").has_value(),
+					R"(`AnyOf<'a'>::parse("Ab")` does not give a valid result)");
+				ASSERT(*(P::parse("Ab")) == "A",
+					R"(`*(AnyOf<'a'>::parse("Ab"))` does not equal `"A"`)");
+
+				// ...
+			}
+		</script></code></pre>
+	</div>
+</section>
+
+<section my-columns="70%">
+	<h2>Simple test</h2>
+	<div style="width:100%;">
+		<pre class="text"><code data-trim hide-line-numbers data-line-numbers=""><script type="text/template">
+			AnyOf.cpp(38,2): error C2338: static_assert failed:
+				'`AnyOf<'a'>::parse("Ab")` does not give a valid result'
+		</script></code></pre>
+		<div><br/></div>
+		<pre class="text fragment"><code data-trim hide-line-numbers data-line-numbers=""><script type="text/template">
+			Displaying all fixture results, 1 total.
+
+			Fixture "AnyOf" - 1 tests / 1 failures.
+
+			=================================
+
+			Fixture "AnyOf" - 1 tests
+				Test "Parse single 'a'" - 1 checks / 1 errors.
+
+			Test "Parse single 'a'" failed at
+				File: AnyOf.cpp
+				Line: 38
+				Message: `AnyOf<'a'>::parse("Ab")` does not give a valid result
+		</script></code></pre>
+	</div>
+</section>
+
+<section my-columns="80%">
+	<h2>Infeasable to write many of these</h2>
+	<div style="width:100%;">
+		<pre class="cpp"><code data-trim hide-line-numbers data-line-numbers=""><script type="text/template">
+			FIXTURE("AnyOf");
+
+			TEST("AnyOf", "Parse single 'a'")
+			{
+				using P = AnyOf<'a'>;
+
+				ASSERT(Parser<P>, "AnyOf<'a'> does not satisfy the Parser concept");
+
+				ASSERT(P::parse("ab").has_value(),
+					R"(`AnyOf<'a'>::parse("ab")` does not give a valid result)");
+				ASSERT(*(P::parse("ab")) == "a",
+					R"(`*(AnyOf<'a'>::parse("ab"))` does not equal `"a"`)");
+				ASSERT(P::parse("ab").remaining() == "b",
+					R"(`AnyOf<'a'>::parse("ab").remaining()` does not equal `"b"`)");
+
+				ASSERT(not P::parse("ba").has_value(),
+					R"(`AnyOf<'a'>::parse("ba")` gives a valid result but it should not)");
+				ASSERT(P::parse("ba").remaining() == "ba",
+					R"(`AnyOf<'a'>::parse("ba").remaining()` does not equal `"ba"`)");
+			}
+		</script></code></pre>
+	</div>
+</section>
+
+<section my-columns="80%">
+	<h2>Infeasable to write many of these</h2>
+	<div style="width:100%;">
+		<pre class="cpp"><code data-trim hide-line-numbers data-line-numbers=""><script type="text/template">
+			FIXTURE("AnyOf");
+
+			TEST("AnyOf", "Parse single 'a'")
+			{
+				using P = AnyOf<'a'>;
+
+				ASSERT(Parser<P>, "AnyOf<'a'> does not satisfy the Parser concept");
+
+				ASSERT(P::parse("ab").has_value(),
+					R"(`AnyOf<'a'>::parse("ab")` does not give a valid result)");
+				ASSERT(*(P::parse("ab")) == "A",
+					R"(`*(AnyOf<'a'>::parse("ab"))` does not equal `"a"`)");
+				ASSERT(P::parse("ab").remaining() == "b",
+					R"(`AnyOf<'a'>::parse("ab").remaining()` does not equal `"b"`)");
+
+				ASSERT(not P::parse("ba").has_value(),
+					R"(`AnyOf<'a'>::parse("ba")` gives a valid result but it should not)");
+				ASSERT(P::parse("ba").remaining() == "ba",
+					R"(`AnyOf<'a'>::parse("ba").remaining()` does not equal `"ba"`)");
+			}
+		</script></code></pre>
+		<div class="fragment" style="position:absolute; top:15%; left:20%; font-size:800%;">
+			DRY!
+		</div>
+	</div>
+</section>
+
+<!-- #endregion Intro -->
+
+<!-- #region Parametrize -->
+
+<section my-columns="100%">
+	<h2>Parametrize the testing</h2>
+	<div style="width:100%;">
+		<pre class="cpp"><code data-trim hide-line-numbers data-line-numbers="|2-3|4-5|6-7|8-9|"><script type="text/template">
+			#define ASSERT_PARSE_SUCCESS(P, INPUT, OUTPUT, REMAIN)                                  \
+				ASSERT((Parser<P>),                                                                   \
+				"`" STR(P) "` does not satisfy the Parser concept.");                               \
+				ASSERT(P::parse(INPUT).has_value(),                                                   \
+				"`" STR(P) "::parse(" STR(INPUT) ")` does not give a valid result" );               \
+				ASSERT(*(P::parse(INPUT)) == (OUTPUT),                                                \
+				"`*(" STR(P) "::parse(" STR(INPUT) "))` does not equal `" STR(OUTPUT) "`");         \
+				ASSERT(P::parse(INPUT).remaining() == (REMAIN),                                       \
+				"`" STR(P) "::parse(" STR(INPUT) ").remaining()` does not equal `" STR(REMAIN) "`")
+		</script></code></pre>
+	</div>
+</section>
+
+<section my-columns="55%">
+	<h2>Parametrize the testing</h2>
+	<div style="width:100%;">
+		<pre class="cpp"><code data-trim hide-line-numbers data-line-numbers=""><script type="text/template">
+			TEST("AnyOf", "Parse single 'a'")
+			{
+				ASSERT_PARSE_SUCCESS(AnyOf<'a'>, "ab", "a", "b");
+			}
+		</script></code></pre>
+		<pre class="text fragment"><code data-trim hide-line-numbers data-line-numbers=""><script type="text/template">
+			Displaying all fixture results, 1 total.
+
+			Fixture "AnyOf" - 1 tests / 0 failures.
+		</script></code></pre>
+	</div>
+</section>
+
+<section my-columns="55%">
+	<h2>Parametrize the testing</h2>
+	<div style="width:100%;">
+		<pre class="cpp"><code data-trim hide-line-numbers data-line-numbers=""><script type="text/template">
+			TEST("AnyOf", "Parse single 'a'")
+			{
+				ASSERT_PARSE_SUCCESS(AnyOf<'a'>, "Ab", "A", "b");
+			}
+		</script></code></pre>
+		<pre class="text fragment"><code data-trim hide-line-numbers data-line-numbers=""><script type="text/template">
+			AnyOf.cpp(44,2): error C2338: static_assert failed:
+				'`AnyOf<'a'>::parse("Ab")` does not give a valid result'
+		</script></code></pre>
+	</div>
+</section>
+
+<section my-columns="55%">
+	<h2>Parametrize the testing</h2>
+	<div style="width:100%;">
+		<pre class="cpp"><code data-trim hide-line-numbers data-line-numbers=""><script type="text/template">
+			TEST("AnyOf", "Parse single 'a'")
+			{
+				ASSERT_PARSE_SUCCESS(AnyOf<'a'>, "ab", "A", "b");
+			}
+		</script></code></pre>
+		<pre class="text fragment"><code data-trim hide-line-numbers data-line-numbers=""><script type="text/template">
+			AnyOf.cpp(44,2): error C2338: static_assert failed:
+				'`*(AnyOf<'a'>::parse("ab"))` does not equal `"A"`'
+		</script></code></pre>
+	</div>
+</section>
+
+<section my-columns="55%">
+	<h2>Parametrize the testing</h2>
+	<div style="width:100%;">
+		<pre class="cpp"><code data-trim hide-line-numbers data-line-numbers=""><script type="text/template">
+			TEST("AnyOf", "Parse single 'a'")
+			{
+				ASSERT_PARSE_SUCCESS(AnyOf<'a'>, "ab", "a", "B");
+			}
+		</script></code></pre>
+		<pre class="text fragment"><code data-trim hide-line-numbers data-line-numbers=""><script type="text/template">
+			AnyOf.cpp(44,2): error C2338: static_assert failed:
+				'`AnyOf<'a'>::parse("ab").remaining()` does not equal `"B"`'
+		</script></code></pre>
+	</div>
+</section>
+
+<section my-columns="82%">
+	<h2>Trouble with string literals</h2>
+	<div style="width:100%;">
+		<pre class="cpp"><code data-trim hide-line-numbers data-line-numbers=""><script type="text/template">
+			TEST("ISO-8601", "parse")
+			{
+				auto digit = "0123456789"_any_of;
+				auto year = exactly<4>(digit) % join;
+				auto month = exactly<2>(digit) % join;
+				auto day = digit % exactly<2> % join;
+				auto parser = year >> "-"_ign >> month >> "-"_ign >> day;
+				using P = decltype(parser);
+
+				ASSERT_PARSE_SUCCESS(P, "2024-05-02", std::tuple("2024", "05", "02"), "");
+			}
+		</script></code></pre>
+		<pre class="text fragment"><code data-trim hide-line-numbers data-line-numbers=""><script type="text/template">
+			Displaying all fixture results, 1 total.
+
+			Fixture "ISO-8601" - 1 tests / 0 failures.
+		</script></code></pre>
+	</div>
+</section>
+
+<section my-columns="82%">
+	<h2>Trouble with string literals</h2>
+	<div style="width:100%;">
+		<pre class="cpp"><code data-trim hide-line-numbers data-line-numbers=""><script type="text/template">
+			TEST("ISO-8601", "parse")
+			{
+				auto digit = "0123456789"_any_of;
+				auto year = exactly<4>(digit) % join;
+				auto month = exactly<2>(digit) % join;
+				auto day = digit % exactly<2> % join;
+				auto parser = year >> "-"_ign >> month >> "-"_ign >> day;
+				using P = decltype(parser);
+
+				ASSERT_PARSE_SUCCESS(P, "2024-05-02", std::tuple("2024", "01", "01"), "");
+			}
+		</script></code></pre>
+		<pre class="text fragment"><code data-trim hide-line-numbers data-line-numbers=""><script type="text/template">
+			AnyOf.cpp(62,2): error C2338: static_assert failed:
+				'`*(P::parse("2024-05-02"))` does not equal `std::tuple("2024", "01", "01")`'
+		</script></code></pre>
+	</div>
+</section>
+
+<section my-columns="82%">
+	<h2>Trouble with string literals</h2>
+	<div style="width:100%;">
+		<pre class="cpp"><code data-trim hide-line-numbers data-line-numbers><script type="text/template">
+			template <class L, class R>
+			concept can_sequence = requires { L{} >> R{}; };
+		</script></code></pre>
+		<pre class="cpp"><code data-trim hide-line-numbers data-line-numbers="|6|"><script type="text/template">
+			template <Parser L, Parser R>
+			void sequence_tester(L, R)
+			{
+				if constexpr (std::same_as<typename L::value_type, typename R::value_type>)
+				{
+					// Where do we pretty print L and R??
+					ASSERT((can_sequence<L, R>), "`L >> R` did not compile");
+				}
+				else
+				{
+					ASSERT((!can_sequence<L, R>), "`L >> R` compiled but it should not");
+				}
+			}
+		</script></code></pre>
+	</div>
+</section>
+
+<section my-columns="55%">
+	<h2>Trouble with string literals</h2>
+	<div style="width:100%;">
+		<pre class="cpp"><code data-trim hide-line-numbers data-line-numbers><script type="text/template">
+			ExampleFile.cpp(42,1): error C2338: static_assert failed:
+				'`L >> R` compiled but it should not'
+		</script></code></pre>
+		<div class="fragment">??</div>
+	</div>
+</section>
+
+<!-- #endregion Parametrize -->
+
+<!-- #region More macros -->
+
+<section my-columns="82%">
+	<h2>Parametrize the testing - more macros</h2>
+	<div style="width:100%;">
+		<pre class="cpp fragment"><code data-trim hide-line-numbers data-line-numbers=""><script type="text/template">
+			#define ALL_SAMPLES     \
+				(AnyOf1) (AnyOf2) ... \
+				(AllOf1) (AllOf2) ... \
+				...
+
+			// Using BOOST_PP_SEQ_FOR_EACH_PRODUCT over ALL_SAMPLES
+			#define ASSERT_ALL_SAMPLES_2(ASSERTER) ...
+		</script></code></pre>
+	</div>
+</section>
+
+<section my-columns="100%">
+	<h2>Parametrize the testing - more macros</h2>
+	<div style="width:100%;">
+		<pre class="cpp"><code data-trim hide-line-numbers data-line-numbers="|3|5-6|10-11|15|19|"><script type="text/template">
+			#define SEQUENCE_OPERATOR_ASSERTER(L, R)                                        \
+				{                                                                             \
+				if constexpr (std::same_as<typename L::value_type, typename R::value_type>) \
+				{                                                                           \
+					ASSERT((can_sequence<L, R>),                                              \
+					"`" STR(L) " >> " STR(R) "` did not compile");                          \
+				}                                                                           \
+				else                                                                        \
+				{                                                                           \
+					ASSERT((!can_sequence<L, R>),                                             \
+					"`" STR(L) " >> " STR(R) "` compiled but it should not");               \
+				}                                                                           \
+				}
+
+			#define ALL_SAMPLES (AnyOf<"abc">) (AnyOf<"xyz">) (AnyOf<L"abc">) (AnyOf<L"xyz">)
+
+			TEST("Combinable with sequence", "all samples")
+			{
+				ASSERT_ALL_SAMPLES_2(SEQUENCE_OPERATOR_ASSERTER);
+			}
+		</script></code></pre>
+	</div>
+</section>
+
+<section my-columns="55%">
+	<h2>Parametrize the testing - more macros</h2>
+	<div style="width:100%;">
+		<pre class="text"><code data-trim hide-line-numbers data-line-numbers="|2"><script type="text/template">
+			AnyOf.cpp(100,2): error C2338: static_assert failed:
+				'`AnyOf<"abc"> >> AnyOf<"abc">` compiled but it should not'
+			AnyOf.cpp(100,2): error C2338: static_assert failed:
+				'`AnyOf<"abc"> >> AnyOf<"xyz">` compiled but it should not'
+			AnyOf.cpp(100,2): error C2338: static_assert failed:
+				'`AnyOf<"abc"> >> AnyOf<L"abc">` did not compile'
+			...
+		</script></code></pre>
+	</div>
+</section>
+
+<section my-columns="100%">
+	<h2>Parametrize the testing - more macros</h2>
+	<div style="width:100%;">
+		<pre class="cpp"><code data-trim hide-line-numbers data-line-numbers="|5,10|2,13"><script type="text/template">
+			#define SEQUENCE_OPERATOR_ASSERTER(L, R)                                        \
+				{                                                                             \
+				if constexpr (std::same_as<typename L::value_type, typename R::value_type>) \
+				{                                                                           \
+					ASSERT((can_sequence<L, R>),                                              \
+					"`" STR(L) " >> " STR(R) "` did not compile");                          \
+				}                                                                           \
+				else                                                                        \
+				{                                                                           \
+					ASSERT((!can_sequence<L, R>),                                             \
+					"`" STR(L) " >> " STR(R) "` compiled but it should not");               \
+				}                                                                           \
+				}
+
+			#define ALL_SAMPLES (AnyOf<"abc">) (AnyOf<"xyz">) (AnyOf<L"abc">) (AnyOf<L"xyz">)
+
+			TEST("Combinable with sequence", "all samples")
+			{
+				ASSERT_ALL_SAMPLES_2(SEQUENCE_OPERATOR_ASSERTER);
+			}
+		</script></code></pre>
+	</div>
+</section>
+
+<section my-columns="100%">
+	<h2>Parametrize the testing - more macros</h2>
+	<div style="width:100%;">
+		<pre class="cpp"><code data-trim hide-line-numbers data-line-numbers="2,13|"><script type="text/template">
+			#define SEQUENCE_OPERATOR_ASSERTER(L, R)                                        \
+				[]{                                                                           \
+				if constexpr (std::same_as<typename L::value_type, typename R::value_type>) \
+				{                                                                           \
+					ASSERT((can_sequence<L, R>),                                              \
+					"`" STR(L) " >> " STR(R) "` did not compile");                          \
+				}                                                                           \
+				else                                                                        \
+				{                                                                           \
+					ASSERT((!can_sequence<L, R>),                                             \
+					"`" STR(L) " >> " STR(R) "` compiled but it should not");               \
+				}                                                                           \
+				}()
+
+			#define ALL_SAMPLES (AnyOf<"abc">) (AnyOf<"xyz">) (AnyOf<L"abc">) (AnyOf<L"xyz">)
+
+			TEST("Combinable with sequence", "all samples")
+			{
+				ASSERT_ALL_SAMPLES_2(SEQUENCE_OPERATOR_ASSERTER);
+			}
+		</script></code></pre>
+	</div>
+</section>
+
+<!-- #endregion More macros -->
+
+<section data-markdown class="list-fade-in-then-semi-out">
+	<textarea data-template>
+		## My framework summary
+		* Declare with `FIXTURE(name)` and `TEST(fixture_name, name)`
+		* `ASSERT(cond, msg)` uses both `static_assert` and run-time
+		* All error messages must be string literals
+		* Loop over a list of parsers with `ASSERT_ALL_SAMPLES(ASSERTER)` and `ASSERT_ALL_SAMPLES_2(ASSERTER)`
+		* Result: custom pretty `static_assert` messages
+	</textarea>
+</section>
+
+<!-- #endregion My solution -->
+
+
+
+<!-- #region Upcoming C++ features -->
+
+<section signpost change-footer="Upcoming C++">
+	Upcoming C++ features
+</section>
+
+<!-- #region C++23 static_assert(false) -->
+
+<section my-columns="100%">
+	<h2><code>static_assert(false)</code></h2>
+	<iframe src="https://wg21.link/p2593" style="width:100%; height:100%">
+	</iframe>
+</section>
+
+<section data-markdown class="list-fade-in-then-semi-out">
+	<textarea data-template>
+		## `static_assert(false)`
+		* Accepted as a DR into C++23 under CWG2518
+	</textarea>
+</section>
+
+<section my-columns="50% 50%">
+	<h2><code>static_assert(false)</code></h2>
+	<div style="width:100%;">
+		<div style="text-align: left;">Pre C++23</div>
+		<pre class="cpp"><code data-trim hide-line-numbers data-line-numbers=""><script type="text/template">
+			template <class T>
+			constexpr bool always_false_v = false;
+		</script></code></pre>
+		<pre class="cpp"><code data-trim hide-line-numbers data-line-numbers="|1|3-4,11|5-6|7-8|9-10|"><script type="text/template">
+			std::variant<int, string> v = get_variant();
+
+			auto visitor = []<class T>(const T& t)
+			{
+				if constexpr (std::same_as<T, int>)
+					return std::to_string(t);
+				else if constexpr (std::same_as<T,string>)
+					return t;
+				else
+					static_assert(always_false_v<T>);
+			};
+
+			string result = std::visit(visitor, v);
+		</script></code></pre>
+	</div>
+	<div style="width:100%;" class="fragment">
+		<div style="text-align: left;">C++23</div>
+		<pre class="cpp"><code data-trim hide-line-numbers data-line-numbers=""><script type="text/template">
+			//
+			//
+		</script></code></pre>
+		<pre class="cpp"><code data-trim hide-line-numbers data-line-numbers="|9-10|"><script type="text/template">
+			std::variant<int, string> v = get_variant();
+
+			auto visitor = []<class T>(const T& t)
+			{
+				if constexpr (std::same_as<T, int>)
+					return std::to_string(t);
+				else if constexpr (std::same_as<T,string>)
+					return t;
+				else
+					static_assert(false);
+			};
+
+			string result = std::visit(visitor, v);
+		</script></code></pre>
+	</div>
+</section>
+
+<section my-columns="100%">
+	<h2><code>static_assert(false)</code></h2>
+	<div style="width:100%;">
+		<pre class="cpp"><code data-trim hide-line-numbers data-line-numbers="|5,10|"><script type="text/template">
+			#define SEQUENCE_OPERATOR_ASSERTER(L, R)                                        \
+				{                                                                             \
+				if constexpr (std::same_as<typename L::value_type, typename R::value_type>) \
+				{                                                                           \
+					ASSERT((can_sequence<L, R>),                                              \
+					"`" STR(L) " >> " STR(R) "` did not compile");                          \
+				}                                                                           \
+				else                                                                        \
+				{                                                                           \
+					ASSERT((!can_sequence<L, R>),                                             \
+					"`" STR(L) " >> " STR(R) "` compiled but it should not");               \
+				}                                                                           \
+				}
+		</script></code></pre>
+	</div>
+</section>
+
+<!-- #endregion C++23 static_assert(false) -->
+
+<!-- #region C++26 user-generated static_assert messages -->
+
+<section my-columns="100%">
+	<h2>User-generated <code>static_assert</code> messages</h2>
+	<iframe src="https://wg21.link/p2741" style="width:100%; height:100%">
+	</iframe>
+</section>
+
+<section data-markdown class="list-fade-in-then-semi-out">
+	<textarea data-template>
+		## User-generated `static_assert` messages
+		* Expands what can be used as a `static_assert` message
+		* `M.size()` convertible to `std::size_t`
+		* `M.data()` convertible to `const char*`
+		* Accepted into C++26
+	</textarea>
+</section>
+
+<section my-columns="82%">
+	<h2>User-generated <code>static_assert</code> messages</h2>
+	<div style="width:100%;">
+		<pre class="cpp"><code data-trim hide-line-numbers data-line-numbers="|4-5|7|9-11|15-17|"><script type="text/template">
+			template <Parser L, Parser R>
+			void sequence_tester(L, R)
+			{
+				constexpr auto pretty_L = k3::tok3n::pretty(L{}).view();
+				constexpr auto pretty_R = k3::tok3n::pretty(R{}).view();
+
+				if constexpr (std::same_as<typename L::value_type, typename R::value_type>)
+				{
+					ASSERT((can_sequence<L, R>),
+						std::format("`L >> R` did not compile\nL = {}\nR = {}",
+							pretty_L, pretty_R));
+				}
+				else
+				{
+					ASSERT((!can_sequence<L, R>),
+						std::format("`L >> R` compiled but it should not\nL = {}\nR = {}",
+							pretty_L, pretty_R));
+				}
+			}
+		</script></code></pre>
+	</div>
+</section>
+
+<section my-columns="82%">
+	<h2>User-generated <code>static_assert</code> messages</h2>
+	<div style="width:100%;">
+		<pre class="cpp"><code data-trim hide-line-numbers data-line-numbers="|9-11|15-17|"><script type="text/template">
+			template <Parser L, Parser R>
+			void sequence_tester(L, R)
+			{
+				constexpr auto pretty_L = k3::tok3n::pretty(L{}).view();
+				constexpr auto pretty_R = k3::tok3n::pretty(R{}).view();
+
+				if constexpr (std::same_as<typename L::value_type, typename R::value_type>)
+				{
+					ASSERT((can_sequence<L, R>),
+						std::string("`L >> R` did not compile\nL = ")
+							+ pretty_L + "\nR = " + pretty_R);
+				}
+				else
+				{
+					ASSERT((!can_sequence<L, R>),
+						std::string("`L >> R` compiled but it should not\nL = ")
+							+ pretty_L + "\nR = " + pretty_R);
+				}
+			}
+		</script></code></pre>
+	</div>
+</section>
+
+<!-- #endregion C++26 user-generated static_assert messages -->
+
+<!-- #endregion Upcoming C++ features -->
+
+
+
+<!-- #region Conclusion -->
+
+<section signpost change-footer="Conclusion">
+	Conclusion
+</section>
+
+<section data-markdown class="list-fade-in-then-semi-out">
+	<textarea data-template>
+		## Summary
+		* `tok3n` is a parser combinator library for spans of anything
+		* I need to test it at compile-time
+		* CT testing is hard, especially custom error messages
+		* Test frameworks Snitch and UT
+		* CT test failures don't need to fail the compile!
+		* If we want `static_assert` test cases, it'll be better in C++26
+	</textarea>
+</section>
+
+<section data-markdown class="list-fade-in-then-semi-out">
+	<textarea data-template>
+		## Takeaways
+		* Try out new libraries, you might learn something
+		* Dive deep and reassess your assumptions
+		* Javascript is actually pretty cool
+	</textarea>
+</section>
+
+<!-- #endregion Conclusion -->
+
+<section full no-footer>
+	<div style="display: flex; flex-flow: column; height: 100%;">
+
+		<div style="flex: 0 1 auto; padding:1.8% 3% 2% 3%; background-color: #DDDDDD; display: flex; flex-flow: row;">
+			<div style="flex: 1 1 auto;"></div>
+			<div style="display: flex; flex-flow: column; flex: 0 1 auto;">
+				<div style="font-size:300%; text-align: center;">Thank you!</div>
+			</div>
+			<div style="flex: 1 1 auto;"></div>
+		</div>
+
+
+		<div style="flex: 1 1 auto; display: flex; flex-flow: row;">
+			<div style="flex: 1 1 auto;"></div>
+			<div style="display: flex; flex-flow: column; flex: 0 1 auto;">
+				<div style="flex: 1 1 auto;"></div>
+				<div style="text-align: center; font-size: 150%;">
+					Braden Ganetsky
+				</div>
+				<br/>
+				<div style="text-align: center;">
+					braden@ganets.ky
+				</div>
+				<div style="text-align: center;">
+					GitHub @k3DW
+				</div>
+				<div style="flex: 1 1 auto;"></div>
+			</div>
+			<div style="flex: 1 1 auto;"></div>
+		</div>
+
+
+	</div>
+</section>
