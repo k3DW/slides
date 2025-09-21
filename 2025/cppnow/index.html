@@ -1,0 +1,310 @@
+---
+layout: reveal.js
+title: "C++Now 2025"
+layout-version: 1
+footer:
+    left: "Lambda All the Things"
+    right: "Braden Ganetsky - C++Now 2025"
+    sub: true
+thank-you:
+    version: 1
+---
+
+<!-- #region Intro -->
+
+<section full data-background-image="./img/Lambda All The Things_Title Card.png" no-footer change-footer="Introduction">
+</section>
+
+<section full data-background-image="./img/lambda-all-the-things-fixed.jpg" no-footer>
+</section>
+
+<!-- <section full data-background-color="#FFFFFF" no-footer change-footer="Introduction">
+    <div style="display: flex; flex-flow: column; height: 100%;">
+
+        <div style="flex: 0 1 75%; display: flex; flex-flow: row;">
+            <div style="font-size:200%; display: flex; flex-flow: column; flex: 0 1 auto;">
+                <div style="flex: 1 1 auto;"></div>
+                <div>Lambda</div>
+                <div style="margin-top:-10px;">All the Things</div>
+                <div style="flex: 1 1 auto;"></div>
+                <div style="flex: 0 1 0.5em;"></div>
+            </div>
+            <div style="flex: 50 1 auto;"></div>
+            <div style="display: flex; flex-flow: column; flex: 0 1 36%;">
+                <div style="flex: 1 1 auto;"></div>
+                <div style="display: flex; flex-flow: row; flex: 0 1 auto;">
+                    <div style="flex: 1 1 auto;"></div>
+                    <img src="/img/profile-picture.png"></img>
+                </div>
+                <div style="flex: 3 1 auto;"></div>
+            </div>
+            <div style="flex: 1 1 auto;"></div>
+        </div>
+
+        <div style="flex: 1 1 auto; padding:1.8% 3% 2% 3%; background-color: #DDDDDD; display: flex; flex-flow: column;">
+            <div style="font-size:125%; ">Braden Ganetsky</div>
+            <div style="flex: 1 1 auto;"></div>
+            <div style="font-size:100%; ">C++Now 2025</div>
+        </div>
+
+    </div>
+</section> -->
+
+<section data-markdown class="list-fade-in-then-semi-out">
+    <textarea data-template>
+        ## About me
+        * Canadian
+        * Mechanical engineering degree
+        * I like twisty puzzles
+        ![test](/img/NEP7570939.jpg) <!-- .element style="position:absolute; height:75%; right:0; top:12%;"-->
+        * Working in C++ for 4 years
+        * On WG21 since 2023
+        * Run Winnipeg C++ Developers
+    </textarea>
+</section>
+
+<section data-markdown class="list-fade-in-then-semi-out">
+    <textarea data-template>
+        ## Lambdas
+        * Introduced in C++11
+        * On the cutting edge of C++ features
+    </textarea>
+</section>
+
+<section my-columns>
+    <div>
+        <img src="./img/constexpr-all-the-things.jpg" width="50%" />
+        <br/>
+        "constexpr ALL the things!"
+        <br/>
+        <a href="https://www.youtube.com/watch?v=HMB9oXFobJc" style="font-size: 50%;">https://www.youtube.com/watch?v=HMB9oXFobJc</a>
+    </div>
+</section>
+
+<section data-markdown class="list-fade-in-then-semi-out">
+    <textarea data-template>
+        ## How much can we do without...?
+        * structs/classes
+        * unions
+        * functions
+    </textarea>
+</section>
+
+<section my-columns>
+    <div style="margin-inline: auto;">
+        <img src="./img/SICP_cover.jpg" />
+    </div>
+</section>
+
+<section my-columns>
+    <div>
+        <img src="./img/Building Streams out of Hot Air_Title Card copy.png" width="75%" />
+    </div>
+</section>
+
+<section data-markdown class="list-fade-in-then-semi-out">
+    <textarea data-template>
+        ## Goals
+        * Implement as much of the stdlib as possible
+        * ... with minimal classes/structs, unions, functions
+        * ... in C++23
+        * Determine the minimum number of "rule breaks"
+        * Maintain C++'s semantics
+    </textarea>
+</section>
+
+<section data-markdown class="list-fade-in-then-semi-out">
+    <textarea data-template>
+        ## This talk is
+        * A thought experiment
+        * Scientific
+        * A fun challenge, testing limits of lambdas
+        * A 90-minute lightning talk
+        * _Full of code you should not write!_
+    </textarea>
+</section>
+
+<section data-markdown class="list-fade-in-then-semi-out">
+    <textarea data-template>
+        ## Overview
+        * History of C++ lambdas
+        * Type traits and utilities
+        * Classes by example - `unique_ptr`
+        * More features
+    </textarea>
+</section>
+
+<!-- #endregion Intro -->
+
+
+
+<include src="./regions/lambda-history.html"></include>
+
+
+
+<!-- #region Type traits -->
+
+<section data-markdown signpost change-footer="Type traits and utilities">
+    Type traits and utilities
+</section>
+
+<section my-columns="50%">
+    <div style="text-align: left;">
+        <div>[expr.prim.lambda.closure]/1</div>
+        <br/>
+        <div style="font-weight: normal !important;">
+            <span class="fragment semi-fade-out" data-fragment-index="1">
+                The type of a
+                <i style="font-style: italic !important;">lambda-expression</i>
+                (which is also the type of the closure object)
+            </span>
+            is a unique, unnamed non-union class type<span class="fragment semi-fade-out" data-fragment-index="1">,
+                called the
+                <i style="font-style: italic !important;">closure type</i>,
+                whose properties are described below.
+            </span>
+        </div>
+    </div>
+</section>
+
+<section data-markdown class="list-fade-in-then-semi-out">
+    <textarea data-template>
+        ## Type traits and utilities
+        * `integral_constant`
+        * Query traits, like `is_same`
+        * `type_identity`
+        * Cast functions
+        * Overloading
+    </textarea>
+</section>
+
+<include src="./regions/type-traits/1-integral-constant.html"></include>
+<include src="./regions/type-traits/2-query-traits.html"></include>
+<include src="./regions/type-traits/3-type-identity.html"></include>
+<include src="./regions/type-traits/4-cast-functions.html"></include>
+<include src="./regions/type-traits/5-overloading.html"></include>
+
+<!-- #endregion Type traits -->
+
+
+
+<!-- #region Classes by example -->
+
+<section data-markdown signpost change-footer="Classes by example">
+    Classes by example
+</section>
+
+<section data-markdown class="list-fade-in-then-semi-out">
+    <textarea data-template>
+        ## Classes by example - `unique_ptr`
+        * Data members
+        * Data accessors, and member functions
+        * Non-SMF constructors
+        * Static members, e.g. typedefs
+        * Copy and move
+        * Destructors
+    </textarea>
+</section>
+
+<include src="./regions/unique-ptr/1-data-members.html"></include>
+<include src="./regions/unique-ptr/2-member-functions.html"></include>
+<include src="./regions/unique-ptr/3-constructors.html"></include>
+<include src="./regions/unique-ptr/4-static-members.html"></include>
+<include src="./regions/unique-ptr/5-copy-move.html"></include>
+<include src="./regions/unique-ptr/6-destructor.html"></include>
+
+<!-- #endregion Classes by example -->
+
+
+
+<!-- #region More features -->
+
+<section data-markdown signpost change-footer="More features">
+    More features
+</section>
+
+<section data-markdown class="list-fade-in-then-semi-out">
+    <textarea data-template>
+        ## More features
+        * Propagating copy and move
+        * `tuple` - member function template
+        * `tuple` - equality operator
+        * Reusable storage
+        * Range-based for loop
+        * Declaration and TUs
+        * `main` function
+    </textarea>
+</section>
+
+<include src="./regions/more-features/0-copying-moving.html"></include>
+<include src="./regions/more-features/1-tuple-memfn-template.html"></include>
+<include src="./regions/more-features/2-tuple-equality-op.html"></include>
+<include src="./regions/more-features/3-reusable-storage.html"></include>
+<include src="./regions/more-features/4-range-for.html"></include>
+<include src="./regions/more-features/4.5-translation-units.html"></include>
+<include src="./regions/more-features/5-main.html"></include>
+
+<!-- #endregion More features -->
+
+
+
+<!-- #region Conclusion -->
+
+<section signpost change-footer="Conclusion">
+    Conclusion
+</section>
+
+<section my-columns>
+    <h2>Conclusion</h2>
+    <div style="width:100%;">
+        <div style="width:100%;" class="fragment">
+            Lambdas are very powerful in C++23!
+        </div>
+        <br>
+        <div style="width:100%;" class="fragment">
+            except...
+        </div>
+    </div>
+</section>
+
+<section full>
+    <h2>Lambda Restrictions</h2>
+    <li class="fragment fade-in-then-semi-out" style="font-size:80%;">No implicit conversions, e.g. base class slicing</li>
+    <li class="fragment fade-in-then-semi-out" style="font-size:80%;">No member typedef</li>
+    <li class="fragment fade-in-then-semi-out" style="font-size:80%;">No compiler-selected overloading</li>
+    <li class="fragment fade-in-then-semi-out" style="font-size:80%;">No user-defined conversion functions</li>
+    <li class="fragment fade-in-then-semi-out" style="font-size:80%;">No user-defined implicit copy/move operations</li>
+    <li class="fragment fade-in-then-semi-out" style="font-size:80%;">No user-defined destructors</li>
+    <li class="fragment fade-in-then-semi-out" style="font-size:80%;">Limited template argument deduction</li>
+    <li class="fragment fade-in-then-semi-out" style="font-size:80%;">No directly extendable overload sets</li>
+    <li class="fragment fade-in-then-semi-out" style="font-size:80%;">No operator overloading</li>
+    <li class="fragment fade-in-then-semi-out" style="font-size:80%;">No array captures</li>
+    <li class="fragment fade-in-then-semi-out" style="font-size:80%;">No separating declaration and definition</li>
+    <li class="fragment fade-in-then-semi-out" style="font-size:80%;">No linking across TUs</li>
+</section>
+
+<section data-markdown class="list-fade-in-then-semi-out">
+    <textarea data-template>
+        ## Unavoidable rule breaks
+        * Struct template `type_identity` before C++26
+        * Struct `no_copy`
+        * Struct template `dtor_wrapper`
+        * Union template `variadic_union`
+        * `main` function in hosted environment
+        * ... others?
+    </textarea>
+</section>
+
+<section data-markdown class="list-fade-in-then-semi-out">
+    <textarea data-template>
+        ## Takeaways
+        * The standard library is huge
+        * Lambdas are versatile
+        * Lambdas can replace most classes and functions
+        * But not all
+        * The standard library is _huge_
+        * Play around with code!
+    </textarea>
+</section>
+
+<!-- #endregion Conclusion -->

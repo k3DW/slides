@@ -1,0 +1,49 @@
+<section my-columns>
+    <h2>Range-based for loop</h2>
+    <div style="text-align: left;">
+        <div>[stmt.ranged]/1</div>
+        <br/>
+        <div style="font-weight: normal !important;">
+            The range-based <code>for</code> statement
+        </div>
+        <pre class="cpp" style="width:100% !important;"><code data-trim hide-line-numbers data-line-numbers=""><script type="text/template">
+            for ( init-statement_opt for-range-declaration : for-range-initializer ) statement
+        </script></code></pre>
+        <div style="font-weight: normal !important;">
+            is equivalent to
+        </div>
+        <pre class="cpp" style="width:100% !important;"><code data-trim hide-line-numbers data-line-numbers="|4-5|6-7"><script type="text/template">
+            {
+                init-statement_opt
+                auto &&range = for-range-initializer ;
+                auto begin = begin-expr ;
+                auto end = end-expr ;
+                for ( ; begin != end; ++begin ) {
+                    for-range-declaration = * begin ;
+                    statement
+                }
+            }
+        </script></code></pre>
+    </div>
+</section>
+
+<section my-columns>
+    <h2>Range-based for loop</h2>
+    <div style="width:100%;">
+        <pre class="cpp"><code data-trim hide-line-numbers data-line-numbers=""><script type="text/template">
+            auto vec = vector<int>({1,2,3,4,5});
+        </script></code></pre>
+        <pre class="cpp fragment"><code data-trim hide-line-numbers data-line-numbers=""><script type="text/template">
+            auto begin = vec(begin_memfn_tag{});
+            auto end = vec(end_memfn_tag{});
+        </script></code></pre>
+        <pre class="cpp fragment"><code data-trim hide-line-numbers data-line-numbers=""><script type="text/template">
+            for ( ; not op_equals(begin, end); begin(operator_pre_incr_tag{}) ) {
+                use(begin(operator_star_tag{}));
+            }
+        </script></code></pre>
+        <div class="fragment" style="position:absolute; top:10%; left:27%; font-size:1000%;">
+            ✔️
+        </div>
+    </div>
+</section>

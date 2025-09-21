@@ -1,0 +1,403 @@
+<section my-columns>
+    <h2>Copy and move</h2>
+    <div style="width:100%;">
+        <pre class="cpp fragment"><code data-trim hide-line-numbers data-line-numbers=""><script type="text/template">
+            auto p1 = unique_ptr<int>(new int(5));
+            auto p2 = unique_ptr<int>(nullptr);
+        </script></code></pre>
+        <pre class="cpp fragment"><code data-trim hide-line-numbers data-line-numbers=""><script type="text/template">
+            p2 = p1;
+        </script></code></pre>
+        <pre class="cpp fragment"><code data-trim hide-line-numbers data-line-numbers=""><script type="text/template">
+            // error: object of type '(lambda at /path/to/unique_ptr.hpp:58:9)' cannot
+            // be assigned because its copy assignment operator is implicitly deleted
+            //    66 |     p2 = p1; // Deleted function operator=
+            //       |        ^
+        </script></code></pre>
+    </div>
+</section>
+
+<section my-columns="50%">
+    <h2>Copy and move</h2>
+    <div style="text-align: left;">
+        <div>[expr.prim.lambda.closure]/16</div>
+        <br/>
+        <div style="font-weight: normal !important;">
+            <span class="fragment semi-fade-out" data-fragment-index="1">
+                {...}
+            </span>
+            It has a deleted copy assignment operator if the
+            <i style="font-style: italic !important;">lambda-expression</i>
+            has a
+            <i style="font-style: italic !important;">lambda-capture</i>
+            <span class="fragment semi-fade-out" data-fragment-index="1">
+                and defaulted copy and move assignment operators otherwise ([class.copy.assign]).
+            </span>
+        </div>
+    </div>
+</section>
+
+<section my-columns>
+    <h2>Copy and move</h2>
+    <div style="width:100%;">
+        <pre class="cpp"><code data-trim hide-line-numbers data-line-numbers="4-10|4-6|7-9|4-10"><script type="text/template">
+            using Impl = decltype(overloaded(
+                // ...
+
+                []<non_const Self>(Self& self, operator_assign_tag, T*,
+                    Self&& other) static noexcept
+                -> Self& {
+                    auto other_ptr = other(release_memfn_tag{});
+                    self(reset_memfn_tag{}, other_ptr);
+                    return self;
+                },
+
+                // ...
+            ));
+        </script></code></pre>
+    </div>
+</section>
+
+<section my-columns>
+    <h2>Copy and move</h2>
+    <div style="width:100%;">
+        <pre class="cpp"><code data-trim hide-line-numbers data-line-numbers=""><script type="text/template">
+            auto p1 = unique_ptr<int>(new int(5));
+            auto p2 = unique_ptr<int>(nullptr);
+        </script></code></pre>
+        <pre class="cpp fragment"><code data-trim hide-line-numbers data-line-numbers=""><script type="text/template">
+            p2(operator_assign_tag{}, move(p1));
+        </script></code></pre>
+        <pre class="cpp fragment"><code data-trim hide-line-numbers data-line-numbers=""><script type="text/template">
+            // p2(operator_assign_tag{}, p1); // Long template error
+        </script></code></pre>
+        <div class="fragment" style="position:absolute; top:10%; left:27%; font-size:1000%;">
+            ✔️
+        </div>
+    </div>
+</section>
+
+<section my-columns>
+    <h2>Copy and move</h2>
+    <div style="width:100%;">
+        <pre class="cpp"><code data-trim hide-line-numbers data-line-numbers=""><script type="text/template">
+            template <class T>
+            using unique_ptr_t = decltype(unique_ptr_impl<T>(nullptr));
+        </script></code></pre>
+    </div>
+</section>
+
+<section my-columns="60%">
+    <h2>Copy and move</h2>
+    <div style="width:100%;">
+        <pre class="cpp"><code data-trim hide-line-numbers data-line-numbers="4"><script type="text/template">
+            template <class T>
+            constexpr auto unique_ptr = overloaded(
+                // ...
+
+
+
+
+
+
+                // ...
+            );
+        </script></code></pre>
+    </div>
+</section>
+
+<section my-columns="60%">
+    <h2>Copy and move</h2>
+    <div style="width:100%;">
+        <pre class="cpp"><code data-trim hide-line-numbers data-line-numbers="4-6|7-9|"><script type="text/template">
+            template <class T>
+            constexpr auto unique_ptr = overloaded(
+                // ...
+                [](const unique_ptr_t<T>& other) static {
+                    // Deleted
+                },
+                [](unique_ptr_t<T>&& other) static {
+                    return unique_ptr_impl<T>(other(release_memfn_tag{}));
+                },
+                // ...
+            );
+        </script></code></pre>
+    </div>
+</section>
+
+<section my-columns>
+    <h2>Copy and move</h2>
+    <div style="width:100%;">
+        <pre class="cpp"><code data-trim hide-line-numbers data-line-numbers=""><script type="text/template">
+            auto p1 = unique_ptr<int>(new int(5));
+            auto p2 = unique_ptr<int>(move(p1)); // Success
+        </script></code></pre>
+        <br>
+        <pre class="cpp fragment"><code data-trim hide-line-numbers data-line-numbers=""><script type="text/template">
+            auto p1 = unique_ptr<int>(new int(5));
+            // auto p2 = unique_ptr<int>(p1); // Error, void return type
+        </script></code></pre>
+    </div>
+</section>
+
+<section my-columns>
+    <h2>Copy and move</h2>
+    <div style="width:100%;">
+        <pre class="cpp"><code data-trim hide-line-numbers data-line-numbers=""><script type="text/template">
+            auto p1 = unique_ptr<int>(new int(5));
+            auto p2 = move(p1);
+        </script></code></pre>
+        <br>
+        <pre class="cpp fragment"><code data-trim hide-line-numbers data-line-numbers=""><script type="text/template">
+            auto p1 = unique_ptr<int>(new int(5));
+            auto p2 = p1;
+        </script></code></pre>
+        <br>
+        <span class="fragment">Both do shallow copy!!</span>
+    </div>
+</section>
+
+<section my-columns="45%">
+    <h2>Copy and move</h2>
+    <div style="text-align: left;">
+        <div>[expr.prim.lambda.closure]/16</div>
+        <br/>
+        <div style="font-weight: normal !important;">
+            {...} It has a defaulted copy constructor and a
+            defaulted move constructor ([class.copy.ctor]). {...}
+        </div>
+    </div>
+</section>
+
+<section no-footer one-by-one-fragment-list>
+    <h2>Lambda Restrictions</h2>
+    <li>No user-defined implicit copy/move operations</li>
+</section>
+
+<section my-columns>
+    <h2>Copy and move</h2>
+    <div style="width:100%;">
+        <pre class="cpp"><code data-trim hide-line-numbers data-line-numbers="|3|4-6|7|8-10|"><script type="text/template">
+            template <class T>
+            struct move_wrapper {
+                T value;
+                constexpr move_wrapper(T arg)
+                    : value(move(arg))
+                {}
+                move_wrapper(const move_wrapper&) = delete;
+                constexpr move_wrapper(move_wrapper&& that) noexcept
+                    : value(exchange(that.value, T{}))
+                {}
+            };
+        </script></code></pre>
+        <div class="fragment" style="position:absolute; top:10%; left:27%; font-size:1000%;">
+            🤔
+        </div>
+    </div>
+</section>
+
+<section my-columns>
+    <h2>Copy and move</h2>
+    <div style="width:100%;">
+        As minimal as possible:
+        <br>
+        <pre class="cpp fragment"><code data-trim hide-line-numbers data-line-numbers=""><script type="text/template">
+            struct no_copy {
+                no_copy() = default;
+                no_copy(const no_copy&) = delete;
+            };
+        </script></code></pre>
+    </div>
+</section>
+
+<section my-columns="90%">
+    <h2>Copy and move</h2>
+    <div style="width:100%;">
+        <pre class="cpp"><code data-trim hide-line-numbers data-line-numbers="|2"><script type="text/template">
+            return
+                [_ptr = ptr]<class Self, class Tag, class... Args>
+                (this Self&& self, Tag, Args&&... args) -> decltype(auto) {
+                    return Impl{}(forward<Self>(self), Tag{}, _ptr, forward<Args>(args)...);
+                };
+        </script></code></pre>
+    </div>
+</section>
+
+<section my-columns="90%">
+    <h2>Copy and move</h2>
+    <div style="width:100%;">
+        <pre class="cpp"><code data-trim hide-line-numbers data-line-numbers="2|"><script type="text/template">
+            return
+                [_ptr = ptr, _ = no_copy{}]<class Self, class Tag, class... Args>
+                (this Self&& self, Tag, Args&&... args) -> decltype(auto) {
+                    return Impl{}(forward<Self>(self), Tag{}, _ptr, forward<Args>(args)...);
+                };
+        </script></code></pre>
+    </div>
+</section>
+
+<section my-columns>
+    <h2>Copy and move</h2>
+    <div style="width:100%;">
+        <pre class="cpp"><code data-trim hide-line-numbers data-line-numbers=""><script type="text/template">
+            auto p1 = unique_ptr<int>(new int(5));
+            // auto p2 = move(p1); // Error
+        </script></code></pre>
+        <br>
+        <pre class="cpp fragment"><code data-trim hide-line-numbers data-line-numbers=""><script type="text/template">
+            auto p1 = unique_ptr<int>(new int(5));
+            // auto p2 = p1; // Error
+        </script></code></pre>
+    </div>
+</section>
+
+<section my-columns="40%">
+    <h2>Copy and move</h2>
+    <div style="width:100%;">
+        <pre class="cpp"><code data-trim hide-line-numbers data-line-numbers=""><script type="text/template">
+            auto f = [](unique_ptr_t<int> p) {
+                // ...
+            };
+        </script></code></pre>
+        <pre class="cpp fragment"><code data-trim hide-line-numbers data-line-numbers=""><script type="text/template">
+            auto p1 = unique_ptr<int>(new int(5));
+        </script></code></pre>
+        <pre class="cpp fragment"><code data-trim hide-line-numbers data-line-numbers=""><script type="text/template">
+            // f(move(p1)); // Error
+            f(unique_ptr<int>(move(p1)));
+        </script></code></pre>
+    </div>
+</section>
+
+<section my-columns="40%">
+    <h2>Copy and move</h2>
+    <div style="width:100%;">
+        <pre class="cpp"><code data-trim hide-line-numbers data-line-numbers=""><script type="text/template">
+            auto f = [](unique_ptr_t<int> p) {
+                return g(unique_ptr<int>(move(p)));
+            };
+        </script></code></pre>
+        <pre class="cpp"><code data-trim hide-line-numbers data-line-numbers=""><script type="text/template">
+            auto p1 = unique_ptr<int>(new int(5));
+        </script></code></pre>
+        <pre class="cpp"><code data-trim hide-line-numbers data-line-numbers=""><script type="text/template">
+            // f(move(p1)); // Error
+            f(unique_ptr<int>(move(p1)));
+        </script></code></pre>
+    </div>
+</section>
+
+<section my-columns="40%">
+    <h2>Copy and move</h2>
+    <div style="width:100%;">
+        <pre class="cpp"><code data-trim hide-line-numbers data-line-numbers=""><script type="text/template">
+            auto f = [](auto p) {
+                return g(???);
+            };
+        </script></code></pre>
+        <pre class="cpp"><code data-trim hide-line-numbers data-line-numbers=""><script type="text/template">
+            auto p1 = unique_ptr<int>(new int(5));
+        </script></code></pre>
+        <pre class="cpp"><code data-trim hide-line-numbers data-line-numbers=""><script type="text/template">
+            // f(move(p1)); // Error
+            f(unique_ptr<int>(move(p1)));
+        </script></code></pre>
+    </div>
+</section>
+
+<section my-columns>
+    <h2>Copy and move</h2>
+    <div style="width:100%;">
+        <pre class="cpp"><code data-trim hide-line-numbers data-line-numbers=""><script type="text/template">
+            using factory_tag = decltype([]{});
+        </script></code></pre>
+    </div>
+</section>
+
+<section my-columns>
+    <h2>Copy and move</h2>
+    <div style="width:100%;">
+        <pre class="cpp"><code data-trim hide-line-numbers data-line-numbers=""><script type="text/template">
+            template <class...>
+            constexpr auto unique_ptr_factory = 0;
+        </script></code></pre>
+        <pre class="cpp fragment"><code data-trim hide-line-numbers data-line-numbers="2-6"><script type="text/template">
+            // Inside `unique_ptr_impl<T>`
+            [](auto&& self, factory_tag, T*)
+                -> decltype(auto(unique_ptr_factory<decltype(self), T>))
+            {
+                return {};
+            }
+        </script></code></pre>
+        <pre class="cpp fragment"><code data-trim hide-line-numbers data-line-numbers=""><script type="text/template">
+            template <class T>
+            constexpr auto unique_ptr = overloaded( ... );
+        </script></code></pre>
+        <pre class="cpp fragment"><code data-trim hide-line-numbers data-line-numbers=""><script type="text/template">
+            template <class Self, class T>
+            constexpr auto unique_ptr_factory<Self, T> = unique_ptr<T>;
+        </script></code></pre>
+    </div>
+</section>
+
+<section my-columns="40%">
+    <h2>Copy and move</h2>
+    <div style="width:100%;">
+        <pre class="cpp"><code data-trim hide-line-numbers data-line-numbers=""><script type="text/template">
+            auto f = [](auto p) {
+                return g(???);
+            };
+        </script></code></pre>
+        <pre class="cpp"><code data-trim hide-line-numbers data-line-numbers=""><script type="text/template">
+            auto p1 = unique_ptr<int>(new int(5));
+        </script></code></pre>
+        <pre class="cpp"><code data-trim hide-line-numbers data-line-numbers=""><script type="text/template">
+            // f(move(p1)); // Error
+            f(unique_ptr<int>(move(p1)));
+        </script></code></pre>
+    </div>
+</section>
+
+<section my-columns="40%">
+    <h2>Copy and move</h2>
+    <div style="width:100%;">
+        <pre class="cpp"><code data-trim hide-line-numbers data-line-numbers=""><script type="text/template">
+            auto f = [](auto p) {
+                return g(p(factory_tag{})(move(p)));
+            };
+        </script></code></pre>
+        <pre class="cpp"><code data-trim hide-line-numbers data-line-numbers=""><script type="text/template">
+            auto p1 = unique_ptr<int>(new int(5));
+        </script></code></pre>
+        <pre class="cpp"><code data-trim hide-line-numbers data-line-numbers=""><script type="text/template">
+            // f(move(p1)); // Error
+            f(unique_ptr<int>(move(p1)));
+        </script></code></pre>
+    </div>
+</section>
+
+<section my-columns="40%">
+    <h2>Copy and move</h2>
+    <div style="width:100%;">
+        <pre class="cpp"><code data-trim hide-line-numbers data-line-numbers=""><script type="text/template">
+            auto f = [](auto p) {
+                return g(decltype(p(factory_tag{})){}(move(p)));
+            };
+        </script></code></pre>
+        <pre class="cpp"><code data-trim hide-line-numbers data-line-numbers=""><script type="text/template">
+            auto p1 = unique_ptr<int>(new int(5));
+        </script></code></pre>
+        <pre class="cpp"><code data-trim hide-line-numbers data-line-numbers=""><script type="text/template">
+            // f(move(p1)); // Error
+            f(unique_ptr<int>(move(p1)));
+        </script></code></pre>
+        <div class="fragment" style="position:absolute; top:10%; left:27%; font-size:1000%;">
+            ✔️
+        </div>
+    </div>
+</section>
+
+<section no-footer one-by-one-fragment-list>
+    <h2>Unavoidable Rule Breaks</h2>
+    <li>Struct <code>no_copy</code></li>
+</section>

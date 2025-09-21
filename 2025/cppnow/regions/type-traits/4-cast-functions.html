@@ -1,0 +1,109 @@
+<section my-columns>
+    <h2>Cast functions</h2>
+    <div style="width:100%;">
+        <pre class="cpp fragment"><code data-trim hide-line-numbers data-line-numbers=""><script type="text/template">
+            template <class T>
+            constexpr auto declval =
+                []<class U = T>() static noexcept -> add_rvalue_reference_t<U> {
+                    static_assert(false);
+                };
+        </script></code></pre>
+    </div>
+</section>
+
+<section my-columns>
+    <h2>Cast functions</h2>
+    <div style="width:100%;">
+        <pre class="cpp"><code data-trim hide-line-numbers data-line-numbers=""><script type="text/template">
+            constexpr auto move =
+                []<class T>(T&& t) static noexcept -> remove_reference_t<T>&& {
+                    return static_cast<remove_reference_t<T>&&>(t);
+                };
+        </script></code></pre>
+        <br>
+        <pre class="cpp fragment"><code data-trim hide-line-numbers data-line-numbers=""><script type="text/template">
+            constexpr auto as_const =
+                []<class T>(T& t) static noexcept -> add_const_t<T>& {
+                    return t;
+                };
+        </script></code></pre>
+    </div>
+</section>
+
+<section my-columns="85%">
+    <h2>Cast functions</h2>
+    <div style="width:100%;">
+        <pre class="cpp"><code data-trim hide-line-numbers data-line-numbers="2-3|2|3-5|2-3"><script type="text/template">
+            // [forward]/1
+            template<class T> constexpr T&& forward(remove_reference_t<T>& t) noexcept;
+            template<class T> constexpr T&& forward(remove_reference_t<T>&& t) noexcept;
+            // [forward]/2
+            //   Mandates: For the second overload, is_lvalue_reference_v<T> is false.
+        </script></code></pre>
+    </div>
+</section>
+
+<section my-columns>
+    <h2>Cast functions</h2>
+    <div style="width:100%;">
+        <pre class="cpp"><code data-trim hide-line-numbers data-line-numbers="1-5|7-12|"><script type="text/template">
+            template <class T>
+            constexpr auto forward_lvalue =
+                [](remove_reference_t<T>& t) static noexcept -> T&& {
+                    return static_cast<T&&>(t);
+                };
+            
+            template <class T>
+            constexpr auto forward_rvalue =
+                [](remove_reference_t<T>&& t) static noexcept -> T&& {
+                    static_assert(not is_lvalue_reference_v<T>);
+                    return static_cast<T&&>(t);
+                };
+        </script></code></pre>
+        <pre class="cpp fragment"><code data-trim hide-line-numbers data-line-numbers=""><script type="text/template">
+            template <class T>
+            constexpr auto forward = ???;
+        </script></code></pre>
+    </div>
+</section>
+
+<section my-columns="85%">
+    <h2>Cast functions</h2>
+    <div style="width:100%;">
+        <pre class="cpp"><code data-trim hide-line-numbers data-line-numbers="|3|4,7|6|"><script type="text/template">
+            template <class T>
+            constexpr auto forward =
+                []<class U>(U&& u) static noexcept -> T&&
+                    requires requires { { static_cast<T&&>(u) } -> same_as<T&&>; }
+                {
+                    static_assert(is_lvalue_reference_v<U> or not is_lvalue_reference_v<T>);
+                    return static_cast<T&&>(u);
+                };
+        </script></code></pre>
+    </div>
+</section>
+
+<section my-columns>
+    <h2>Cast functions</h2>
+    <div style="width:100%;">
+        <pre class="cpp"><code data-trim hide-line-numbers data-line-numbers=""><script type="text/template">
+            // From cppreference
+            template <class T>
+            constexpr auto forward_like =
+                []<class U>(U&& x) static noexcept -> auto&& {
+                    constexpr bool is_adding_const = is_const_v<remove_reference_t<T>>;
+                    if constexpr (is_lvalue_reference_v<T&&>) {
+                        if constexpr (is_adding_const)
+                            return as_const(x);
+                        else
+                            return static_cast<U&>(x);
+                    } else {
+                        if constexpr (is_adding_const)
+                            return move(as_const(x));
+                        else
+                            return move(x);
+                    }
+                };
+        </script></code></pre>
+    </div>
+</section>

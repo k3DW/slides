@@ -1,0 +1,399 @@
+<section my-columns>
+    <h2>Overloading</h2>
+    <div style="width:100%;">
+        <pre class="cpp fragment"><code data-trim hide-line-numbers data-line-numbers=""><script type="text/template">
+            template <class... Fs>
+            struct overloaded : Fs... {
+                using Fs::operator()...;
+            };
+        </script></code></pre>
+    </div>
+</section>
+
+<section my-columns>
+    <h2>Overloading</h2>
+    <div style="width:100%;">
+        <pre class="cpp"><code data-trim hide-line-numbers data-line-numbers=""><script type="text/template">
+            template <class F, class... Args>
+            concept invocable = requires (F&& f, Args&&... args) {
+                // Assuming no member pointers
+                forward<F>(f)(forward<Args>(args)...);
+            };
+        </script></code></pre>
+    </div>
+</section>
+
+<section my-columns="90%">
+    <h2>Overloading</h2>
+    <div style="width:100%;">
+        <pre class="cpp"><code data-trim hide-line-numbers data-line-numbers=""><script type="text/template">
+            constexpr auto overloaded =
+                []<class... Fs>(Fs... fs) static {
+                    // return lambda calling one of `fs...`
+                };
+        </script></code></pre>
+    </div>
+</section>
+
+<section my-columns="90%">
+    <h2>Overloading</h2>
+    <div style="width:100%;">
+        <pre class="cpp"><code data-trim hide-line-numbers data-line-numbers="|3"><script type="text/template">
+            constexpr auto overloaded =
+                []<class... Fs>(Fs... fs) static {
+
+
+
+
+                    
+                };
+        </script></code></pre>
+    </div>
+</section>
+
+<section my-columns="90%">
+    <h2>Overloading</h2>
+    <div style="width:100%;">
+        <pre class="cpp"><code data-trim hide-line-numbers data-line-numbers="3,5,7"><script type="text/template">
+            constexpr auto overloaded =
+                []<class... Fs>(Fs... fs) static {
+                    if constexpr ((is_empty_v<Fs> and ...)) {
+                        // Capture-less
+                    } else {
+                        // Capture `fs...`
+                    }
+                };
+        </script></code></pre>
+    </div>
+</section>
+
+<section my-columns="90%">
+    <h2>Overloading</h2>
+    <div style="width:100%;">
+        <pre class="cpp"><code data-trim hide-line-numbers data-line-numbers="3,10,17|4"><script type="text/template">
+            constexpr auto overloaded =
+                []<class... Fs>(Fs... fs) static {
+                    if constexpr ((is_empty_v<Fs> and ...)) {
+                        
+
+
+
+
+
+                    } else {
+                        
+
+
+
+
+
+                    }
+                };
+        </script></code></pre>
+    </div>
+</section>
+
+<section my-columns="90%">
+    <h2>Overloading</h2>
+    <div style="width:100%;">
+        <pre class="cpp"><code data-trim hide-line-numbers data-line-numbers="4-9|4|5|6|4-9|11"><script type="text/template">
+            constexpr auto overloaded =
+                []<class... Fs>(Fs... fs) static {
+                    if constexpr ((is_empty_v<Fs> and ...)) {
+                        return []<class... Args>
+                            requires (... or invocable<Fs, Args...>)
+                        (Args&&... args) static constexpr -> decltype(auto) {
+
+
+                        };
+                    } else {
+                        
+
+
+
+
+
+                    }
+                };
+        </script></code></pre>
+    </div>
+</section>
+
+<section my-columns="90%">
+    <h2>Overloading</h2>
+    <div style="width:100%;">
+        <pre class="cpp"><code data-trim hide-line-numbers data-line-numbers="11-16|11|7"><script type="text/template">
+            constexpr auto overloaded =
+                []<class... Fs>(Fs... fs) static {
+                    if constexpr ((is_empty_v<Fs> and ...)) {
+                        return []<class... Args>
+                            requires (... or invocable<Fs, Args...>)
+                        (Args&&... args) static constexpr -> decltype(auto) {
+
+
+                        };
+                    } else {
+                        return [...fs = move(fs)]<class... Args>
+                            requires (... or invocable<Fs, Args...>)
+                        (Args&&... args) constexpr -> decltype(auto) {
+
+                            
+                        };
+                    }
+                };
+        </script></code></pre>
+    </div>
+</section>
+
+<section my-columns="90%">
+    <h2>Overloading</h2>
+    <div style="width:100%;">
+        <pre class="cpp"><code data-trim hide-line-numbers data-line-numbers="7-8,14-15"><script type="text/template">
+            constexpr auto overloaded =
+                []<class... Fs>(Fs... fs) static {
+                    if constexpr ((is_empty_v<Fs> and ...)) {
+                        return []<class... Args>
+                            requires (... or invocable<Fs, Args...>)
+                        (Args&&... args) static constexpr -> decltype(auto) {
+                            return first_invocable_for<Args...>(Fs{}...)
+
+                        };
+                    } else {
+                        return [...fs = move(fs)]<class... Args>
+                            requires (... or invocable<Fs, Args...>)
+                        (Args&&... args) constexpr -> decltype(auto) {
+                            return first_invocable_for<Args...>(fs...)
+                            
+                        };
+                    }
+                };
+        </script></code></pre>
+    </div>
+</section>
+
+<section my-columns="90%">
+    <h2>Overloading</h2>
+    <div style="width:100%;">
+        <pre class="cpp"><code data-trim hide-line-numbers data-line-numbers="7-8,14-15"><script type="text/template">
+            constexpr auto overloaded =
+                []<class... Fs>(Fs... fs) static {
+                    if constexpr ((is_empty_v<Fs> and ...)) {
+                        return []<class... Args>
+                            requires (... or invocable<Fs, Args...>)
+                        (Args&&... args) static constexpr -> decltype(auto) {
+                            return first_invocable_for<Args...>(Fs{}...)
+                                (forward<Args>(args)...);
+                        };
+                    } else {
+                        return [...fs = move(fs)]<class... Args>
+                            requires (... or invocable<Fs, Args...>)
+                        (Args&&... args) constexpr -> decltype(auto) {
+                            return first_invocable_for<Args...>(fs...)
+                                (forward<Args>(args)...);
+                        };
+                    }
+                };
+        </script></code></pre>
+    </div>
+</section>
+
+<section my-columns="90%">
+    <h2>Overloading</h2>
+    <div style="width:100%;">
+        <pre class="cpp fragment"><code data-trim hide-line-numbers data-line-numbers=""><script type="text/template">
+            template <class... Args>
+            constexpr auto first_invocable_for =
+
+
+                
+
+
+
+
+
+            //
+        </script></code></pre>
+    </div>
+</section>
+
+<section my-columns="90%">
+    <h2>Overloading</h2>
+    <div style="width:100%;">
+        <pre class="cpp"><code data-trim hide-line-numbers data-line-numbers="3,5|6"><script type="text/template">
+            template <class... Args>
+            constexpr auto first_invocable_for =
+                []<class Self, class F, class... Fs>
+                    requires (invocable<F, Args...> or ... or invocable<Fs, Args...>)
+                (this Self self, F&& f, Fs&&... fs) constexpr -> decltype(auto) {
+
+
+
+
+
+                };
+        </script></code></pre>
+    </div>
+</section>
+
+<section my-columns="90%">
+    <h2>Overloading</h2>
+    <div style="width:100%;">
+        <pre class="cpp"><code data-trim hide-line-numbers data-line-numbers="6-8"><script type="text/template">
+            template <class... Args>
+            constexpr auto first_invocable_for =
+                []<class Self, class F, class... Fs>
+                    requires (invocable<F, Args...> or ... or invocable<Fs, Args...>)
+                (this Self self, F&& f, Fs&&... fs) constexpr -> decltype(auto) {
+                    if constexpr (invocable<F, Args...>) {
+                        return forward<F>(f);
+                    }
+
+
+                };
+        </script></code></pre>
+    </div>
+</section>
+
+<section my-columns="90%">
+    <h2>Overloading</h2>
+    <div style="width:100%;">
+        <pre class="cpp"><code data-trim hide-line-numbers data-line-numbers="8-10|"><script type="text/template">
+            template <class... Args>
+            constexpr auto first_invocable_for =
+                []<class Self, class F, class... Fs>
+                    requires (invocable<F, Args...> or ... or invocable<Fs, Args...>)
+                (this Self self, F&& f, Fs&&... fs) constexpr -> decltype(auto) {
+                    if constexpr (invocable<F, Args...>) {
+                        return forward<F>(f);
+                    } else {
+                        return self(forward<Fs>(fs)...);
+                    }
+                };
+        </script></code></pre>
+    </div>
+</section>
+
+<section my-columns="45% 45%">
+    <h2>Overloading</h2>
+    <div style="width:100%;">
+        <pre class="cpp"><code data-trim hide-line-numbers data-line-numbers="1-3|4-6|7-10|"><script type="text/template">
+            using F1 = decltype([](int x, double y) {
+                return x + y;
+            });
+            using F2 = decltype([](auto&&... ts) { 
+                return sizeof...(ts);
+            });
+            struct F : F1, F2 {
+                using F1::operator();
+                using F2::operator();
+            };
+            constexpr auto fn = F{};
+        </script></code></pre>
+        <pre class="cpp fragment"><code data-trim hide-line-numbers data-line-numbers=""><script type="text/template">
+            static_assert(fn(3, 4) == 2);
+        </script></code></pre>
+    </div>
+    <div style="width:100%;" class="fragment">
+        <pre class="cpp"><code data-trim hide-line-numbers data-line-numbers="2-4|5-7|"><script type="text/template">
+            constexpr auto fn = overloaded(
+                [](int x, double y) {
+                    return x + y;
+                },
+                [](auto&&... ts) { 
+                    return sizeof...(ts);
+                }
+
+
+
+            );
+        </script></code></pre>
+        <pre class="cpp fragment"><code data-trim hide-line-numbers data-line-numbers=""><script type="text/template">
+            static_assert(fn(3, 4) == 7.0);
+        </script></code></pre>
+    </div>
+</section>
+
+<section no-footer one-by-one-fragment-list>
+    <h2>Lambda Restrictions</h2>
+    <li>No compiler-selected overloading</li>
+</section>
+
+<section my-columns="45% 45%">
+    <h2>Overloading</h2>
+    <div style="width:100%;">
+        <pre class="cpp"><code data-trim hide-line-numbers data-line-numbers=""><script type="text/template">
+            using F1 = decltype([](int x, double y) {
+                return x + y;
+            });
+            using F2 = decltype([](auto&&... ts) { 
+                return sizeof...(ts);
+            });
+            struct F : F1, F2 {
+                using F1::operator();
+                using F2::operator();
+            };
+            constexpr auto fn = F{};
+        </script></code></pre>
+        <pre class="cpp"><code data-trim hide-line-numbers data-line-numbers=""><script type="text/template">
+            static_assert(fn(3, 4) == 2);
+        </script></code></pre>
+    </div>
+    <div style="width:100%;">
+        <pre class="cpp"><code data-trim hide-line-numbers data-line-numbers="|2-4"><script type="text/template">
+            constexpr auto fn = overloaded(
+                [](int x, double y) {
+                    return x + y;
+                },
+                [](auto&&... ts) { 
+                    return sizeof...(ts);
+                }
+
+
+
+            );
+        </script></code></pre>
+        <pre class="cpp"><code data-trim hide-line-numbers data-line-numbers=""><script type="text/template">
+            static_assert(fn(3, 4) == 7.0);
+        </script></code></pre>
+    </div>
+</section>
+
+<section my-columns="45% 45%">
+    <h2>Overloading</h2>
+    <div style="width:100%;">
+        <pre class="cpp"><code data-trim hide-line-numbers data-line-numbers=""><script type="text/template">
+            using F1 = decltype([](int x, double y) {
+                return x + y;
+            });
+            using F2 = decltype([](auto&&... ts) { 
+                return sizeof...(ts);
+            });
+            struct F : F1, F2 {
+                using F1::operator();
+                using F2::operator();
+            };
+            constexpr auto fn = F{};
+        </script></code></pre>
+        <pre class="cpp"><code data-trim hide-line-numbers data-line-numbers=""><script type="text/template">
+            static_assert(fn(3, 4) == 2);
+        </script></code></pre>
+    </div>
+    <div style="width:100%;">
+        <pre class="cpp"><code data-trim hide-line-numbers data-line-numbers="2-6"><script type="text/template">
+            constexpr auto fn = overloaded(
+                [](same_as<int> auto x,
+                   same_as<double> auto y)
+                {
+                    return x + y;
+                },
+                [](auto&&... ts) { 
+                    return sizeof...(ts);
+                }
+
+            );
+        </script></code></pre>
+        <pre class="cpp"><code data-trim hide-line-numbers data-line-numbers=""><script type="text/template">
+            static_assert(fn(3, 4) == 2);
+        </script></code></pre>
+    </div>
+</section>

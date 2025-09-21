@@ -1,0 +1,326 @@
+<section data-markdown signpost change-footer="Lambda history">
+    History of C++ lambdas
+</section>
+
+<section data-markdown class="list-fade-in-then-semi-out">
+    <textarea data-template>
+        ## Lambdas in C++11
+        * Capture by-copy or by-reference, possibly variadic
+        * Default capture by-copy `[=]` or by-reference `[&]`
+        * Capture `this` by-reference
+        * Non-generic call operator, `const` by default
+        * Optionally deduced return type!!
+    </textarea>
+</section>
+
+<section my-columns>
+    <h2>Lambdas in C++11</h2>
+    <pre class="cpp"><code data-trim data-line-numbers="|1,11|9-10|2-3,8|4-6|"><script type="text/template">
+        struct S {
+            template <class... Ts>
+            int foo(int x, Ts&... ts) {
+                auto lambda = [x, this, &ts...](int yy) {
+                    return do_something(x, yy, z, ts...);
+                };
+                return lambda(y);
+            }
+            int y;
+            int z;
+        };
+    </script></code></pre>
+</section>
+
+<section data-markdown class="list-fade-in-then-semi-out">
+    <textarea data-template>
+        ## Lambdas in C++14
+        * Generic call operator
+        * Capture by-copy or by-reference with initializer
+            * Allows capture by move or by const reference
+        * Default arguments to call operator
+        * Can return lambda from a function
+    </textarea>
+</section>
+
+<section my-columns="75%">
+    <h2>Lambdas in C++14</h2>
+    <pre class="cpp"><code data-trim data-line-numbers="|4"><script type="text/template">
+        struct S {
+            template <class... Ts>
+            int foo(int x, Ts&... ts) {
+                auto lambda = [x, this, &ts...](int yy) {
+                    return do_something(x, yy, z, ts...);
+                };
+                return lambda(y);
+            }
+            int y;
+            int z;
+        };
+    </script></code></pre>
+</section>
+
+<section my-columns="75%">
+    <h2>Lambdas in C++14</h2>
+    <pre class="cpp"><code data-trim data-line-numbers="4|4-5"><script type="text/template">
+        struct S {
+            template <class... Ts>
+            int foo(int x, Ts&... ts) {
+                auto lambda = [x, this, &ts...](auto yy) {
+                    return do_something(x, yy, z, ts...);
+                };
+                return lambda(y);
+            }
+            int y;
+            int z;
+        };
+    </script></code></pre>
+</section>
+
+<section my-columns="75%">
+    <h2>Lambdas in C++14</h2>
+    <pre class="cpp"><code data-trim data-line-numbers="4-5"><script type="text/template">
+        struct S {
+            template <class... Ts>
+            int foo(int x, Ts&... ts) {
+                auto lambda = [x, this, &ts...](auto yy, int w = 7) {
+                    return do_something(x, yy, z, w, ts...);
+                };
+                return lambda(y);
+            }
+            int y;
+            int z;
+        };
+    </script></code></pre>
+</section>
+
+<section my-columns="75%">
+    <h2>Lambdas in C++14</h2>
+    <pre class="cpp"><code data-trim data-line-numbers="4-5|3,7"><script type="text/template">
+        struct S {
+            template <class... Ts>
+            int foo(int x, Ts&... ts) {
+                auto lambda = [value = x, this, &ts...](auto yy, int w = 7) {
+                    return do_something(value, yy, z, w, ts...);
+                };
+                return lambda(y);
+            }
+            int y;
+            int z;
+        };
+    </script></code></pre>
+</section>
+
+<section my-columns="75%">
+    <h2>Lambdas in C++14</h2>
+    <pre class="cpp"><code data-trim data-line-numbers="3,7|"><script type="text/template">
+        struct S {
+            template <class... Ts>
+            auto foo(int x, Ts&... ts) {
+                auto lambda = [value = x, this, &ts...](auto yy, int w = 7) {
+                    return do_something(value, yy, z, w, ts...);
+                };
+                return lambda;
+            }
+            int y;
+            int z;
+        };
+    </script></code></pre>
+</section>
+
+<section data-markdown class="list-fade-in-then-semi-out">
+    <textarea data-template>
+        ## Lambdas in C++17
+        * `constexpr` call operator (by default)
+        * Capture `this` by-copy
+    </textarea>
+</section>
+
+<section my-columns="90%">
+    <h2>Lambdas in C++17</h2>
+    <pre class="cpp"><code data-trim data-line-numbers="|4"><script type="text/template">
+        struct S {
+            template <class... Ts>
+            auto foo(int x, Ts&... ts) {
+                auto lambda = [value = x, this, &ts...](auto yy, int w = 7) {
+                    return do_something(value, yy, z, w, ts...);
+                };
+                return lambda;
+            }
+            int y;
+            int z;
+        };
+    </script></code></pre>
+</section>
+
+<section my-columns="90%">
+    <h2>Lambdas in C++17</h2>
+    <pre class="cpp"><code data-trim data-line-numbers="4"><script type="text/template">
+        struct S {
+            template <class... Ts>
+            auto foo(int x, Ts&... ts) {
+                auto lambda = [value = x, this, &ts...](auto yy, int w = 7) constexpr {
+                    return do_something(value, yy, z, w, ts...);
+                };
+                return lambda;
+            }
+            int y;
+            int z;
+        };
+    </script></code></pre>
+</section>
+
+<section my-columns="90%">
+    <h2>Lambdas in C++17</h2>
+    <pre class="cpp"><code data-trim data-line-numbers="4|5"><script type="text/template">
+        struct S {
+            template <class... Ts>
+            auto foo(int x, Ts&... ts) {
+                auto lambda = [value = x, *this, &ts...](auto yy, int w = 7) constexpr {
+                    return do_something(value, yy, z, w, ts...);
+                };
+                return lambda;
+            }
+            int y;
+            int z;
+        };
+    </script></code></pre>
+</section>
+
+<section my-columns="90%">
+    <h2>Lambdas in C++17</h2>
+    <pre class="cpp"><code data-trim data-line-numbers="5|"><script type="text/template">
+        struct S {
+            template <class... Ts>
+            auto foo(int x, Ts&... ts) {
+                auto lambda = [value = x, *this, &ts...](auto yy, int w = 7) constexpr {
+                    return do_something(value, yy, this->z, w, ts...);
+                };
+                return lambda;
+            }
+            int y;
+            int z;
+        };
+    </script></code></pre>
+</section>
+
+<section data-markdown class="list-fade-in-then-semi-out">
+    <textarea data-template>
+        ## Lambdas in C++20
+        * Allowed in unevaluated contexts
+        * Capture-less lambda as NTTP
+        * `consteval` call operator
+        * Explicit template parameter list
+        * Constraints on template parameters or call operator
+        * Capture by-copy or by-reference pack with initializer
+    </textarea>
+</section>
+
+<section my-columns>
+    <h2>Lambdas in C++20</h2>
+    <div style="width:100%;">
+        <pre class="cpp"><code data-trim hide-line-numbers data-line-numbers=""><script type="text/template">
+            using foo = decltype([]{});
+        </script></code></pre>
+        <pre class="cpp fragment"><code data-trim hide-line-numbers data-line-numbers=""><script type="text/template">
+            constexpr auto bar = sizeof([x, y, z]{});
+        </script></code></pre>
+        <pre class="cpp fragment"><code data-trim hide-line-numbers data-line-numbers="1-2|3|"><script type="text/template">
+            template <auto value>
+            struct baz {};
+            using qux = baz<[]{}>;
+        </script></code></pre>
+        <pre class="cpp fragment"><code data-trim hide-line-numbers data-line-numbers=""><script type="text/template">
+            auto quux = [](int x, int y) consteval {
+                return x + y;
+            };
+        </script></code></pre>
+    </div>
+</section>
+
+<section my-columns="85%">
+    <h2>Lambdas in C++20</h2>
+    <div style="width:100%;">
+        <pre class="cpp"><code data-trim hide-line-numbers data-line-numbers="|1|2|"><script type="text/template">
+            auto foo = []<class T> requires std::integral<T>
+                (const T& t, const auto& u) requires requires { t + u; }
+            {
+                return t + u;
+            };
+        </script></code></pre>
+        <!-- <pre class="cpp fragment"><code data-trim hide-line-numbers data-line-numbers="|1-2,6|3|4|"><script type="text/template">
+            template <class... Ts>
+            auto bar(Ts&&... ts) {
+                return [...args = std::forward<Ts>(ts)] <class F> (F&& f) -> decltype(auto) {
+                    return std::forward<F>(f)(std::forward<Ts>(args)...);
+                };
+            }
+        </script></code></pre> -->
+    </div>
+</section>
+
+<section my-columns>
+    <h2>Lambdas in C++20</h2>
+    <div>
+        <img src="./img/too-cute.jpg" width="50%" />
+        <br/>
+        "What You Can Learn from Being Too Cute"
+        <br/>
+        <a href="https://www.youtube.com/watch?v=15etE6WcvBY" style="font-size: 50%;">https://www.youtube.com/watch?v=HMB9oXFobJc</a>
+    </div>
+</section>
+
+<section my-columns="85%">
+    <h2>Lambdas in C++20</h2>
+    <div style="width:100%;">
+        <pre class="cpp"><code data-trim hide-line-numbers data-line-numbers="|1,5|2|4|3|"><script type="text/template">
+            void enumerate_pack(auto f, auto... args) {
+                [&]<std::size_t... Idxs>(std::index_sequence<Idxs...>) {
+                    (f(Idxs, args), ...);
+                }(std::make_index_sequence<sizeof...(args)>{});
+            }
+        </script></code></pre>
+        <br>
+        <pre class="cpp fragment"><code data-trim hide-line-numbers data-line-numbers="1-4|5-7|"><script type="text/template">
+            template <std::size_t... Idxs>
+            void enumerate_pack_impl(std::index_sequence<Idxs...>, auto f, auto... args) {
+                (f(Idxs, args), ...);
+            }
+            void enumerate_pack(auto f, auto... args) {
+                enumerate_pack_impl(std::make_index_sequence<sizeof...(args)>{}, f, args...);
+            }
+        </script></code></pre>
+    </div>
+</section>
+
+<section data-markdown class="list-fade-in-then-semi-out">
+    <textarea data-template>
+        ## Lambdas in C++23
+        * Attributes on the call operator
+        * Drop empty parens in all cases
+        * `static` call operator
+        * Explicit object parameter
+    </textarea>
+</section>
+
+<section my-columns="85%">
+    <h2>Lambdas in C++23</h2>
+    <div style="width:100%;">
+        <pre class="cpp"><code data-trim hide-line-numbers data-line-numbers=""><script type="text/template">
+            auto throw_ = []<class E> [[noreturn]] static {
+                throw E{};
+            };
+        </script></code></pre>
+        <br>
+        <pre class="cpp fragment"><code data-trim hide-line-numbers data-line-numbers="2-5|2|3|2-5"><script type="text/template">
+            // From cppreference
+            auto nth_fibonacci3 = [](this auto self, int n, int a = 0, int b = 1) -> int {
+                return n ? self(n - 1, a + b, a) : b;
+            };
+        </script></code></pre>
+        <pre class="cpp fragment"><code data-trim hide-line-numbers data-line-numbers="2-5|3|2-5"><script type="text/template">
+            // From cppreference
+            auto nth_fibonacci2 = [](auto self, int n, int a = 0, int b = 1) -> int {
+                return n ? self(self, n - 1, a + b, a) : b;
+            };
+        </script></code></pre>
+    </div>
+</section>

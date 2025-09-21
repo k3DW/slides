@@ -1,0 +1,32 @@
+<section my-columns>
+    <h2>Declarations and TUs</h2>
+    <div style="width:100%;">
+        <pre class="cpp fragment"><code data-trim hide-line-numbers data-line-numbers=""><script type="text/template">
+            extern const auto lambda;
+        </script></code></pre>
+        <pre class="cpp fragment"><code data-trim hide-line-numbers data-line-numbers=""><script type="text/template">
+            const auto lambda = [](int x) {
+                // ...
+            };
+        </script></code></pre>
+        <pre class="none fragment"><code data-trim hide-line-numbers data-line-numbers=""><script type="text/template">
+            error: declaration of variable 'lambda' with
+            deduced type 'const auto' requires an initializer
+                1 | extern const auto lambda;
+                  |                   ^
+        </script></code></pre>
+        <div class="fragment" style="position:absolute; top:10%; left:27%; font-size:1000%;">
+            ❌
+        </div>
+    </div>
+</section>
+
+<section no-footer one-by-one-fragment-list="font-size:75%;">
+    <h2>Lambda Restrictions</h2>
+    <li>No separating declaration and definition</li>
+</section>
+
+<section no-footer one-by-one-fragment-list="font-size:75%;">
+    <h2>Lambda Restrictions</h2>
+    <li>No linking across TUs</li>
+</section>

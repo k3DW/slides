@@ -1,0 +1,190 @@
+<section my-columns>
+    <h2>Copying and moving</h2>
+    <div style="width:100%;">
+        <pre class="cpp fragment"><code data-trim hide-line-numbers data-line-numbers=""><script type="text/template">
+            int x = 5;
+            auto p = make_unique<int>(6);
+        </script></code></pre>
+        <pre class="cpp fragment"><code data-trim hide-line-numbers data-line-numbers=""><script type="text/template">
+            auto do_move = [](auto& value) {
+                return ???;
+            };
+        </script></code></pre>
+    </div>
+</section>
+
+<section my-columns="50%">
+    <h2>Copying and moving</h2>
+    <div style="width:100%;">
+        <pre class="cpp"><code data-trim hide-line-numbers data-line-numbers=""><script type="text/template">
+            constexpr auto maybe_copy_construct =
+                []<class T>(const T& t) static -> decltype(auto) {
+
+
+
+
+
+                };
+        </script></code></pre>
+    </div>
+</section>
+
+<section my-columns="50%">
+    <h2>Copying and moving</h2>
+    <div style="width:100%;">
+        <pre class="cpp"><code data-trim hide-line-numbers data-line-numbers="3-5"><script type="text/template">
+            constexpr auto maybe_copy_construct =
+                []<class T>(const T& t) static -> decltype(auto) {
+                    if constexpr (requires { auto(t); }) {
+                        return t;
+                    }
+
+
+                };
+        </script></code></pre>
+    </div>
+</section>
+
+<section my-columns="50%">
+    <h2>Copying and moving</h2>
+    <div style="width:100%;">
+        <pre class="cpp"><code data-trim hide-line-numbers data-line-numbers="5-7|"><script type="text/template">
+            constexpr auto maybe_copy_construct =
+                []<class T>(const T& t) static -> decltype(auto) {
+                    if constexpr (requires { auto(t); }) {
+                        return t;
+                    } else {
+                        return t(factory_tag{})(t);
+                    }
+                };
+        </script></code></pre>
+    </div>
+</section>
+
+<section my-columns>
+    <h2>Copying and moving</h2>
+    <div style="width:100%;">
+        <pre class="cpp"><code data-trim hide-line-numbers data-line-numbers="|2|4-5|6-7|"><script type="text/template">
+            constexpr auto maybe_move_construct =
+                []<class T> requires (not is_const_v<remove_reference_t<T>>)
+                (T&& t) static noexcept -> decltype(auto) {
+                    if constexpr (requires { auto(move(t)); }) {
+                        return move(t);
+                    } else {
+                        return t(factory_tag{})(move(t));
+                    }
+                };
+        </script></code></pre>
+    </div>
+</section>
+
+<section my-columns>
+    <h2>Copying and moving</h2>
+    <div style="width:100%;">
+        <pre class="cpp"><code data-trim hide-line-numbers data-line-numbers=""><script type="text/template">
+            int x = 5;
+            auto p = make_unique<int>(6);
+        </script></code></pre>
+        <pre class="cpp"><code data-trim hide-line-numbers data-line-numbers=""><script type="text/template">
+            auto do_move = [](auto& value) {
+                return maybe_move_construct(value);
+            };
+        </script></code></pre>
+    </div>
+</section>
+
+<section my-columns>
+    <h2>Copying and moving</h2>
+    <div style="width:100%;">
+        <pre class="cpp"><code data-trim hide-line-numbers data-line-numbers="|3-4|5-6|"><script type="text/template">
+            constexpr auto maybe_forward_construct =
+                []<class T>(T&& t) static -> decltype(auto) {
+                    if constexpr (is_reference_v<T>) {
+                        return maybe_copy_construct(t);
+                    } else {
+                        return maybe_move_construct(t);
+                    }
+                };
+        </script></code></pre>
+    </div>
+</section>
+
+<section my-columns="95%">
+    <h2>Copying and moving</h2>
+    <div style="width:100%;">
+        <pre class="cpp"><code data-trim hide-line-numbers data-line-numbers=""><script type="text/template">
+            template <class T>
+            constexpr auto construct =
+                []<class U>(U&& u) static -> decltype(auto) {
+
+
+
+
+
+
+
+
+                };
+        </script></code></pre>
+    </div>
+</section>
+
+<section my-columns="95%">
+    <h2>Copying and moving</h2>
+    <div style="width:100%;">
+        <pre class="cpp"><code data-trim hide-line-numbers data-line-numbers="4-6"><script type="text/template">
+            template <class T>
+            constexpr auto construct =
+                []<class U>(U&& u) static -> decltype(auto) {
+                    if constexpr (is_same_v<T, remove_cvref_t<U>>) {
+                        return maybe_forward_construct(forward<U>(u));
+                    }
+
+
+
+
+
+                };
+        </script></code></pre>
+    </div>
+</section>
+
+<section my-columns="95%">
+    <h2>Copying and moving</h2>
+    <div style="width:100%;">
+        <pre class="cpp"><code data-trim hide-line-numbers data-line-numbers="6-8"><script type="text/template">
+            template <class T>
+            constexpr auto construct =
+                []<class U>(U&& u) static -> decltype(auto) {
+                    if constexpr (is_same_v<T, remove_cvref_t<U>>) {
+                        return maybe_forward_construct(forward<U>(u));
+                    } else if constexpr (requires { T{maybe_forward_construct(forward<U>(u))}; }) {
+                        return T{maybe_forward_construct(forward<U>(u))};
+                    }
+
+
+
+                };
+        </script></code></pre>
+    </div>
+</section>
+
+<section my-columns="95%">
+    <h2>Copying and moving</h2>
+    <div style="width:100%;">
+        <pre class="cpp"><code data-trim hide-line-numbers data-line-numbers="8-11|"><script type="text/template">
+            template <class T>
+            constexpr auto construct =
+                []<class U>(U&& u) static -> decltype(auto) {
+                    if constexpr (is_same_v<T, remove_cvref_t<U>>) {
+                        return maybe_forward_construct(forward<U>(u));
+                    } else if constexpr (requires { T{maybe_forward_construct(forward<U>(u))}; }) {
+                        return T{maybe_forward_construct(forward<U>(u))};
+                    } else {
+                        return decltype(declval<T>()(factory_tag{})){}
+                            (maybe_forward_construct(forward<U>(u)));
+                    }
+                };
+        </script></code></pre>
+    </div>
+</section>
