@@ -1,0 +1,134 @@
+---
+layout: reveal.js
+title: "C++ on Sea 2025"
+layout-version: 1
+footer:
+    left: "Pattern Matching"
+    right: "Braden Ganetsky - C++ on Sea 2025"
+    sub: true
+thank-you:
+    version: 1
+---
+
+<!-- #region Intro -->
+
+<section full data-background-image="./img/The Pattern Matching We Already Have_Title Card copy.png" no-footer change-footer="Introduction">
+</section>
+
+<!-- <section full data-background-color="#FFFFFF" no-footer change-footer="Introduction">
+    <div style="display: flex; flex-flow: column; height: 100%;">
+
+        <div style="flex: 0 1 75%; display: flex; flex-flow: row;">
+            <div style="font-size:200%; display: flex; flex-flow: column; flex: 0 1 auto;">
+                <div style="flex: 1 1 auto;"></div>
+                <div                          >The Pattern Matching</div>
+                <div style="margin-top:-10px;">We Already Have</div>
+                <div style="flex: 1 1 auto;"></div>
+                <div style="flex: 0 1 0.5em;"></div>
+            </div>
+            <div style="flex: 50 1 auto;"></div>
+            <div style="display: flex; flex-flow: column; flex: 0 1 36%;">
+                <div style="flex: 1 1 auto;"></div>
+                <div style="display: flex; flex-flow: row; flex: 0 1 auto;">
+                    <div style="flex: 1 1 auto;"></div>
+                    <img src="/img/profile-picture.png"></img>
+                </div>
+                <div style="flex: 3 1 auto;"></div>
+            </div>
+            <div style="flex: 1 1 auto;"></div>
+        </div>
+
+        <div style="flex: 1 1 auto; padding:1.8% 3% 2% 3%; background-color: #DDDDDD; display: flex; flex-flow: column;">
+            <div style="font-size:125%; ">Braden Ganetsky</div>
+            <div style="flex: 1 1 auto;"></div>
+            <div style="font-size:100%; ">C++ on Sea 2025</div>
+        </div>
+
+    </div>
+</section> -->
+
+<include src="./regions/intro.html"></include>
+
+<section data-markdown class="list-fade-in-then-semi-out">
+    <textarea data-template>
+        ## About me
+        * Canadian
+        * Mechanical engineering degree
+        * I like twisty puzzles
+        ![test](/img/NEP7570939.jpg) <!-- .element style="position:absolute; height:75%; right:0; top:12%;"-->
+        * Working in C++ for 4 years
+        * On WG21 since 2023
+        * Run Winnipeg C++ Developers
+    </textarea>
+</section>
+
+<!-- #endregion Intro -->
+
+
+
+<section data-markdown signpost change-footer="Function overload resolution">
+    Function overload resolution
+</section>
+
+<include src="./regions/1-function-overload-resolution.html"></include>
+
+<section data-markdown signpost change-footer="Template specializations">
+    Template specializations
+</section>
+
+<include src="./regions/2-template-specializations.html"></include>
+
+<section data-markdown signpost change-footer="Template argument deduction">
+    Template argument deduction
+</section>
+
+<include src="./regions/3-template-argument-deduction.html"></include>
+
+<section data-markdown signpost change-footer="Class template argument deduction">
+    Class template argument deduction
+</section>
+
+<include src="./regions/4-class-template-argument-deduction.html"></include>
+
+
+
+<!-- #region Conclusion -->
+
+<section signpost change-footer="Conclusion">
+    Conclusion
+</section>
+
+<section data-markdown class="list-fade-in-then-semi-out">
+    <textarea data-template>
+        ## C++ has pattern matching!
+        * Function overload resolution
+        * Template specializations
+        * Template argument deduction
+        * Class template argument deduction
+    </textarea>
+</section>
+
+<section data-markdown class="list-fade-in-then-semi-out">
+    <textarea data-template>
+        ## I read the standard so you don't have to
+        * [over.match]
+        * [temp.names], [temp.spec.partial], [temp.spec]
+        * [temp.deduct]
+        * [over.match.class.deduct], [dcl.type.class.deduct], [temp.deduct.guide]
+        * Cppreference is also an amazing resource
+    </textarea>
+</section>
+
+<section data-markdown class="list-fade-in-then-semi-out">
+    <textarea data-template>
+        ## Takeaways
+        * We already have pattern matching!
+        * The general rules can be quite elegant
+        * ...but the edge cases can get gnarly
+        * Analogue reasoning about your code is a muscle
+        * Get curious, exercise that muscle
+        * Appreciate how far C++ has come
+    </textarea>
+</section>
+
+<!-- #endregion Conclusion -->

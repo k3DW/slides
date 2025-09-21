@@ -1,0 +1,65 @@
+<section my-columns="50% 50%">
+    <h2>List of viable candidate functions</h2>
+    <div style="width:100%;">
+        <pre class="cpp"><code data-trim data-line-numbers="|3|5|8-10|"><script type="text/template">
+            int foo();
+            int foo(double);
+            int foo(int, double = 4.0);
+            int foo(int, bool);
+            int foo(...);
+            int foo(bool);
+            int foo(std::unique_ptr<int>);
+            template <class T>
+                requires (sizeof(T) == 3)
+            int foo(T);
+        </script></code></pre>
+        <pre class="cpp fragment"><code data-trim hide-line-numbers data-line-numbers=""><script type="text/template">
+            void bar() {
+                foo(nullptr);
+            }
+        </script></code></pre>
+    </div>
+    <ul class="fragment" style="font-size: 75%;">
+        <li><code>int foo();</code></li>
+        <li><code>int foo(double);</code></li>
+        <li><code>int foo(int, double = 4.0);</code></li>
+        <li><code>int foo(int, bool);</code></li>
+        <li><code>int foo(...);</code></li>
+        <li><code>int foo(bool);</code></li>
+        <li><code>int foo(std::unique_ptr&lt;int&gt;);</code></li>
+        <li><code>int foo&lt;T&gt;(T);</code></li>
+    </ul>
+</section>
+
+<section my-columns="50% 50%">
+    <h2>List of viable candidate functions</h2>
+    <div style="width:100%;">
+        <pre class="cpp"><code data-trim data-line-numbers=""><script type="text/template">
+            int foo();
+            int foo(double);
+            int foo(int, double = 4.0);
+            int foo(int, bool);
+            int foo(...);
+            int foo(bool);
+            int foo(std::unique_ptr<int>);
+            template <class T>
+                requires (sizeof(T) == 3)
+            int foo(T);
+        </script></code></pre>
+        <pre class="cpp"><code data-trim hide-line-numbers data-line-numbers=""><script type="text/template">
+            void bar() {
+                foo(nullptr);
+            }
+        </script></code></pre>
+    </div>
+    <ul style="font-size: 75%;">
+        <li class="fragment semi-fade-out" data-fragment-index="1"><code>int foo();</code></li>
+        <li class="fragment semi-fade-out" data-fragment-index="3"><code>int foo(double);</code></li>
+        <li class="fragment semi-fade-out" data-fragment-index="3"><code>int foo(int, double = 4.0);</code></li>
+        <li class="fragment semi-fade-out" data-fragment-index="1"><code>int foo(int, bool);</code></li>
+        <li><code>int foo(...);</code></li>
+        <li><code>int foo(bool);</code></li>
+        <li><code>int foo(std::unique_ptr&lt;int&gt;);</code></li>
+        <li class="fragment semi-fade-out" data-fragment-index="2"><code>int foo&lt;T&gt;(T);</code></li>
+    </ul>
+</section>

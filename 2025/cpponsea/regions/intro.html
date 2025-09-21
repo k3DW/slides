@@ -1,0 +1,152 @@
+<section data-markdown class="list-fade-in-then-semi-out">
+    <textarea data-template>
+        ## C++ pattern matching proposals
+        * Herb Sutter's P2392
+        * Michael Park's P2688 (follow-up to P1371)
+    </textarea>
+</section>
+
+<section my-columns>
+    <h2>C++ pattern matching proposals</h2>
+    <div style="width:100%;">
+        <pre class="cpp fragment"><code data-trim hide-line-numbers data-line-numbers="1|2|3|"><script type="text/template">
+            struct Shape { virtual ~Shape() = default; };
+            struct Circle : Shape { int radius; };
+            struct Rectangle : Shape { int width, height; };
+        </script></code></pre>
+        <pre class="cpp fragment"><code data-trim hide-line-numbers data-line-numbers="|3|4|5|"><script type="text/template">
+            // With P2392
+            int get_area(const Shape& shape) {
+                return inspect (shape) {
+                    [r] as Circle => 3.14 * r * r;
+                    [w, h] as Rectangle => w * h;
+                };
+            }
+        </script></code></pre>
+        <pre class="cpp fragment"><code data-trim hide-line-numbers data-line-numbers="|3|4|5|"><script type="text/template">
+            // With P2688
+            int get_area(const Shape& shape) {
+                return shape match {
+                    Circle: let [r] => 3.14 * r * r;
+                    Rectangle: let [w, h] => w * h;
+                };
+            }
+        </script></code></pre>
+        <div class="fragment" style="position:absolute; top:10%; left:27%; font-size:1000%;">
+            🔮
+        </div>
+    </div>
+</section>
+
+<section my-columns>
+    <h2>C++ pattern matching proposals</h2>
+    <div style="width:100%;">
+        <div style="width:100%;" class="fragment">
+            There is no pattern matching in the language yet...
+        </div>
+        <br>
+        <div style="width:100%;" class="fragment">
+            ...right?
+        </div>
+    </div>
+</section>
+
+<section my-columns>
+    <h2>The pattern matching we already have</h2>
+    <div style="width:100%;">
+        <pre class="cpp fragment" data-fragment-index="1"><code data-trim hide-line-numbers data-line-numbers=""><script type="text/template">
+            bool foo(bool x) {
+                return not x;
+            }
+        </script></code></pre>
+        <pre class="cpp fragment" data-fragment-index="2"><code data-trim hide-line-numbers data-line-numbers=""><script type="text/template">
+            template <class T>
+            requires std::floating_point<T>
+            void foo(T x) {
+                std::cout << x;
+            }
+        </script></code></pre>
+        <pre class="cpp fragment" data-fragment-index="3"><code data-trim hide-line-numbers data-line-numbers=""><script type="text/template">
+            int foo(std::unique_ptr<int> x) {
+                return x ? *x : 0;
+            }
+        </script></code></pre>
+    </div>
+    <div style="width:100%;">
+        <pre class="cpp fragment" data-fragment-index="4"><code data-trim hide-line-numbers data-line-numbers=""><script type="text/template">
+            foo(+[]{});
+        </script></code></pre>
+        <pre class="cpp fragment" data-fragment-index="7"><code data-trim hide-line-numbers data-line-numbers=""><script type="text/template">
+            // foo(bool)
+        </script></code></pre>
+        <br/>
+        <pre class="cpp fragment" data-fragment-index="5"><code data-trim hide-line-numbers data-line-numbers=""><script type="text/template">
+            foo(123);
+        </script></code></pre>
+        <pre class="cpp fragment" data-fragment-index="7"><code data-trim hide-line-numbers data-line-numbers=""><script type="text/template">
+            // foo(bool)
+        </script></code></pre>
+        <br/>
+        <pre class="cpp fragment" data-fragment-index="6"><code data-trim hide-line-numbers data-line-numbers=""><script type="text/template">
+            foo("abc");
+        </script></code></pre>
+        <pre class="cpp fragment" data-fragment-index="7"><code data-trim hide-line-numbers data-line-numbers=""><script type="text/template">
+            // foo(bool)
+        </script></code></pre>
+    </div>
+</section>
+
+<section my-columns="48% 52%">
+    <h2>The pattern matching we already have</h2>
+    <div style="width:100%;">
+        <pre class="cpp fragment"><code data-trim hide-line-numbers data-line-numbers=""><script type="text/template">
+            template <class T, class U>
+            struct is_same {
+                static constexpr bool value = false;
+            };
+        </script></code></pre>
+        <pre class="cpp fragment"><code data-trim hide-line-numbers data-line-numbers=""><script type="text/template">
+            template <class T>
+            struct is_same<T, T> {
+                static constexpr bool value = true;
+            };
+        </script></code></pre>
+    </div>
+    <div style="width:100%;">
+        <pre class="cpp fragment"><code data-trim hide-line-numbers data-line-numbers=""><script type="text/template">
+            static_assert(is_same<int, int>::value);
+        </script></code></pre>
+        <pre class="cpp fragment"><code data-trim hide-line-numbers data-line-numbers=""><script type="text/template">
+            static_assert(not is_same<int, int*>::value);
+        </script></code></pre>
+    </div>
+</section>
+
+<section data-markdown class="list-fade-in-then-semi-out">
+    <textarea data-template>
+        ## The pattern matching we already have
+        * Function overload resolution
+        * Template specializations
+        * Template argument deduction
+        * Class template argument deduction
+    </textarea>
+</section>
+
+<section data-markdown class="list-fade-in-then-semi-out">
+    <textarea data-template>
+        ## Goal of this talk
+        * Understand basic mechanism of these facilities
+        * Analogue reasoning about your code
+        * Give insight into the logical reasoning in C++
+    </textarea>
+</section>
+
+<section data-markdown class="list-fade-in-then-semi-out">
+    <textarea data-template>
+        ## In this talk
+        * Scratching the surface
+        * Minute details are glossed over
+        * Newly invented syntax for demonstration purposes
+        * Questions at any time!
+    </textarea>
+</section>

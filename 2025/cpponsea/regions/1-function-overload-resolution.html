@@ -1,0 +1,68 @@
+<section data-markdown class="list-fade-in-then-semi-out">
+    <textarea data-template>
+        ## Function overload resolution
+        * Since the beginning
+        * In the C++98 standard
+        * A defining feature of C++ compared to C
+        * Non-template pattern matching
+    </textarea>
+</section>
+
+<section my-columns>
+    <div style="margin-inline: auto;">
+        <img src="./img/fraction-of-our-power-meme.png" width="100%" />
+    </div>
+</section>
+
+<section data-markdown class="list-fade-in-then-semi-out">
+    <textarea data-template>
+        ## Function overloading
+        * Examples of function overloading
+        * How does overload resolution work?
+    </textarea>
+</section>
+
+<include src="./regions/1-function-overload-resolution/1.1-examples.html"></include>
+
+<section data-markdown class="list-fade-in-then-semi-out">
+    <textarea data-template>
+        ## General mechanism
+        * Context of overload resolution, possible candidate functions
+        * List of viable candidate functions
+        * From the viable list, find the "best" one
+    </textarea>
+</section>
+
+<section data-markdown class="list-fade-in-then-semi-out">
+    <textarea data-template>
+        ## Distinct contexts of overload resolution
+        * Function calls
+        * Object `operator()`
+        * Operator overloading
+        * Constructors
+        * Conversion functions
+    </textarea>
+</section>
+
+<section data-markdown class="list-fade-in-then-semi-out">
+    <textarea data-template>
+        ## List of viable candidate functions
+        * Grab all candidate functions
+        * Grab the list of arguments
+        * Remove candidates with wrong number of parameters
+        * Remove candidates with unsatisfied constraints
+        * Remove candidates with incompatible arguments
+    </textarea>
+</section>
+
+<include src="./regions/1-function-overload-resolution/1.2-viable.html"></include>
+
+<section data-markdown class="list-fade-in-then-semi-out">
+    <textarea data-template>
+        ## Find the best candidate function
+        * "Implicit conversion sequence" for each parameter-argument pair
+        * Rank the viable candidates based on conversions
+    </textarea>
+</section>
+
+<include src="./regions/1-function-overload-resolution/1.3-best.html"></include>
