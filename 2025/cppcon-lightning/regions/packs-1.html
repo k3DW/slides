@@ -1,0 +1,99 @@
+<section my-columns="40%">
+    <h2>Code duplication</h2>
+    <div style="width:100%;">
+        <pre class="cpp"><code data-trim hide-line-numbers data-line-numbers=""><script type="text/template">
+            template <parser P>
+            struct xyz_parser {
+                // ...
+
+
+
+
+
+
+
+
+
+
+
+
+                // ...
+            };
+        </script></code></pre>
+    </div>
+</section>
+
+<section my-columns="40%">
+    <h2>Code duplication</h2>
+    <div style="width:100%;">
+        <pre class="cpp"><code data-trim hide-line-numbers data-line-numbers="4-7"><script type="text/template">
+            template <parser P>
+            struct xyz_parser {
+                // ...
+                template <class R>
+                static constexpr auto parse(R&& r) {
+                    // ...
+                }
+
+
+
+
+
+
+
+
+                // ...
+            };
+        </script></code></pre>
+    </div>
+</section>
+
+<section my-columns="40%">
+    <h2>Code duplication</h2>
+    <div style="width:100%;">
+        <pre class="cpp"><code data-trim hide-line-numbers data-line-numbers="8-12"><script type="text/template">
+            template <parser P>
+            struct xyz_parser {
+                // ...
+                template <class R>
+                static constexpr auto parse(R&& r) {
+                    // ...
+                }
+                template <class R, class Out>
+                static constexpr auto parse(R&& r, Out& out) {
+                    // ...
+                }
+
+
+
+
+                // ...
+            };
+        </script></code></pre>
+    </div>
+</section>
+
+<section my-columns="40%">
+    <h2>Code duplication</h2>
+    <div style="width:100%;">
+        <pre class="cpp"><code data-trim hide-line-numbers data-line-numbers="13-16|"><script type="text/template">
+            template <parser P>
+            struct xyz_parser {
+                // ...
+                template <class R>
+                static constexpr auto parse(R&& r) {
+                    // ...
+                }
+                template <class R, class Out>
+                static constexpr auto parse(R&& r, Out& out) {
+                    // ...
+                }
+                template <class R>
+                static constexpr auto lookahead(R&& r) {
+                    // ...
+                }
+                // ...
+            };
+        </script></code></pre>
+    </div>
+</section>

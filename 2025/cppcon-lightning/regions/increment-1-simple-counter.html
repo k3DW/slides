@@ -1,0 +1,77 @@
+<section my-columns="30%">
+    <h2>A simple counter</h2>
+    <div style="width:100%;">
+        <pre class="cpp"><code data-trim hide-line-numbers data-line-numbers=""><script type="text/template">
+            class Counter {
+                int _value = 0;
+
+            public:
+                int value() const { return _value; }
+
+
+
+
+
+
+
+
+
+
+
+
+            };
+        </script></code></pre>
+    </div>
+</section>
+
+<section my-columns="30%">
+    <h2>A simple counter</h2>
+    <div style="width:100%;">
+        <pre class="cpp"><code data-trim hide-line-numbers data-line-numbers="7-11"><script type="text/template">
+            class Counter {
+                int _value = 0;
+
+            public:
+                int value() const { return _value; }
+
+                Counter& operator++() {
+                    ++_value;
+                    // ... etc
+                    return *this;
+                }
+
+
+
+
+
+
+            };
+        </script></code></pre>
+    </div>
+</section>
+
+<section my-columns="30%">
+    <h2>A simple counter</h2>
+    <div style="width:100%;">
+        <pre class="cpp"><code data-trim hide-line-numbers data-line-numbers="13-17|"><script type="text/template">
+            class Counter {
+                int _value = 0;
+
+            public:
+                int value() const { return _value; }
+
+                Counter& operator++() {
+                    ++_value;
+                    // ... etc
+                    return *this;
+                }
+
+                Counter operator++(int) {
+                    auto temp = *this;
+                    ++*this;
+                    return temp;
+                }
+            };
+        </script></code></pre>
+    </div>
+</section>

@@ -1,0 +1,130 @@
+---
+layout: reveal.js
+title: "CppCon 2025 Lightning Talk"
+layout-version: 1
+footer:
+    left: "A Pack as an Optional Parameter"
+    right: "Braden Ganetsky - CppCon 2025"
+    sub: false
+thank-you:
+    version: 1
+    text:
+        - GitHub @k3DW
+        - <a>https://github.com/k3DW/tok3n</a>
+---
+
+<!-- #region Intro -->
+
+<section full data-background-color="#FFFFFF" no-footer change-footer="Introduction">
+    <div style="display: flex; flex-flow: column; height: 100%;">
+
+        <div style="flex: 0 1 75%; display: flex; flex-flow: row;">
+            <div style="font-size:200%; display: flex; flex-flow: column; flex: 0 1 auto;">
+                <div style="flex: 1 1 auto;"></div>
+                <div                          >A Pack as an</div>
+                <div style="margin-top:-10px;">Optional Parameter</div>
+                <div style="flex: 1 1 auto;"></div>
+                <div style="flex: 0 1 0.5em;"></div>
+            </div>
+            <div style="flex: 50 1 auto;"></div>
+            <div style="display: flex; flex-flow: column; flex: 0 1 36%;">
+                <div style="flex: 1 1 auto;"></div>
+                <div style="display: flex; flex-flow: row; flex: 0 1 auto;">
+                    <div style="flex: 1 1 auto;"></div>
+                    <img src="/img/profile-picture.png"></img>
+                </div>
+                <div style="flex: 3 1 auto;"></div>
+            </div>
+            <div style="flex: 1 1 auto;"></div>
+        </div>
+
+        <div style="flex: 1 1 auto; padding:1.8% 3% 2% 3%; background-color: #DDDDDD; display: flex; flex-flow: column;">
+            <div style="font-size:125%; ">Braden Ganetsky</div>
+            <div style="flex: 1 1 auto;"></div>
+            <div style="font-size:100%; ">CppCon 2025 Lightning Talk</div>
+        </div>
+
+    </div>
+</section>
+
+<!--
+
+    * Briefly show off tok3n
+    * Zoom in on the parse, parse-into, and lookahead functionality
+
+-->
+
+<section data-markdown class="list-fade-in-then-semi-out">
+    <textarea data-template>
+        ## This talk
+        * Fun with `operator++`
+        * Introduce `tok3n`
+        * How I use packs in `tok3n`
+    </textarea>
+</section>
+
+<!-- #endregion Intro -->
+
+
+
+<!-- #region Fun with `operator++` -->
+
+<section signpost>
+    Fun with <code>operator++</code>
+</section>
+
+<include src="./regions/increment-1-simple-counter.html"></include>
+<include src="./regions/increment-2-harmonize.html"></include>
+<include src="./regions/increment-3-unify.html"></include>
+
+<!-- #endregion Fun with `operator++` -->
+
+
+
+<!-- #region Introduce `tok3n` -->
+
+<section signpost>
+    Introduce <code>tok3n</code>
+</section>
+
+<section data-markdown class="list-fade-in-then-semi-out">
+    <textarea data-template>
+        ## `tok3n`
+        * C++20 library
+        * Expression template parser generators
+        * Started writing in 2021
+        * How I learned almost all the metaprogramming I know
+        * All types are empty types (for now)
+        * Fully `constexpr` capable
+        * All unit tests are compile-time tests
+    </textarea>
+</section>
+
+<include src="./regions/tok3n-1-basic.html"></include>
+<include src="./regions/tok3n-2-combinators.html"></include>
+<include src="./regions/tok3n-3-modify.html"></include>
+<include src="./regions/tok3n-4-parser-functions.html"></include>
+
+<!-- #endregion Introduce `tok3n` -->
+
+
+
+<!-- #region How I use packs in `tok3n` -->
+
+<section signpost>
+    How I use packs in <code>tok3n</code>
+</section>
+
+<include src="./regions/packs-1.html"></include>
+<include src="./regions/packs-2.html"></include>
+<include src="./regions/packs-3.html"></include>
+
+<section data-markdown class="list-fade-in-then-semi-out">
+    <textarea data-template>
+        ## Using the comma operator this way
+        * I'm not saying you should do this
+        * I'm just saying it's pretty cool
+    </textarea>
+</section>
+
+<!-- #endregion How I use packs in `tok3n` -->
