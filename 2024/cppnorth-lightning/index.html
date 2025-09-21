@@ -1,0 +1,409 @@
+---
+layout: reveal.js
+title: "CppNorth 2024 Lightning Talk"
+layout-version: 1
+footer:
+    left: "CppNorth 2024 Lightning Talk"
+    right: "Braden Ganetsky - CppNorth 2024"
+    sub: false
+---
+
+<section full data-background-color="#FFFFFF" no-footer change-footer="Introduction">
+	<div style="display: flex; flex-flow: column; height: 100%;">
+
+		<div style="flex: 0 1 75%; display: flex; flex-flow: row;">
+			<div style="font-size:200%; display: flex; flex-flow: column; flex: 0 1 auto;">
+				<div style="flex: 1 1 auto;"></div>
+				<div>Failing compilation</div>
+				<div style="margin-top:-10px;">by evaluating</div>
+				<div style="margin-top:-10px;">a concept</div>
+				<div style="flex: 1 1 auto;"></div>
+				<div style="flex: 0 1 0.5em;"></div>
+			</div>
+			<div style="flex: 50 1 auto;"></div>
+			<div style="display: flex; flex-flow: column; flex: 0 1 36%;">
+				<div style="flex: 1 1 auto;"></div>
+				<div style="display: flex; flex-flow: row; flex: 0 1 auto;">
+					<div style="flex: 1 1 auto;"></div>
+					<img src="/img/profile-picture.png"></img>
+				</div>
+				<div style="flex: 3 1 auto;"></div>
+			</div>
+			<div style="flex: 1 1 auto;"></div>
+		</div>
+
+		<div style="flex: 1 1 auto; padding:1.8% 3% 2% 3%; background-color: #DDDDDD; display: flex; flex-flow: column;">
+			<div style="font-size:125%; ">Braden Ganetsky</div>
+			<div style="flex: 1 1 auto;"></div>
+			<div style="font-size:100%; ">CppNorth 2024 Lightning Talk</div>
+		</div>
+
+	</div>
+</section>
+
+<section full data-background-color="#FFFFFF" no-footer change-footer="Introduction">
+	<div style="display: flex; flex-flow: column; height: 100%;">
+
+		<div style="flex: 0 1 75%; display: flex; flex-flow: row;">
+			<div style="font-size:200%; display: flex; flex-flow: column; flex: 0 1 auto;">
+				<div style="flex: 1 1 auto;"></div>
+				<div>How I wish I could</div>
+				<div style="margin-top:-10px;">constrain my</div>
+				<div style="margin-top:-10px;">function template</div>
+				<div style="flex: 1 1 auto;"></div>
+				<div style="flex: 0 1 0.5em;"></div>
+			</div>
+			<div style="flex: 50 1 auto;"></div>
+			<div style="display: flex; flex-flow: column; flex: 0 1 36%;">
+				<div style="flex: 1 1 auto;"></div>
+				<div style="display: flex; flex-flow: row; flex: 0 1 auto;">
+					<div style="flex: 1 1 auto;"></div>
+					<img src="/img/profile-picture.png"></img>
+				</div>
+				<div style="flex: 3 1 auto;"></div>
+			</div>
+			<div style="flex: 1 1 auto;"></div>
+		</div>
+
+		<div style="flex: 1 1 auto; padding:1.8% 3% 2% 3%; background-color: #DDDDDD; display: flex; flex-flow: column;">
+			<div style="font-size:125%; ">Braden Ganetsky</div>
+			<div style="flex: 1 1 auto;"></div>
+			<div style="font-size:100%; ">CppNorth 2024 Lightning Talk</div>
+		</div>
+
+	</div>
+</section>
+
+<section data-markdown class="list-fade-in-then-semi-out">
+	<textarea data-template>
+		## This talk is about
+		* Function templates
+		* Putting conditions on function templates
+	</textarea>
+</section>
+
+<section my-columns="50% 50%">
+	<h2>Conditions on a function template</h2>
+	<div style="width:100%;">
+		<div style="text-align: center;"><code>static_assert</code></div>
+		<pre class="cpp fragment"><code data-trim hide-line-numbers data-line-numbers="|1|2,4|3|"><script type="text/template">
+			template <class T>
+			std::string foo(T t) {
+				static_assert(std::integral<T>);
+				return std::to_string(t);
+			}
+		</script></code></pre>
+	</div>
+	<div style="width:100%;" class="fragment">
+		<div style="text-align: center;">Constraints</div>
+		<pre class="cpp fragment"><code data-trim hide-line-numbers data-line-numbers="|2|"><script type="text/template">
+			template <class T>
+			requires std::integral<T>
+			std::string foo(T t) {
+				return std::to_string(t);
+			}
+		</script></code></pre>
+	</div>
+</section>
+
+<section data-markdown class="list-fade-in-then-semi-out">
+	<textarea data-template>
+		## Benefits of `static_assert`
+		* User-specified diagnostic message
+	</textarea>
+</section>
+
+<section data-markdown class="list-fade-in-then-semi-out">
+	<textarea data-template>
+		## Benefits of constraints
+		* Callability evaluated as a predicate
+		* Removes certain functions from overload set `foo`
+	</textarea>
+</section>
+
+<section my-columns="30%">
+	<h2>Benefits of constraints</h2>
+	<div style="width:100%">
+		<pre class="cpp"><code data-trim hide-line-numbers data-line-numbers=""><script type="text/template">
+			template <class T>
+			concept Fooable = requires (T t) { foo(t); };
+		</script></code></pre>
+		<br/>
+		<pre class="cpp fragment"><code data-trim hide-line-numbers data-line-numbers=""><script type="text/template">
+			// In foo_test.cpp, for example
+			static_assert(Fooable<int>);
+			static_assert(!Fooable<double>);
+		</script></code></pre>
+	</div>
+</section>
+
+<section data-markdown class="list-fade-in-then-semi-out">
+	<textarea data-template>
+		## If we used `static_assert`
+		* `Fooable<double>` instantiates `foo<double>`
+		* `foo<double>` hits the `static_assert`
+		* Compilation failure from evaluating a concept (#1)
+	</textarea>
+</section>
+
+<section data-markdown class="list-fade-in-then-semi-out">
+	<textarea data-template>
+		## What do I want?
+		* User-specified diagnostic message
+		* Also removing from the overload set
+		* Is this possible?
+	</textarea>
+</section>
+
+<section my-columns="30%">
+	<h2>What do I want?</h2>
+	<div style="width:100%">
+		<pre class="cpp"><code data-trim hide-line-numbers data-line-numbers=""><script type="text/template">
+			template <class T>
+			concept Fooable = requires (T t) { foo(t); };
+		</script></code></pre>
+		<pre class="cpp fragment"><code data-trim hide-line-numbers data-line-numbers=""><script type="text/template">
+			static_assert(Fooable<int>);
+			static_assert(!Fooable<double>);
+		</script></code></pre>
+		<br>
+		<pre class="cpp fragment"><code data-trim hide-line-numbers data-line-numbers=""><script type="text/template">
+			foo(0);   // Compiles
+		</script></code></pre>
+		<pre class="cpp fragment"><code data-trim hide-line-numbers data-line-numbers=""><script type="text/template">
+			foo(0.0); // Error: "You worthless developer"
+		</script></code></pre>
+	</div>
+</section>
+
+<section data-markdown class="list-fade-in-then-semi-out">
+	<textarea data-template>
+		## Idea #1
+		* `static_assert` inside the concept
+	</textarea>
+</section>
+
+<section my-columns="50%">
+	<h2>Idea #1 - example</h2>
+	<div style="width:100%">
+		<pre class="cpp"><code data-trim hide-line-numbers data-line-numbers=""><script type="text/template">
+			template <class T>
+			concept MyIntegral =
+				[] {
+					static_assert(std::integral<T>, "Message");
+					return std::integral<T>;
+				}();
+		</script></code></pre>
+		<pre class="cpp fragment"><code data-trim hide-line-numbers data-line-numbers=""><script type="text/template">
+			template <class T>
+			requires MyIntegral<T>
+			std::string foo(T t) {
+				return std::to_string(t);
+			}
+		</script></code></pre>
+	</div>
+</section>
+
+<section data-markdown class="list-fade-in-then-semi-out">
+	<textarea data-template>
+		## Idea #1 - problems
+		* The `static_assert` is never triggered (in MSVC at least)
+	</textarea>
+</section>
+
+<section data-markdown class="list-fade-in-then-semi-out">
+	<textarea data-template>
+		## Idea #2
+		* Factor out the lambda
+	</textarea>
+</section>
+
+<section my-columns="60%">
+	<h2>Idea #2 - example</h2>
+	<div style="width:100%">
+		<pre class="cpp"><code data-trim hide-line-numbers data-line-numbers="1-4|5-6|"><script type="text/template">
+			constexpr auto MyIntegralImpl = []<class T>() {
+				static_assert(std::integral<T>, "Message");
+				return std::integral<T>;
+			};
+			template <class T>
+			concept MyIntegral = MyIntegralImpl.template operator()<T>();
+		</script></code></pre>
+	</div>
+</section>
+
+<section data-markdown class="list-fade-in-then-semi-out">
+	<textarea data-template>
+		## Idea #2 - problems
+		* Same problems as a `static_assert` used regularly
+		* Fundamental conflict: signature versus body
+	</textarea>
+</section>
+
+<section data-markdown class="list-fade-in-then-semi-out">
+	<textarea data-template>
+		## Idea #3
+		* Credit to Patrick Roberts
+		* Mix concepts with `enable_if` SFINAE
+	</textarea>
+</section>
+
+<section my-columns="60%">
+	<h2>Idea #3 - example</h2>
+	<div style="width:100%">
+		<pre class="cpp"><code data-trim hide-line-numbers data-line-numbers=""><script type="text/template">
+			template <class T,
+						class = typename std::enable_if<std::integral<T>>::type>
+			concept MyIntegral = std::integral<T>;
+		</script></code></pre>
+		<br/>
+		<pre class="cpp fragment"><code data-trim hide-line-numbers data-line-numbers=""><script type="text/template">
+			static_assert(MyIntegral<int>); // Succeeds
+		</script></code></pre>
+		<pre class="cpp fragment"><code data-trim hide-line-numbers data-line-numbers=""><script type="text/template">
+			static_assert(!MyIntegral<double>); // error C2039:
+			// 'type': is not a member of 'std::enable_if<false, void>'
+		</script></code></pre>
+		<br/>
+		<pre class="cpp fragment"><code data-trim hide-line-numbers data-line-numbers=""><script type="text/template">
+			static_assert(Fooable<int>); // Succeeds
+		</script></code></pre>
+		<pre class="cpp fragment"><code data-trim hide-line-numbers data-line-numbers=""><script type="text/template">
+			static_assert(!Fooable<double>); // Succeeds
+		</script></code></pre>
+	</div>
+</section>
+
+<section data-markdown class="list-fade-in-then-semi-out">
+	<textarea data-template>
+		## Idea #3 - problems
+		* Lack of user-specified message
+		* However, compilation failure from evaluating a concept (#2)
+	</textarea>
+</section>
+
+<section data-markdown class="list-fade-in-then-semi-out">
+	<textarea data-template>
+		## Idea #4
+		* Custom `enable_if` implementation
+	</textarea>
+</section>
+
+<section my-columns="65%">
+	<h2>Idea #4 - example</h2>
+	<div style="width:100%">
+		<pre class="cpp"><code data-trim hide-line-numbers data-line-numbers="|3|"><script type="text/template">
+			template <bool, class T>
+			struct enable_if_integral_impl {
+				using must_be_an_integral_type = T;
+			};
+			template <class T>
+			struct enable_if_integral_impl<false, T> {};
+		</script></code></pre>
+		<pre class="cpp fragment"><code data-trim hide-line-numbers data-line-numbers=""><script type="text/template">
+			template <bool b, class T = void>
+			using enable_if_integral =
+				typename enable_if_integral_impl<b, T>::must_be_an_integral_type;
+		</script></code></pre>
+		<br/>
+		<pre class="cpp fragment"><code data-trim hide-line-numbers data-line-numbers=""><script type="text/template">
+			template <class T,
+						class = enable_if_integral<std::integral<T>>>
+			concept MyIntegral = std::integral<T>;
+		</script></code></pre>
+	</div>
+</section>
+
+<section my-columns="60%">
+	<h2>Idea #4 - example</h2>
+	<div style="width:100%">
+		<pre class="cpp"><code data-trim hide-line-numbers data-line-numbers=""><script type="text/template">
+			static_assert(MyIntegral<int>); // Succeeds
+		</script></code></pre>
+		<pre class="cpp fragment"><code data-trim hide-line-numbers data-line-numbers=""><script type="text/template">
+			static_assert(!MyIntegral<double>); // error C2794:
+			// 'must_be_an_integral_type': is not a member of any direct or
+			// indirect base class of 'enable_if_integral_impl<false,void>'
+		</script></code></pre>
+		<br/>
+		<pre class="cpp fragment"><code data-trim hide-line-numbers data-line-numbers=""><script type="text/template">
+			static_assert(Fooable<int>); // Succeeds
+		</script></code></pre>
+		<pre class="cpp fragment"><code data-trim hide-line-numbers data-line-numbers=""><script type="text/template">
+			static_assert(!Fooable<double>); // Succeeds
+		</script></code></pre>
+	</div>
+</section>
+
+<section data-markdown class="list-fade-in-then-semi-out">
+	<textarea data-template>
+		## Idea #4 - problems
+		* Almost completely satisfies what I want, however:
+	</textarea>
+</section>
+
+<section my-columns="30%">
+	<h2>Idea #4 - problems</h2>
+	<div style="width:100%">
+		<pre class="cpp"><code data-trim hide-line-numbers data-line-numbers=""><script type="text/template">
+			foo(0); // Succeeds
+		</script></code></pre>
+		<pre class="cpp fragment"><code data-trim hide-line-numbers data-line-numbers=""><script type="text/template">
+			foo(0.0); // error C2672: 'foo':
+			// no matching overloaded function found
+		</script></code></pre>
+	</div>
+</section>
+
+<section data-markdown class="list-fade-in-then-semi-out">
+	<textarea data-template>
+		## Idea #4 - problems
+		* It removes `foo<double>` from the overload set
+		* I *still* don't get the error message I want
+	</textarea>
+</section>
+
+<section data-markdown class="list-fade-in-then-semi-out">
+	<textarea data-template>
+		## Conclusion
+		* I like writing constraints to check callability
+		* I also like user-specified error messages
+		* I want to mix them together
+		* I haven't yet figured out how
+		* ...
+		* If you have an idea, please talk to me later!
+	</textarea>
+</section>
+
+<section full no-footer>
+	<div style="display: flex; flex-flow: column; height: 100%;">
+
+		<div style="flex: 0 1 auto; padding:1.8% 3% 2% 3%; background-color: #DDDDDD; display: flex; flex-flow: row;">
+			<div style="flex: 1 1 auto;"></div>
+			<div style="display: flex; flex-flow: column; flex: 0 1 auto;">
+				<div style="font-size:300%; text-align: center;">Thank you!</div>
+			</div>
+			<div style="flex: 1 1 auto;"></div>
+		</div>
+
+		<div style="flex: 1 1 auto; display: flex; flex-flow: row;">
+			<div style="flex: 1 1 auto;"></div>
+			<div style="display: flex; flex-flow: column; flex: 0 1 auto;">
+				<div style="flex: 1 1 auto;"></div>
+				<div style="text-align: center; font-size:150%;">
+					Braden Ganetsky
+				</div>
+				<br/>
+				<div style="text-align: center;">
+					braden@ganets.ky
+				</div>
+				<div style="text-align: center;">
+					GitHub @k3DW
+				</div>
+				<div style="flex: 1 1 auto;"></div>
+			</div>
+			<div style="flex: 1 1 auto;"></div>
+		</div>
+
+	</div>
+</section>
