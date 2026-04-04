@@ -39,6 +39,7 @@
 				"{{ site.baseurl }}/_reveal.js/plugin/notes/notes.js",
 				"{{ site.baseurl }}/_reveal.js/plugin/markdown/markdown.js",
 				"{{ site.baseurl }}/_reveal.js/plugin/highlight/highlight.js",
+				"{{ site.baseurl }}/_reveal.js.ext/plugin/codelinehide/plugin.js",
 			],
 
             {% if page.layout-version == 1 %}
@@ -85,7 +86,12 @@
 				//autoAnimateDuration: 0,
 
 				// Learn about plugins: https://revealjs.com/plugins/
-				plugins: [ RevealMarkdown, RevealHighlight, RevealNotes ]
+				plugins: [
+					RevealMarkdown,
+					RevealHighlight,
+					RevealNotes,
+					RevealCodeLineHide,
+				]
 			});
 
 			Reveal.on("ready", () => {
