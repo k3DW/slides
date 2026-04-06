@@ -84,23 +84,19 @@ let RevealCodeLineHide = (() => {
     });
   }
 
-  // The structure inside <pre>, after the processing done with `data-line-numbers`:
-  //   ```html
-  //   <pre>
-  //     <code ...>
-  //     <code data-fragment-index="0" ...>
-  //     <code data-fragment-index="1" ...>
-  //     ...
-  //   </pre>
-  //   ```
-  // Each <code> needs its own hide spec applied. Note that these <code>
-  // elements are neither 0-indexed or 1-indexed on the `data-fragment-index`.
-  // The first element has no `data-fragment-index` at all, then it starts at 0.
   function applyHideToPre(pre) {
+    // This is assurance that we're iterating in the right order
+    let lastFragmentIndexSeen = -1;
+    const ensureIncreasingFragmentIndex = dataFragmentIndex => {
+      const fragmentIndex = parseInt(dataFragmentIndex || '0', 10);
+      console.assert(fragmentIndex > lastFragmentIndexSeen);
+      lastFragmentIndexSeen = fragmentIndex;
+    };
+
+    let stepIndex = 0;
     pre.querySelectorAll('code[data-line-hide]').forEach(code => {
-      const idx = code.getAttribute('data-fragment-index');
-      const stepIndex = (idx === null || idx === '') ? 0 : parseInt(idx, 10) + 1;
-      applyHideToCode(code, stepIndex);
+      ensureIncreasingFragmentIndex(code.getAttribute('data-fragment-index'))
+      applyHideToCode(code, stepIndex++);
     });
   }
 
