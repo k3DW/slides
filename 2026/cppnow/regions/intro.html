@@ -1,0 +1,144 @@
+<section my-columns>
+    <div>
+        <img src="./img/2024-talk.png" width="50%" />
+        <br/>
+        "Unit Testing an Expression Template Library in C++20"
+        <br/>
+        <a href="https://www.youtube.com/watch?v=H4KzM-wDiQw" style="font-size: 50%;">https://www.youtube.com/watch?v=H4KzM-wDiQw</a>
+    </div>
+</section>
+
+<section data-markdown class="list-fade-in-then-semi-out">
+    <textarea data-template>
+        ## Goals of this talk
+
+        Need
+        * Test features at compile-time and run-time
+        * Helpful error messages at run-time
+
+        Want
+        * Write test only once, compile-time and run-time together
+        * Equally helpful error messages from compile-time cases
+    </textarea>
+</section>
+
+<section data-markdown class="list-fade-in-then-semi-out">
+    <textarea data-template>
+        ## My claim
+        * It is good engineering practice to test the code you write
+        * Corollary: It is _bad_ engineering practice to _not_ test the code you write
+    </textarea>
+</section>
+
+<section data-markdown class="list-fade-in-then-semi-out">
+    <textarea data-template>
+        ## My claim
+        * If I claim `tok3n` is fully capable at compile-time,
+        * then it should be tested at compile-time
+    </textarea>
+</section>
+
+<section my-columns="60%">
+    <h2>What radicalized me</h2>
+    <div style="width: 100%;">
+        <pre class="cpp fragment"><code data-trim hide-line-numbers
+            data-line-numbers="1-7|3  |4-5|4-5|6|"
+            data-line-hide=   "3-6|4-6|5-6|6  | |"
+        ><script type="text/template">
+            template <std::size_t N>
+            struct static_string {
+                std::array<char, N> data = {};
+                constexpr static_string() = default;
+                constexpr static_string(const char(&input)[N + 1]);
+                constexpr std::string_view view() const;
+            };
+        </script></code></pre>
+        <pre class="cpp fragment"><code data-trim hide-line-numbers
+            data-line-numbers="1-11  |2   |4-10|5-9|5-9|"
+            data-line-hide=   "2,4-10|4-10|5-9 |6-8|   |"
+        ><script type="text/template">
+            template <static_string str>
+            requires (is_sorted_and_unique(str))
+            struct any_of_parser {
+                static constexpr bool parse(std::string_view in) {
+                    return std::ranges::any_of(str.view(),
+                        [&](char c) {
+                            return in.starts_with(c);
+                        }
+                    );
+                }
+            };
+        </script></code></pre>
+    </div>
+</section>
+
+<section my-columns="60%">
+    <h2>What radicalized me</h2>
+    <div style="width: 100%;">
+        <pre class="cpp"><code data-trim hide-line-numbers
+            data-line-numbers="   |3  |4|5|"
+            data-line-hide=   "2-6|4-5|5| |"
+        ><script type="text/template">
+            int main() {
+                {
+                    any_of_parser<"abc"> p;
+                    static_assert(p.parse("b"));
+                    assert(p.parse("b"));
+                }
+            }
+        </script></code></pre>
+        <pre class="cpp fragment"><code data-trim hide-line-numbers
+            data-line-numbers="2,7|4|5|5-6"
+            data-line-hide=   "6  |6|6|   "
+        ><script type="text/template">
+            int main() {
+                [] {
+                    any_of_parser<"abc"> p;
+                    static_assert(p.parse("b"));
+                    assert(p.parse("b"));
+                    // Assertion failed: p.parse("b")
+                }();
+            }
+        </script></code></pre>
+        <span class="fragment"><a>https://godbolt.org/z/nhTfbvPnz</a></span>
+    </div>
+</section>
+
+<section data-markdown class="list-fade-in-then-semi-out">
+    <textarea data-template>
+        ## This talk is about...
+        * Testing the correctness of your program...
+        * For code that runs at compile-time...
+        * In a way that is ergonomic enough to remove friction
+    </textarea>
+</section>
+
+<!-- <section data-markdown class="list-fade-in-then-semi-out">
+    <textarea data-template>
+        ## This talk is not about...
+        * Performance
+        * Compile-fail tests
+    </textarea>
+</section> -->
+
+<section data-markdown class="list-fade-in-then-semi-out">
+    <textarea data-template>
+        ## About me
+        * Canadian
+        * Secretary of WG21
+        * Facilitator of Winnipeg C++ Developers
+        * Licensed professional engineer
+        * I like twisty puzzles
+        ![test]({{ site.baseurl }}/img/NEP7570939.jpg) <!-- .element style="position:absolute; height:75%; right:0; top:12%;"-->
+    </textarea>
+</section>
+
+<section data-markdown class="list-fade-in-then-semi-out">
+    <textarea data-template>
+        ## Overview
+        * History of C++ compile-time computation
+        * Forms of compile-time testing
+        * Evolution of testing in `tok3n`
+        * My compile-time-first unit testing library
+    </textarea>
+</section>
