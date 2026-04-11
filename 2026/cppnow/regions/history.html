@@ -1,0 +1,303 @@
+<section my-columns no-footer>
+    <div style="width:100%; font-size: 125%;">
+        <span>The history of C++ compile-time computation</span>
+        <br/>
+        <span class="fragment">is the history of C++ itself</span>
+    </div>
+</section>
+
+<section my-columns="80%">
+    <h2>Erwin Unruh's prime numbers</h2>
+    <div style="width:100%;">
+        <iframe class="fragment" src="http://www.erwin-unruh.de/Prim.html" style="width:100%; height:85%;"></iframe>
+        <span><a>http://www.erwin-unruh.de/Prim.html</a></span>
+    </div>
+</section>
+
+<section my-columns="80%">
+    <h2>Erwin Unruh's prime numbers (original)</h2>
+    <div style="width:100%;">
+        <iframe class="fragment" src="http://www.erwin-unruh.de/primorig.html" style="width:100%; height:85%;"></iframe>
+        <span><a>http://www.erwin-unruh.de/primorig.html</a></span>
+    </div>
+</section>
+
+<section data-markdown class="list-fade-in-then-semi-out">
+    <textarea data-template>
+        ## Erwin Unruh's prime numbers
+        * San Diego, 1994
+        * The first demonstration that templates are Turing-complete
+        * This was _not_ an intentional language feature
+    </textarea>
+</section>
+
+<section data-markdown class="list-fade-in-then-semi-out">
+    <textarea data-template>
+        ## Partial and explicit template specializations
+        * Pattern matching engine
+    </textarea>
+</section>
+
+<section my-columns>
+    <div>
+        <img src="./img/2tkkAFCWGbM.jpg" width="50%" />
+        <br/>
+        "The Pattern Matching We Already Have"
+        <br/>
+        <a href="https://www.youtube.com/watch?v=2tkkAFCWGbM" style="font-size: 50%;">https://www.youtube.com/watch?v=2tkkAFCWGbM</a>
+    </div>
+</section>
+
+<section data-markdown class="list-fade-in-then-semi-out">
+    <textarea data-template>
+        ## C++98
+        * Compile-time decision making and computation...
+        * Partial and explicit template specializations
+        * SFINAE (more than just enable_if)
+        * ...much of it is cumbersome but it works
+    </textarea>
+</section>
+
+<section data-markdown class="list-fade-in-then-semi-out">
+    <textarea data-template>
+        ## With them we get
+        * Compile-time polymorphism
+        * Fallback/fallthrough behaviour
+        * Compile-time branching
+        * Compile-time recursion
+        * Property detection
+        * ...etc
+    </textarea>
+</section>
+
+<section my-columns>
+    <div style="width: 100%;">
+        <pre class="cpp"><code data-trim hide-line-numbers
+            data-line-numbers="1-3,21|4-5 |7   |9-10 |12-13|15-16|12-16|12-16,20|"
+            data-line-hide=   "4-20  |6-20|8-20|11-20|17-20|17-20|17-20|        |"
+        ><script type="text/template">
+            template<typename T>
+            class DetectX
+            {
+                struct Fallback { int X; }; // add member name "X"
+                struct Derived : T, Fallback { };
+
+                template<typename U, U> struct Check;
+
+                typedef char ArrayOfOne[1];  // typedef for an array of size one.
+                typedef char ArrayOfTwo[2];  // typedef for an array of size two.
+
+                template<typename U>
+                static ArrayOfOne & func(Check<int Fallback::*, &U::X> *);
+
+                template<typename U>
+                static ArrayOfTwo & func(...);
+
+              public:
+                typedef DetectX type;
+                enum { value = sizeof(func<Derived>(0)) == 2 };
+            };
+        </script></code></pre>
+        <span><a style="font-size: 50%;">https://en.wikibooks.org/wiki/More_C%2B%2B_Idioms/Member_Detector</a></span>
+    </div>
+</section>
+
+<section data-markdown class="list-fade-in-then-semi-out">
+    <textarea data-template>
+        ## C++11
+        * More purposeful compile-time than C++98
+        * `static_assert`
+        * `decltype`
+        * Stdlib type traits + `std::declval`
+        * `constexpr`
+    </textarea>
+</section>
+
+<section my-columns>
+    <div style="width: 100%;">
+        <pre class="cpp"><code data-trim hide-line-numbers
+            data-line-numbers="2-4,14|1   |5-7 |6   |7   |9-10 |13||5-7"
+            data-line-hide=   "1,3-13|3-13|8-13|8-13|8-13|11-13|  ||   "
+        ><script type="text/template">
+            #include <type_traits>
+            template <typename T>
+            class DetectX
+            {
+                template <typename U,
+                          typename = decltype(std::declval<U>().X)>
+                static std::true_type func(int);
+
+                template <typename U>
+                static std::false_type func(...);
+
+            public:
+                static constexpr bool value = decltype(func<T>(0))::value;
+            };
+        </script></code></pre>
+    </div>
+</section>
+
+<section my-columns>
+    <div style="width: 100%;">
+        <pre class="cpp"><code data-trim hide-line-numbers
+            data-line-numbers="5-7"
+        ><script type="text/template">
+            #include <type_traits>
+            template <typename T>
+            class DetectX
+            {
+                template <typename U>
+                static decltype(std::declval<U>().X, std::true_type{})
+                    func(int);
+
+                template <typename U>
+                static std::false_type func(...);
+
+            public:
+                static constexpr bool value = decltype(func<T>(0))::value;
+            };
+        </script></code></pre>
+    </div>
+</section>
+
+<section my-columns>
+    <div style="width: 100%;">
+        <pre class="cpp"><code data-trim hide-line-numbers
+            data-line-numbers="5-7"
+        ><script type="text/template">
+            #include <type_traits>
+            template <typename T>
+            class DetectX
+            {
+                template <typename U>
+                static auto func(U* u)
+                    -> decltype(u->X, std::true_type{});
+
+                template <typename U>
+                static std::false_type func(...);
+
+            public:
+                static constexpr bool value = decltype(func<T>(0))::value;
+            };
+        </script></code></pre>
+    </div>
+</section>
+
+<section my-columns>
+    <div style="width: 100%;">
+        <pre class="cpp"><code data-trim hide-line-numbers
+            data-line-numbers="1-2|4-6|"
+        ><script type="text/template">
+            template <typename T, typename = void>
+            struct DetectX : std::false_type {};
+
+            template <typename T>
+            struct DetectX<T, decltype(std::declval<T>().X, void())>
+                : std::true_type {};
+        </script></code></pre>
+    </div>
+</section>
+
+<section data-markdown class="list-fade-in-then-semi-out">
+    <textarea data-template>
+        ## Constexpr in C++11
+        * Mark variables as evaluated at compile-time
+        * Mark functions as _maybe_ evaluated at compile-time
+    </textarea>
+</section>
+
+<section data-markdown class="list-fade-in-then-semi-out">
+    <textarea data-template>
+        ## Constexpr functions in C++11
+        * A single return statement
+        * No looping, only recursion or calls to other functions
+        * Only ternary operator, no `if`
+    </textarea>
+</section>
+
+<section my-columns>
+    <div style="width: 100%;">
+        <pre class="cpp"><code data-trim hide-line-numbers data-line-numbers=""><script type="text/template">
+            constexpr int factorial(int x) {
+                return (n <= 1) ? 1 : x * factorial(x - 1);
+            }
+        </script></code></pre>
+        <pre class="cpp fragment"><code data-trim hide-line-numbers data-line-numbers="1|2|"><script type="text/template">
+            constexpr int x = factorial(5);
+            static_assert(x == 120, "x == 120");
+        </script></code></pre>
+    </div>
+</section>
+
+<section data-markdown class="list-fade-in-then-semi-out">
+    <textarea data-template>
+        ## Constexpr functions in C++14
+        * `if`/`else`
+        * Multiple return statements
+        * Looping
+        * Local variables
+    </textarea>
+</section>
+
+<section my-columns>
+    <div style="width: 100%;">
+        <pre class="cpp"><code data-trim hide-line-numbers data-line-numbers="|2-4|5|6-8|"><script type="text/template">
+            constexpr int factorial(int n) {
+                if (n > 12) {
+                    return -1;
+                }
+                int result = 1;
+                for (int i = 2; i <= n; ++i) {
+                    result *= i;
+                }
+                return result;
+            }
+        </script></code></pre>
+        <pre class="cpp fragment"><code data-trim hide-line-numbers data-line-numbers=""><script type="text/template">
+            constexpr int x = factorial(5);
+            static_assert(x == 120, "x == 120");
+        </script></code></pre>
+    </div>
+</section>
+
+<section data-markdown class="list-fade-in-then-semi-out">
+    <textarea data-template>
+        ## Compile-time evaluation in C++17
+        * `if constexpr`, compile-time branching
+        * `inline constexpr` variables
+    </textarea>
+</section>
+
+<section data-markdown class="list-fade-in-then-semi-out">
+    <textarea data-template>
+        ## Compile-time evaluation in C++20
+        * Concepts and constraints
+        * `consteval` immediate functions
+        * Compile-time heap allocation (non-persisting)
+    </textarea>
+</section>
+
+<section my-columns>
+    <div style="width: 100%;">
+        <pre class="cpp"><code data-trim hide-line-numbers data-line-numbers=""><script type="text/template">
+            template <typename T>
+            concept DetectX = requires (T t) { t.X; };
+        </script></code></pre>
+    </div>
+</section>
+
+<section data-markdown class="list-fade-in-then-semi-out">
+    <textarea data-template>
+        ## Compile-time heap allocation
+        * Almost all our code at compile-time
+        * Opens up more needed testing surface
+    </textarea>
+</section>
+
+<section data-markdown class="list-fade-in-then-semi-out">
+    <textarea data-template>
+        ## Step back: Why compile-time?
+        * Remove/reduce UB-related bugs
+        * Remove/reduce run-time overhead
+    </textarea>
+</section>

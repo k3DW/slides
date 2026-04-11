@@ -13,7 +13,44 @@ footer:
 <section full data-background-image="./img/Testing Everything in Constexpr_Title Card.png" no-footer change-footer="Introduction">
 </section>
 
-<include src="./regions/thank-you.html"></include>
-<include src="./regions/intro.html"></include>
+<section data-markdown class="list-fade-in-then-semi-out">
+    <textarea data-template>
+        ## About me
+        * Canadian
+        * Secretary of WG21
+        * Facilitator of Winnipeg C++ Developers
+        * Licensed professional engineer
+        * I like twisty puzzles
+        ![test]({{ site.baseurl }}/img/NEP7570939.jpg) <!-- .element style="position:absolute; height:75%; right:0; top:12%;"-->
+    </textarea>
+</section>
+
+<section data-markdown class="list-fade-in-then-semi-out">
+    <textarea data-template>
+        ## Overview
+        * History of C++ compile-time computation
+        * Forms of compile-time testing
+        * Evolution of testing in `tok3n`
+        * My compile-time-first unit testing library
+    </textarea>
+</section>
 
 <!-- #endregion Intro -->
+
+
+
+<section signpost change-footer="History of compile-time">
+    History of C++ compile-time computation
+</section>
+
+<include src="./regions/history.html"></include>
+
+
+
+<!-- #region Conclusion -->
+
+<section signpost change-footer="Conclusion">
+    Conclusion
+</section>
+
+<!-- #endregion Conclusion -->
