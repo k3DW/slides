@@ -1,0 +1,154 @@
+<section data-markdown class="list-fade-in-then-semi-out">
+    <textarea data-template>
+        ## Forms of compile-time testing
+        * Out-of-source
+        * In-source
+    </textarea>
+</section>
+
+<section data-markdown class="list-fade-in-then-semi-out">
+    <textarea data-template>
+        ## Out-of-source compile-time testing
+        * E.g. compile-fail tests
+    </textarea>
+</section>
+
+<section my-columns="45% 55%">
+    <h2>Compile-fail tests</h2>
+    <div style="width:100%;">
+        <pre class="cpp"><code data-trim hide-line-numbers data-line-numbers="1-12|3-4|6-8|"><script type="text/template">
+            template <class T>
+            struct wrapper {
+                wrapper(T value) :
+                    _value(std::move(value)) {}
+
+                const T& operator()() const {
+                    return _value;
+                }
+
+            private:
+                T _value;
+            };
+        </script></code></pre>
+        <pre class="cpp fragment"><code data-trim hide-line-numbers data-line-numbers="|3|4|"><script type="text/template">
+            #include "file.hpp"
+            int main() {
+                wrapper<int> w{42};
+                w() = 67;
+            }
+        </script></code></pre>
+    </div>
+    <div style="width:100%;">
+        <pre class="cmake fragment"><code data-trim hide-line-numbers
+            data-line-numbers="1-3 |5-10 |12-15|"
+            data-line-hide=   "5-15|12-15|     |"
+        ><script type="text/template">
+            add_executable(compile_fail_test EXCLUDE_FROM_ALL
+                file_test.cpp
+            )
+
+            add_test(
+                NAME compile_fail_test
+                COMMAND ${CMAKE_COMMAND}
+                    --build ${CMAKE_BINARY_DIR}
+                    --target compile_fail_test
+            )
+
+            set_tests_properties(compile_fail_test
+                PROPERTIES
+                    WILL_FAIL TRUE
+            )
+        </script></code></pre>
+    </div>
+</section>
+
+<section my-columns>
+    <h2>Compile-fail tests</h2>
+    <div style="width:100%;">
+        <pre class="none"><code data-trim hide-line-numbers data-line-numbers><script type="text/template">
+            $ ctest -C Debug
+            Test project path/to/build
+                Start 1: compile_fail_test
+            1/1 Test #1: compile_fail_test ................   Passed    0.51 sec
+
+            100% tests passed, 0 tests failed out of 1
+
+            Total Test time (real) =   0.51 sec
+        </script></code></pre>
+    </div>
+</section>
+
+<section my-columns="45% 55%">
+    <h2>Compile-fail tests</h2>
+    <div style="width:100%;">
+        <pre class="cpp"><code data-trim hide-line-numbers
+            data-line-numbers="1-12|6-9|6-9|"
+            data-line-hide=   "9   |9  |   |"
+        ><script type="text/template">
+            template <class T>
+            struct wrapper {
+                wrapper(T value) :
+                    _value(std::move(value)) {}
+
+                const T& operator()() const {
+                    return _value;
+                }
+                T& operator()() = delete;
+            private:
+                T _value;
+            };
+        </script></code></pre>
+        <pre class="cpp"><code data-trim hide-line-numbers data-line-numbers><script type="text/template">
+            #include "file.hpp"
+            int main() {
+                wrapper<int> w{42};
+                w() = 67;
+            }
+        </script></code></pre>
+    </div>
+    <div style="width:100%;">
+        <pre class="cmake"><code data-trim hide-line-numbers data-line-numbers><script type="text/template">
+            add_executable(compile_fail_test EXCLUDE_FROM_ALL
+                file_test.cpp
+            )
+
+            add_test(
+                NAME compile_fail_test
+                COMMAND ${CMAKE_COMMAND}
+                    --build ${CMAKE_BINARY_DIR}
+                    --target compile_fail_test
+            )
+
+            set_tests_properties(compile_fail_test
+                PROPERTIES
+                    WILL_FAIL TRUE
+            )
+        </script></code></pre>
+    </div>
+</section>
+
+<section data-markdown class="list-fade-in-then-semi-out">
+    <textarea data-template>
+        ## Compile-file tests: pros
+        * No extra language support needed
+        * Test absolutely anything, no matter how complex
+    </textarea>
+</section>
+
+<section data-markdown class="list-fade-in-then-semi-out">
+    <textarea data-template>
+        ## Compile-file tests: cons
+        * False positive, fails for the wrong reason
+        * Only one check per file
+    </textarea>
+</section>
+
+<section data-markdown class="list-fade-in-then-semi-out">
+    <textarea data-template>
+        ## In-source compile-time testing
+        * Either `static_assert`s, compile-time failures
+        * or run-time failures
+        * ...with detection idiom, type traits concepts
+        * ...with `constexpr` code
+    </textarea>
+</section>
