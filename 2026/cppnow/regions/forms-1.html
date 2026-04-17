@@ -184,8 +184,19 @@
     <textarea data-template>
         ## Out-of-source testing: cons
         * Only one granular check per file
-        * False positive, fails for the wrong reason
+        * False positive, _fails for the wrong reason_
         * Doesn't tell you _why_ the failure occurred
         * Slower iteration time, must reconfigure for every new check
+    </textarea>
+</section>
+
+<section data-markdown class="list-fade-in-then-semi-out">
+    <textarea data-template>
+        ## In this case...
+        * Checking correct file inclusion
+        * Checking syntax in the whole file
+        * Checking semantics of `wrapper<int> w{42};`
+        * Checking semantics of `w() = 67;`
+        * ...and this is a small file
     </textarea>
 </section>

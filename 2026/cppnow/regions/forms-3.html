@@ -1,0 +1,325 @@
+<section data-markdown class="list-fade-in-then-semi-out">
+    <textarea data-template>
+        ## In-source compile-time testing
+        * Either `static_assert`s, compile-time failures
+        * or run-time failures
+        * ...with detection idiom, type traits, concepts, etc
+        * ...with `constexpr` code
+    </textarea>
+</section>
+
+<section my-columns="50% 50%">
+    <div style="width:100%;">
+        <pre class="cpp"><code data-trim hide-line-numbers data-line-numbers><script type="text/template">
+            template <class T>
+            struct wrapper {
+                wrapper(T value) :
+                    _value(std::move(value)) {}
+
+                const T& operator()() const {
+                    return _value;
+                }
+
+            private:
+                T _value;
+            };
+        </script></code></pre>
+        <pre class="cpp fragment"><code data-trim hide-line-numbers
+            data-line-numbers="1-6|4-5|"
+            data-line-hide=   "4-5|   |"
+        ><script type="text/template">
+            #include "file.hpp"
+            int main() {
+                wrapper<int> w{42};
+                static_assert(not is_assignable_v<
+                    decltype(w()), int>);
+            }
+        </script></code></pre>
+    </div>
+    <div style="width:100%;">
+        <pre class="cmake fragment"><code data-trim hide-line-numbers
+            data-line-numbers="|1-4|8-13|"
+        ><script type="text/template">
+            add_executable(wrapper_test
+                EXCLUDE_FROM_ALL
+                file_test.cpp
+            )
+            target_include_directories(
+                wrapper_test PRIVATE .
+            )
+            add_test(
+                NAME wrapper_test
+                COMMAND ${CMAKE_COMMAND}
+                    --build ${CMAKE_BINARY_DIR}
+                    --target wrapper_test
+            )
+        </script></code></pre>
+        <pre class="cmake fragment"><code data-trim hide-line-numbers
+            data-line-numbers="1-4|5-8|"
+            data-line-hide=   "5-8|   |"
+        ><script type="text/template">
+            add_test(
+                NAME wrapper_test_run
+                COMMAND wrapper_test
+            )
+            set_tests_properties(wrapper_test_run
+                PROPERTIES
+                    DEPENDS wrapper_test
+            )
+        </script></code></pre>
+    </div>
+</section>
+
+<section data-markdown class="list-fade-in-then-semi-out">
+    <textarea data-template>
+        ## Detection idiom, type traits, concepts
+        * Expect-success testing
+        * Properties necessarily known at compile-time
+        * No point in run-time checking
+    </textarea>
+</section>
+
+<section my-columns>
+    <h2>Detection idiom, type traits, concepts</h2>
+    <div style="width:100%;">
+        <pre class="cpp"><code data-trim hide-line-numbers data-line-numbers><script type="text/template">
+            template <class T>
+            struct wrapper {
+                wrapper(T value) :
+                    _value(std::move(value)) {}
+
+                const T& operator()() const {
+                    return _value;
+                }
+
+            private:
+                T _value;
+            };
+        </script></code></pre>
+        <pre class="cpp"><code data-trim hide-line-numbers
+            data-line-numbers="1-6|5|"
+            data-line-hide=   "5  | |"
+        ><script type="text/template">
+            #include "file.hpp"
+            int main() {
+                wrapper<int> w{42};
+                static_assert(not is_assignable_v<decltype(w()), int>);
+                assert(not is_assignable_v<decltype(w()), int>);
+            }
+        </script></code></pre>
+    </div>
+</section>
+
+<section my-columns>
+    <h2>Detection idiom, type traits, concepts</h2>
+    <div style="width:100%;">
+        <pre class="cpp"><code data-trim hide-line-numbers
+            data-line-numbers="    |1-2 |4-9   |6     |7   |8 |11|"
+            data-line-hide=   "1-11|4-11|6-8,11|7-8,11|8,11|11|  |"
+        ><script type="text/template">
+            template <class T>
+            concept reference = std::is_reference_v<T>;
+
+            template <class T, class U>
+            concept call_assignable = requires (T t, U u) {
+                t();
+                { t() } -> reference;
+                t() = u;
+            };
+
+            static_assert(call_assignable<wrapper<int>, int>);
+        </script></code></pre>
+        <pre class="text fragment"><code data-trim hide-line-numbers
+            data-line-numbers="1-2|3|4-5|"
+        ><script type="text/template">
+            path\to\file_test.cpp(11,15): error C2607: static assertion failed
+                  path\to\file_test.cpp(11,15):
+                  the concept 'call_assignable<wrapper<int>,int>' evaluated to false
+                      path\to\file_test.cpp(8,18):
+                      't': you cannot assign to a variable that is const
+        </script></code></pre>
+    </div>
+</section>
+
+<section data-markdown class="list-fade-in-then-semi-out">
+    <textarea data-template>
+        ## `constexpr` code
+        * User code run at compile-time
+        * ...therefore much more complexity
+        * Possible that run-time code will differ
+    </textarea>
+</section>
+
+<!-- <section my-columns="90%">
+    <div style="width:100%;">
+        <pre class="cpp"><code data-trim hide-line-numbers
+            data-line-numbers="1-24|4-6 |7-23|8-10 |11-14|19-22|15-18|"
+            data-line-hide=   "3-23|7-23|8-22|11-22|15-22|15-18|     |"
+        ><script type="text/template">
+            class string_view_joiner {
+                std::optional<std::string_view> _joined;
+            public:
+                constexpr std::optional<std::string_view> get_joined() {
+                    return _joined;
+                }
+                constexpr bool try_join(const std::string_view str) {
+                    if (str.empty()) {
+                        return true;
+                    }
+                    else if (not _joined.has_value()) {
+                        _joined.emplace(str);
+                        return true;
+                    }
+                    else if (_joined->data() + _joined->size() == str.data()) {
+                        _joined.emplace(_joined->data(), _joined->size() + str.size());
+                        return true;
+                    }
+                    else {
+                        _joined = std::nullopt;
+                        return false;
+                    }
+                }
+            };
+        </script></code></pre>
+    </div>
+</section>
+
+<section my-columns>
+    <h2><code>constexpr</code> code</h2>
+    <div style="width:100%;">
+        <pre class="cpp"><code data-trim hide-line-numbers
+            data-line-numbers="1-2 |5  |1,6|2,7|8|9|"
+            data-line-hide=   "3-10|6-9|8-9|8-9|9| |"
+        ><script type="text/template">
+            constexpr std::string_view nums = "0123456789";
+            constexpr std::string_view alpha = "abcdefghij";
+
+            int main() {
+                string_view_joiner j;
+                j.try_join(nums.substr(0, 5));
+                j.try_join(alpha.substr(6, 10));
+                auto joined = j.get_joined();
+                assert(not joined.has_value());
+            }
+        </script></code></pre>
+    </div>
+</section>
+
+<section my-columns="44% 56%">
+    <h2><code>constexpr</code> code</h2>
+    <div style="width:100%;">
+        <pre class="cpp"><code data-trim hide-line-numbers
+            data-line-numbers="7,12|"
+        ><script type="text/template">
+            constexpr std::string_view nums
+                = "0123456789";
+            constexpr std::string_view alpha
+                = "abcdefghij";
+
+            int main() {
+                constexpr auto joined = [] {
+                    string_view_joiner j;
+                    j.try_join(nums.substr(0,5));
+                    j.try_join(alpha.substr(6,10));
+                    return j.get_joined();
+                }();
+                assert(not joined.has_value());
+            }
+        </script></code></pre>
+    </div>
+    <div class="fragment" style="width:100%;">
+        <pre class="text"><code data-trim hide-line-numbers
+            data-line-numbers
+        ><script type="text/template">
+            <source>:43:10: error: constexpr variable 'joined'
+            must be initialized by a constant expression
+               43 |     constexpr auto joined = [] {
+                  |          ^        ~~~~
+               44 |         joiner j;
+                  |         ~~~~~~~~~
+               45 |         j.try_join(nums.substr(0,5));
+                  |         ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+               46 |         j.try_join(alpha.substr(6,10));
+                  |         ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+               47 |         return std::move(j).get_joined();
+                  |         ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+               48 |     }();
+                  |     ~~~
+        </script></code></pre>
+        <span><a>https://godbolt.org/z/r4fzbcWz8</a></span>
+    </div>
+</section> -->
+
+<section my-columns="50% 50%">
+    <h2><code>constexpr</code> code</h2>
+    <div style="width:100%;">
+        <pre class="cpp"><code data-trim hide-line-numbers
+            data-line-numbers="   |1  |3  |5  |6|7|"
+            data-line-hide=   "1-7|2-7|4-7|6-7|7| |"
+        ><script type="text/template">
+            constexpr auto abc = "abc"_all;
+
+            constexpr auto result = abc.parse("abcd");
+
+            static_assert(result);
+            static_assert(*result == "abc");
+            static_assert(result.remaining() == "d");
+        </script></code></pre>
+    </div>
+    <div style="width:100%;">
+        <pre class="cpp fragment"><code data-trim hide-line-numbers
+        ><script type="text/template">
+            auto abc = "abc"_all;
+
+            auto result = abc.parse("abcd");
+
+            assert(result);
+            assert(*result == "abc");
+            assert(result.remaining() == "d");
+        </script></code></pre>
+    </div>
+</section>
+
+<section my-columns="35%">
+    <h2><code>constexpr</code> code</h2>
+    <div style="width:100%;">
+        <pre class="cpp"><code data-trim hide-line-numbers
+            data-line-numbers
+        ><script type="text/template">
+            constexpr auto abc = "abc"_all;
+            constexpr auto result = abc.parse("abcd");
+        </script></code></pre>
+        <br/>
+        <pre class="cpp fragment"><code data-trim hide-line-numbers
+            data-line-numbers="1-2|4-5|7-8|"
+            data-line-hide=   "3-8|7-8|   |"
+        ><script type="text/template">
+            constexpr bool b1 = result.has_value();
+            assert(b1);
+
+            constexpr bool b2 = *result == "abc";
+            assert(b2);
+
+            constexpr bool b3 = result.remaining() == "d";
+            assert(b3);
+        </script></code></pre>
+    </div>
+</section>
+
+<section data-markdown class="list-fade-in-then-semi-out">
+    <textarea data-template>
+        ## `constexpr` code
+        * Can store a condition at compile-time
+        * ...and then check it at run-time
+    </textarea>
+</section>
+
+<section my-columns>
+    <div>
+        <img src="./img/2024-talk.png" width="50%" />
+        <br/>
+        "Unit Testing an Expression Template Library in C++20"
+        <br/>
+        <a href="https://www.youtube.com/watch?v=H4KzM-wDiQw" style="font-size: 50%;">https://www.youtube.com/watch?v=H4KzM-wDiQw</a>
+    </div>
+</section>
