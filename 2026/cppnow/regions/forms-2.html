@@ -1,0 +1,126 @@
+<section data-markdown class="list-fade-in-then-semi-out">
+    <textarea data-template>
+        ## Aside: expect-success tests
+        * Every condition must succeed
+        * Then the whole test passes
+        * There is only _one_ way the test can pass
+    </textarea>
+</section>
+
+<section my-columns="65% 30%">
+    <h2>Aside: expect-success tests</h2>
+    <div style="width:100%;">
+        <table style="width: 100%;">
+            <thead>
+                <tr style="border-bottom: 3px solid;">
+                    <th>Check 1</th> <th>Check 2</th> <th>Whole Test</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr class="fragment" style="border-bottom: 1px solid ">
+                    <td>❌</td> <td>❌</td> <td>❌</td>
+                </tr>
+                <tr class="fragment" style="border-bottom: 1px solid ">
+                    <td>❌</td> <td>✔️</td> <td>❌</td>
+                </tr>
+                <tr class="fragment" style="border-bottom: 1px solid ">
+                    <td>✔️</td> <td>❌</td> <td>❌</td>
+                </tr>
+                <tr class="fragment">
+                    <td>✔️</td> <td>✔️</td> <td>✔️</td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+    <div class="fragment">
+        <img src="./img/gate-1.png"/>
+    </div>
+</section>
+
+<section data-markdown class="list-fade-in-then-semi-out">
+    <textarea data-template>
+        ## Aside: expect-failure tests
+        * _Not_ every condition must succeed
+        * Then the whole test passes
+        * There are many ways the test can pass
+    </textarea>
+</section>
+
+<section my-columns="65% 30%">
+    <h2>Aside: expect-failure tests</h2>
+    <div style="width:100%;" class="fragment">
+        <table style="width: 100%;">
+            <thead>
+                <tr style="border-bottom: 3px solid;">
+                    <th>Check 1</th> <th>Check 2</th> <th>Whole Test</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr class="fragment" style="border-bottom: 1px solid ">
+                    <td>❌</td> <td>❌</td> <td>✔️</td>
+                </tr>
+                <tr class="fragment" style="border-bottom: 1px solid ">
+                    <td>❌</td> <td>✔️</td> <td>✔️</td>
+                </tr>
+                <tr class="fragment" style="border-bottom: 1px solid ">
+                    <td>✔️</td> <td>❌</td> <td>✔️</td>
+                </tr>
+                <tr class="fragment">
+                    <td>✔️</td> <td>✔️</td> <td>❌</td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+    <div>
+        <img src="./img/gate-2.png"/>
+    </div>
+</section>
+
+<section data-markdown class="list-fade-in-then-semi-out">
+    <textarea data-template>
+        ## Aside: expect-failure tests
+        * "Not every conditions must succeed"
+        * Alternatively...
+        * "Some condition must fail"
+        * De Morgan's law
+    </textarea>
+</section>
+
+<section my-columns="65% 30%">
+    <h2>Aside: expect-failure tests</h2>
+    <div style="width:100%;">
+        <table style="width: 100%;">
+            <thead>
+                <tr style="border-bottom: 3px solid;">
+                    <th>Check 1</th> <th>Check 2</th> <th>Whole Test</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr style="border-bottom: 1px solid ">
+                    <td>❌</td> <td>❌</td> <td>✔️</td>
+                </tr>
+                <tr style="border-bottom: 1px solid ">
+                    <td>❌</td> <td>✔️</td> <td>✔️</td>
+                </tr>
+                <tr style="border-bottom: 1px solid ">
+                    <td>✔️</td> <td>❌</td> <td>✔️</td>
+                </tr>
+                <tr>
+                    <td>✔️</td> <td>✔️</td> <td>❌</td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+    <div>
+        <img src="./img/gate-3.png"/>
+    </div>
+</section>
+
+<section data-markdown class="list-fade-in-then-semi-out">
+    <textarea data-template>
+        ## Aside: expect-failure tests
+        * Many ways the test can pass
+        * Only _one_ way the test can fail
+        * This is brittle
+    </textarea>
+</section>
