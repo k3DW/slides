@@ -1,0 +1,94 @@
+<section data-markdown class="list-fade-in-then-semi-out">
+    <textarea data-template>
+        ## More helpers
+        * Multiple test files
+        * Still full of raw `static_assert`s
+        * New traits and `consteval` functions
+        * In the library itself, templated `Result` type and `lookahead()` function
+    </textarea>
+</section>
+
+<section my-columns>
+    <h2>More helpers</h2>
+    <div style="width:100%;">
+        <pre class="cpp"><code data-trim hide-line-numbers data-line-numbers="1-2|3-6|8-10|"><script type="text/template">
+            template <class T>
+            consteval bool validate(
+                k3::parser::success_t,
+                const Result<T>& result,
+                const std::type_identity_t<T>& t,
+                std::string_view remaining)
+            {
+                return (result)
+                    && (*result == t)
+                    && (result.remaining() == remaining);
+            }
+        </script></code></pre>
+        <pre class="cpp fragment"><code data-trim hide-line-numbers data-line-numbers="1|2-4|6-7|"><script type="text/template">
+            consteval bool validate(
+                k3::parser::success_t,
+                const Result<void>& result,
+                std::string_view remaining)
+            {
+                return (result)
+                    && (result.remaining() == remaining);
+            }
+        </script></code></pre>
+    </div>
+</section>
+
+<section my-columns>
+    <h2>More helpers</h2>
+    <div style="width:100%;">
+        <pre class="cpp fragment"><code data-trim hide-line-numbers data-line-numbers="1-2|3-5|7-8|"><script type="text/template">
+            template <class T>
+            consteval bool validate(
+                k3::parser::failure_t,
+                const Result<T>& result,
+                std::string_view remaining)
+            {
+                return (!result)
+                    && (result.remaining() == remaining);
+            }
+        </script></code></pre>
+    </div>
+</section>
+
+<section my-columns>
+    <h2>More helpers</h2>
+    <div style="width:100%;">
+        <pre class="cpp fragment"><code data-trim hide-line-numbers data-line-numbers><script type="text/template">
+            template <class P, class R>
+            concept is_result_of = std::same_as<typename P::result_type, R>;
+        </script></code></pre>
+    </div>
+</section>
+
+<section my-columns="100%">
+    <h2>More helpers</h2>
+    <div style="width:100%;">
+        <pre class="cpp"><code data-trim hide-line-numbers
+            data-line-numbers="1-17|3   |5   |6   |7   |9    |11-12|13-14|"
+            data-line-hide=   "3-14|5-14|9-14|9-14|9-14|11-14|13-14|     |"
+        ><script type="text/template">
+            consteval void single_char()
+            {
+                using P = OneChar<'a'>;
+
+                static_assert(k3::parser::Parser<P>);
+                static_assert(k3::parser::parser_type_v<P> == k3::parser::ParserType::OneChar);
+                static_assert(is_result_of<P, std::string_view>);
+
+                constexpr P p;
+
+                constexpr auto r1 = P::parse("ab");
+                constexpr auto r2 = p.parse("ab");
+                static_assert(validate(success, r1, "a", "b"));
+                static_assert(validate(success, r2, "a", "b"));
+
+                //...
+            }
+        </script></code></pre>
+    </div>
+</section>
+
