@@ -1,0 +1,288 @@
+<section data-markdown class="list-fade-in-then-semi-out">
+    <textarea data-template>
+        ## Writing a test framework
+        * Each check happens at compile-time with `static_assert`
+        * Each check also happens at run-time
+        * Highly specific assertion macros with custom error messages
+    </textarea>
+</section>
+
+<section my-columns>
+    <h2>Writing a test framework</h2>
+    <div style="width:100%;">
+        <pre class="cpp"><code data-trim hide-line-numbers data-line-numbers><script type="text/template">
+            // #define DISABLE_STATIC_ASSERT
+
+            #ifdef DISABLE_STATIC_ASSERT
+            #define STATIC_ASSERT(...)
+            #else
+            #define STATIC_ASSERT(...) static_assert(__VA_ARGS__)
+            #endif
+        </script></code></pre>
+        <pre class="cpp fragment"><code data-trim hide-line-numbers
+            data-line-numbers="1-6|3  |4-5|"
+            data-line-hide=   "3-5|4-5|   |"
+        ><script type="text/template">
+            #define ASSERT(CONDITION, MESSAGE)                        \
+                {                                                     \
+                    STATIC_ASSERT(CONDITION, MESSAGE);                \
+                    if (!TestResultContext::check(CONDITION))         \
+                        return TestResultContext::add_error(MESSAGE); \
+                } static_assert(true, "require semicolon")
+        </script></code></pre>
+        <pre class="cpp fragment"><code data-trim hide-line-numbers
+            data-line-numbers
+        ><script type="text/template">
+            #define STR(...) #__VA_ARGS__
+        </script></code></pre>
+    </div>
+</section>
+
+<section data-markdown class="list-fade-in-then-semi-out">
+    <textarea data-template>
+        ## Writing a test framework
+        * Early return at run-time only
+        * All compile-time conditions are checked
+    </textarea>
+</section>
+
+<section my-columns="90%">
+    <h2>Writing a test framework</h2>
+    <div style="width:100%;">
+        <pre class="cpp"><code data-trim hide-line-numbers data-line-numbers><script type="text/template">
+            #define ASSERT_CONCEPT(Concept, ...)               \
+                ASSERT((Concept<__VA_ARGS__>),                 \
+                    "`" STR(__VA_ARGS__) "` does not satisfy " \
+                    "the " STR(Concept) " concept.")
+        </script></code></pre>
+        <pre class="cpp fragment"><code data-trim hide-line-numbers
+            data-line-numbers="1  |2  |3-4|5-6|7-8|"
+            data-line-hide=   "2-8|3-8|5-8|7-8|   |"
+        ><script type="text/template">
+            #define ASSERT_IS_PARSER(P, V, PARSER_TYPE, ...)                            \
+                ASSERT_CONCEPT(k3::tok3n::detail::parser, P);                           \
+                ASSERT(P::family == PARSER_TYPE,                                        \
+                    "`" STR(P) "::family` does not equal " STR(PARSER_TYPE));           \
+                ASSERT((k3::tok3n::detail::parser_for<P, V>),                           \
+                    "`parser_for<" STR(P) ", " STR(V) ">` is not satisfied");           \
+                ASSERT((std::same_as<typename P::template result_for<V>, __VA_ARGS__>), \
+                    "`" STR(P) "::result_for<" STR(V) ">` is not " STR(__VA_ARGS__))
+        </script></code></pre>
+    </div>
+</section>
+
+<section my-columns>
+    <h2>Writing a test framework</h2>
+    <div style="width:100%;">
+        <pre class="cpp"><code data-trim hide-line-numbers
+            data-line-numbers="1-4 |6-9  |11-14|16-19|20-24|"
+            data-line-hide=   "5-24|10-24|15-24|20-24|     |"
+        ><script type="text/template">
+            #define ASSERT_PARSE_IMPL_PARSE_VALID_(P, INPUT)    \
+                ASSERT((P::parse(INPUT)).has_value(),           \
+                    "`" STR(P) "::parse(" STR(INPUT) ")` does " \
+                    "not give a valid result, but it should." )
+
+            #define ASSERT_PARSE_IMPL_PARSE_RESULT_(P, INPUT, OUTPUT) \
+                ASSERT(*(P::parse(INPUT)) == (OUTPUT),                \
+                    "`*(" STR(P) "::parse(" STR(INPUT) "))` does "    \
+                    ""not equal `" STR(OUTPUT) "`")
+
+            #define ASSERT_PARSE_IMPL_PARSE_REMAINING_(P, INPUT, REMAINING) \
+                ASSERT((P::parse(INPUT)).remaining() == (REMAINING),        \
+                    "`" STR(P) "::parse(" STR(INPUT) ").remaining()` does " \
+                    "not equal `" STR(REMAINING) "`")
+
+            #define ASSERT_PARSE_IMPL_LOOKAHEAD_VALID_(P, INPUT)    \
+                ASSERT((P::lookahead(INPUT)).has_value(),           \
+                    "`" STR(P) "::lookahead(" STR(INPUT) ")` does " \
+                    "not give a valid result, but it should." )
+
+            #define ASSERT_PARSE_IMPL_LOOKAHEAD_REMAINING_(P, INPUT, REMAINING) \
+                ASSERT((P::lookahead(INPUT)).remaining() == (REMAINING),        \
+                    "`" STR(P) "::lookahead(" STR(INPUT) ").remaining()` does " \
+                    "not equal `" STR(REMAINING) "`")
+        </script></code></pre>
+    </div>
+</section>
+
+<section my-columns>
+    <h2>Writing a test framework</h2>
+    <div style="width:100%;">
+        <pre class="cpp"><code data-trim hide-line-numbers
+            data-line-numbers
+        ><script type="text/template">
+            #define ASSERT_PARSE_SUCCESS(P, INPUT, OUTPUT, REMAINING)       \
+                ASSERT_CONCEPT(k3::tok3n::detail::parser, P);               \
+                ASSERT_PARSE_IMPL_PARSE_VALID_(P, INPUT);                   \
+                ASSERT_PARSE_IMPL_PARSE_RESULT_(P, INPUT, OUTPUT);          \
+                ASSERT_PARSE_IMPL_PARSE_REMAINING_(P, INPUT, REMAINING);    \
+                ASSERT_PARSE_IMPL_LOOKAHEAD_VALID_(P, INPUT);               \
+                ASSERT_PARSE_IMPL_LOOKAHEAD_REMAINING_(P, INPUT, REMAINING)
+        </script></code></pre>
+    </div>
+</section>
+
+<section my-columns="90%">
+    <h2>Writing a test framework</h2>
+    <div style="width:100%;">
+        <pre class="cpp"><code data-trim hide-line-numbers
+            data-line-numbers
+        ><script type="text/template">
+            using Single = any_of_parser<'a'>;
+
+            FIXTURE("any_of_parser");
+        </script></code></pre>
+        <pre class="cpp fragment"><code data-trim hide-line-numbers
+            data-line-numbers="1-7|3|4|"
+            data-line-hide=   "3-4|4| |"
+        ><script type="text/template">
+            TEST("any_of_parser", "Requirements")
+            {
+                ASSERT_IS_PARSER(Single, char, any_of_family, output_span<char>);
+                ASSERT_IS_PARSER(Single, wchar_t, any_of_family, output_span<wchar_t>);
+
+                // ...
+            }
+        </script></code></pre>
+    </div>
+</section>
+
+<section my-columns>
+    <h2>Writing a test framework</h2>
+    <div style="width:100%;">
+        <pre class="cpp"><code data-trim hide-line-numbers
+            data-line-numbers
+        ><script type="text/template">
+            using Single = any_of_parser<'a'>;
+
+            FIXTURE("any_of_parser");
+        </script></code></pre>
+        <pre class="cpp"><code data-trim hide-line-numbers
+            data-line-numbers="1-11|3,5  |4,6-8|"
+            data-line-hide=   "3-8 |4,6-8|     |"
+        ><script type="text/template">
+            TEST("any_of_parser", "Parse single")
+            {
+                ASSERT_PARSE_SUCCESS(Single, "ab", "a", "b");
+                ASSERT_PARSE_FAILURE(Single, "ba");
+                ASSERT_PARSE_SUCCESS(Single, "abc", "a", "bc");
+                ASSERT_PARSE_FAILURE(Single, "Ab");
+                ASSERT_PARSE_FAILURE(Single, "Abc");
+                ASSERT_PARSE_FAILURE(Single, " abc");
+
+                // ...
+            }
+        </script></code></pre>
+    </div>
+</section>
+
+<section data-markdown class="list-fade-in-then-semi-out">
+    <textarea data-template>
+        ## Writing a test framework: Bonus
+        * Run-time test runner with parameters
+        * Report the number of run-time failures
+        * CMake functionality for CTest test discovery
+    </textarea>
+</section>
+
+<section my-columns="95%">
+    <h2>Writing a test framework</h2>
+    <div style="width:100%;">
+        <pre class="cpp"><code data-trim hide-line-numbers
+            data-line-numbers
+        ><script type="text/template">
+            TEST("any_of_parser", "slideware")
+            {
+                ASSERT_PARSE_SUCCESS(Single, "b", "b", "");
+            }
+        </script></code></pre>
+        <pre class="text fragment"><code data-trim hide-line-numbers
+            data-line-numbers="1-3 |2   |5-14 |16-20|"
+            data-line-hide=   "4-22|4-22|15-22|21-22|"
+        ><script type="text/template">
+            path\to\any_of_parser.cpp(17,5): error C2338:
+            static_assert failed: '(Single::parse("b")).has_value()'
+              (compiling source file 'path/to/any_of_parser.cpp')
+
+            path\to\any_of_parser.cpp(17,5): error C2131:
+            expression did not evaluate to a constant
+              (compiling source file 'path/to/any_of_parser.cpp')
+              ...
+              failure was caused by call of undefined function or one not declared 'constexpr'
+              ...
+              see usage of '_CrtDbgReport'
+              ...
+              the call stack of the evaluation (the oldest call first) is
+              ...
+
+            path\to\any_of_parser.cpp(17,5): error C2975:
+            '_Val': invalid template argument for 'std::bool_constant',
+            expected compile-time constant expression
+              (compiling source file 'path/to/any_of_parser.cpp')
+              ...
+
+            ...
+        </script></code></pre>
+    </div>
+</section>
+
+<section my-columns>
+    <h2>Writing a test framework</h2>
+    <div style="width:100%;">
+        <pre class="cpp"><code data-trim hide-line-numbers
+            data-line-numbers="|4    |5-6  |1-9  "
+            data-line-hide=   "|3,7-8|3,7-8|3,7-8"
+        ><script type="text/template">
+            TEST("any_of_parser", "slideware")
+            {
+                ASSERT_CONCEPT(k3::tok3n::detail::parser, Single);
+                ASSERT_PARSE_IMPL_PARSE_VALID_(Single, "b");
+                ASSERT_PARSE_IMPL_PARSE_RESULT_(Single, "b", "b");
+                ASSERT_PARSE_IMPL_PARSE_REMAINING_(Single, "b", "");
+                ASSERT_PARSE_IMPL_LOOKAHEAD_VALID_(Single, "b");
+                ASSERT_PARSE_IMPL_LOOKAHEAD_REMAINING_(Single, "b", "");
+            }
+        </script></code></pre>
+    </div>
+</section>
+
+<section my-columns>
+    <h2>Writing a test framework</h2>
+    <div style="width:100%;">
+        <pre class="cpp"><code data-trim hide-line-numbers
+            data-line-numbers="4  |6|8|"
+            data-line-hide=   "6-8| | |"
+        ><script type="text/template">
+            TEST("any_of_parser", "slideware")
+            {
+
+                static_assert(Single::parse("b").has_value());
+
+                static_assert(*(Single::parse("b")) == "b");
+
+                static_assert(Single::parse("b").remaining() == "");
+
+            }
+        </script></code></pre>
+    </div>
+</section>
+
+<section data-markdown class="list-fade-in-then-semi-out">
+    <textarea data-template>
+        ## Writing a test framework: Pros
+        * Custom `static_assert` messages pre C++26
+        * Run-time test runner to report issues more nicely
+        * CMake integration
+    </textarea>
+</section>
+
+<section data-markdown class="list-fade-in-then-semi-out">
+    <textarea data-template>
+        ## Writing a test framework: Cons
+        * Global control of run-time vs compile-time
+        * All messages are macro-based
+        * Framework is tightly coupled to `tok3n`
+        * Dependency on Boost.Preprocessor
+    </textarea>
+</section>
