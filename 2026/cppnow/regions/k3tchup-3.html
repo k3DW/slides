@@ -1,0 +1,132 @@
+<section data-markdown class="list-fade-in-then-semi-out">
+    <textarea data-template>
+        ## `ASSERT_THAT` and `EXPECT_THAT`
+        * Macros that take a "packet"
+        * Preserves the trace
+        * "Packets" must be callable with no arguments
+    </textarea>
+</section>
+
+<section my-columns="100%">
+    <h2><code>ASSERT_THAT</code> and <code>EXPECT_THAT</code></h2>
+    <div style="width:100%;">
+        <pre class="cpp"><code data-trim hide-line-numbers
+            data-line-numbers="|6-8,18-19|9-11|"
+        ><script type="text/template">
+            template <class P,
+                      std::invocable<> Input,
+                      std::invocable<> Result,
+                      std::invocable<> Remaining
+            >
+            auto check_parse_success_packet(P, Input, Result, Remaining)
+            {
+                return [] {
+                    constexpr Input in;
+                    constexpr Result res;
+                    constexpr Remaining rem;
+                    ASSERT_COMPILE_AND_RUN_TIME(P::parse(in()).has_value())
+                      << std::format("P failed to parse {}", in());
+                    EXPECT_COMPILE_AND_RUN_TIME(*P::parse(in()) == res())
+                      << std::format("P::parse({}) was not {}", in(), res());
+                    EXPECT_COMPILE_AND_RUN_TIME(P::parse(in()).remaining() == rem())
+                      << std::format("P::parse({}) did not have {} remaining", in(), rem());
+                };
+            }
+        </script></code></pre>
+    </div>
+</section>
+
+<section my-columns>
+    <h2><code>ASSERT_THAT</code> and <code>EXPECT_THAT</code></h2>
+    <div style="width:100%;">
+        <pre class="text"><code data-trim hide-line-numbers
+            data-line-numbers="|12-13,16-17|"
+        ><script type="text/template">
+            Running fixture "any_of_parser"
+                Test "slideware" - 9 checks / 2 errors.
+            Fixture "any_of_parser" - 1 test / 1 failure.
+
+            ================================
+
+            1 test failed.
+
+            Fixture "any_of_parser"
+            Test "slideware" failed with 2 errors.
+            [Compile-time and run-time non-fatal error]
+                at path\to\test_file.cpp:88
+                at path\to\test_file.cpp:71
+                P::parse(a) did not have bc remaining
+            [Compile-time and run-time non-fatal error]
+                at path\to\test_file.cpp:89
+                at path\to\test_file.cpp:71
+                P::parse(abc) did not have  remaining
+        </script></code></pre>
+    </div>
+</section>
+
+<section data-markdown class="list-fade-in-then-semi-out">
+    <textarea data-template>
+        ## `ASSERT_THAT` and `EXPECT_THAT`
+        * The packet is only called at run-time
+        * The packet's body should handle the compile-time vs run-time checks
+    </textarea>
+</section>
+
+<section data-markdown class="list-fade-in-then-semi-out">
+    <textarea data-template>
+        ## `ASSERT_THAT` and `EXPECT_THAT`
+        * Provide the primitives to build up a system of matchers
+    </textarea>
+</section>
+
+<section my-columns="100%">
+    <h2><code>ASSERT_THAT</code> and <code>EXPECT_THAT</code></h2>
+    <div style="width:100%;">
+        <pre class="cpp"><code data-trim hide-line-numbers
+            data-line-numbers
+        ><script type="text/template">
+            using Single = any_of_parser<'a'>;
+            using Multi  = any_of_parser<"abc">;
+        </script></code></pre>
+        <pre class="cpp fragment"><code data-trim hide-line-numbers
+            data-line-numbers="1-13|3-4 |6-7 |9-10|"
+            data-line-hide=   "3-10|6-10|9-10|    |"
+        ><script type="text/template">
+            TEST("any_of_parser", "Requirements")
+            {
+                EXPECT_THAT(the_parser<Single> | has_value_type<char>);
+                EXPECT_THAT(the_parser<Multi> | has_value_type<char>);
+
+                EXPECT_THAT(the_parser<Single> | has_family<any_of_family>);
+                EXPECT_THAT(the_parser<Multi> | has_family<any_of_family>);
+
+                EXPECT_THAT(the_parser<Single> | is_parser_for<char>.with_result<output_span<char>>);
+                EXPECT_THAT(the_parser<Multi> | is_parser_for<char>.with_result<output_span<char>>);
+
+                // ...
+            }
+        </script></code></pre>
+    </div>
+</section>
+
+<section my-columns="100%">
+    <h2><code>ASSERT_THAT</code> and <code>EXPECT_THAT</code></h2>
+    <div style="width:100%;">
+        <pre class="cpp"><code data-trim hide-line-numbers
+            data-line-numbers="1-11|3,5  |4,6-8|"
+            data-line-hide=   "3-8 |4,6-8|     |"
+        ><script type="text/template">
+            TEST("any_of_parser", "Parse single")
+            {
+                EXPECT_THAT(the_parser<Single> | SUCCEEDS_PARSING("ab", "a", "b"));
+                EXPECT_THAT(the_parser<Single> | FAILS_PARSING("ba"));
+                EXPECT_THAT(the_parser<Single> | SUCCEEDS_PARSING("abc", "a", "bc"));
+                EXPECT_THAT(the_parser<Single> | FAILS_PARSING("Ab"));
+                EXPECT_THAT(the_parser<Single> | FAILS_PARSING("Abc"));
+                EXPECT_THAT(the_parser<Single> | FAILS_PARSING(" abc"));
+
+                // ...
+            }
+        </script></code></pre>
+    </div>
+</section>

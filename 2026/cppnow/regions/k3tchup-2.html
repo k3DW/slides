@@ -1,0 +1,263 @@
+<section my-columns="90%">
+    <h2>Testing a <code>tok3n</code> parser</h2>
+    <div style="width:100%;">
+        <pre class="cpp"><code data-trim hide-line-numbers
+            data-line-numbers
+        ><script type="text/template">
+            using Single = any_of_parser<'a'>;
+
+            FIXTURE("any_of_parser");
+        </script></code></pre>
+        <pre class="cpp fragment"><code data-trim hide-line-numbers
+            data-line-numbers="1-9|3-4|5-6|7-8|"
+            data-line-hide=   "3-8|5-8|7-8|   |"
+        ><script type="text/template">
+            TEST("any_of_parser", "slideware")
+            {
+                ASSERT_COMPILE_AND_RUN_TIME(Single::parse("ab").has_value())
+                    << R"(any_of_parser<'a'> failed to parse "ab")";
+                EXPECT_COMPILE_AND_RUN_TIME(*Single::parse("ab") == "a")
+                    << R"(any_of_parser<'a'>::parse("ab") was not "a")";
+                EXPECT_COMPILE_AND_RUN_TIME(Single::parse("ab").remaining() == "b")
+                    << R"(any_of_parser<'a'>::parse("ab") did not have "b" remaining)";
+            }
+        </script></code></pre>
+    </div>
+</section>
+
+<section my-columns="90%">
+    <h2>Reusability and compile-time</h2>
+    <div style="width:100%;">
+        <pre class="cpp"><code data-trim hide-line-numbers
+            data-line-numbers
+        ><script type="text/template">
+            template <class P>
+            void check_parse_success(P, auto&& in, auto&& res, auto&& rem)
+            {
+                ASSERT_COMPILE_AND_RUN_TIME(P::parse(in).has_value())
+                    << std::format("P failed to parse {}", in);
+                EXPECT_COMPILE_AND_RUN_TIME(*P::parse(in) == res)
+                    << std::format("P::parse({}) was not {}", in, res);
+                EXPECT_COMPILE_AND_RUN_TIME(P::parse(in).remaining() == rem)
+                    << std::format("P::parse({}) did not have {} remaining", in, rem);
+            }
+        </script></code></pre>
+        <pre class="cpp fragment"><code data-trim hide-line-numbers
+            data-line-numbers
+        ><script type="text/template">
+            TEST("any_of_parser", "slideware")
+            {
+                check_parse_success(Single{}, "ab", "a", "b");
+            }
+        </script></code></pre>
+        <div class="fragment" style="position:absolute; top:10%; left:27%; font-size:1000%;">
+            ❌
+        </div>
+    </div>
+</section>
+
+<section full>
+    <h2>Reusability and compile-time</h2>
+    <ul>
+        <li class="fragment">Function calls cannot have any run-time arguments</li>
+    </ul>
+</section>
+
+<section my-columns="100%">
+    <h2>Reusability and compile-time</h2>
+    <div style="width:100%;">
+        <pre class="cpp"><code data-trim hide-line-numbers
+            data-line-numbers="1-15    |2-4 |6-14|8-9  |10-11|12-13|"
+            data-line-hide=   "2-4,6-14|6-14|8-13|10-13|12-13|     |"
+        ><script type="text/template">
+            template <class P,
+                      std::invocable<> Input,
+                      std::invocable<> Result,
+                      std::invocable<> Remaining
+            >
+            void check_parse_success()
+            {
+                ASSERT_COMPILE_AND_RUN_TIME(P::parse(Input{}()).has_value())
+                  << std::format("P failed to parse {}", Input{}());
+                EXPECT_COMPILE_AND_RUN_TIME(*P::parse(Input{}()) == Result{}())
+                  << std::format("P::parse({}) was not {}", Input{}(), Result{}());
+                EXPECT_COMPILE_AND_RUN_TIME(P::parse(Input{}()).remaining() == Remaining{}())
+                  << std::format("P::parse({}) did not have {} remaining", Input{}(), Remaining{}());
+            }
+        </script></code></pre>
+        <div class="fragment" style="position:absolute; top:10%; left:27%; font-size:1000%;">
+            ✔️
+        </div>
+    </div>
+</section>
+
+<section my-columns="100%">
+    <h2>Reusability and compile-time</h2>
+    <div style="width:100%;">
+        <pre class="cpp"><code data-trim hide-line-numbers
+            data-line-numbers="|6"
+        ><script type="text/template">
+            template <class P,
+                      std::invocable<> Input,
+                      std::invocable<> Result,
+                      std::invocable<> Remaining
+            >
+            void check_parse_success()
+            {
+                ASSERT_COMPILE_AND_RUN_TIME(P::parse(Input{}()).has_value())
+                  << std::format("P failed to parse {}", Input{}());
+                EXPECT_COMPILE_AND_RUN_TIME(*P::parse(Input{}()) == Result{}())
+                  << std::format("P::parse({}) was not {}", Input{}(), Result{}());
+                EXPECT_COMPILE_AND_RUN_TIME(P::parse(Input{}()).remaining() == Remaining{}())
+                  << std::format("P::parse({}) did not have {} remaining", Input{}(), Remaining{}());
+            }
+        </script></code></pre>
+    </div>
+</section>
+
+<section my-columns="100%">
+    <h2>Reusability and compile-time</h2>
+    <div style="width:100%;">
+        <pre class="cpp"><code data-trim hide-line-numbers
+            data-line-numbers="6|8-13"
+        ><script type="text/template">
+            template <class P,
+                      std::invocable<> Input,
+                      std::invocable<> Result,
+                      std::invocable<> Remaining
+            >
+            void check_parse_success(P, Input in, Result res, Remaining rem)
+            {
+                ASSERT_COMPILE_AND_RUN_TIME(P::parse(Input{}()).has_value())
+                  << std::format("P failed to parse {}", Input{}());
+                EXPECT_COMPILE_AND_RUN_TIME(*P::parse(Input{}()) == Result{}())
+                  << std::format("P::parse({}) was not {}", Input{}(), Result{}());
+                EXPECT_COMPILE_AND_RUN_TIME(P::parse(Input{}()).remaining() == Remaining{}())
+                  << std::format("P::parse({}) did not have {} remaining", Input{}(), Remaining{}());
+            }
+        </script></code></pre>
+    </div>
+</section>
+
+<section my-columns="100%">
+    <h2>Reusability and compile-time</h2>
+    <div style="width:100%;">
+        <pre class="cpp"><code data-trim hide-line-numbers
+            data-line-numbers="8-13|"
+        ><script type="text/template">
+            template <class P,
+                      std::invocable<> Input,
+                      std::invocable<> Result,
+                      std::invocable<> Remaining
+            >
+            void check_parse_success(P, Input in, Result res, Remaining rem)
+            {
+                ASSERT_COMPILE_AND_RUN_TIME(P::parse(in()).has_value())
+                  << std::format("P failed to parse {}", in());
+                EXPECT_COMPILE_AND_RUN_TIME(*P::parse(in()) == res())
+                  << std::format("P::parse({}) was not {}", in(), res());
+                EXPECT_COMPILE_AND_RUN_TIME(P::parse(in()).remaining() == rem())
+                  << std::format("P::parse({}) did not have {} remaining", in(), rem());
+            }
+        </script></code></pre>
+    </div>
+</section>
+
+<section my-columns>
+    <div style="width:100%;">
+        <pre class="cpp"><code data-trim hide-line-numbers
+            data-line-numbers
+        ><script type="text/template">
+            template <class P,
+                      std::invocable<> Input,
+                      std::invocable<> Result,
+                      std::invocable<> Remaining
+            >
+            void check_parse_success(P, Input in, Result res, Remaining rem)
+            {
+                ASSERT_COMPILE_AND_RUN_TIME(P::parse(in()).has_value())
+                  << std::format("P failed to parse {}", in());
+                EXPECT_COMPILE_AND_RUN_TIME(*P::parse(in()) == res())
+                  << std::format("P::parse({}) was not {}", in(), res());
+                EXPECT_COMPILE_AND_RUN_TIME(P::parse(in()).remaining() == rem())
+                  << std::format("P::parse({}) did not have {} remaining", in(), rem());
+            }
+        </script></code></pre>
+        <pre class="cpp fragment"><code data-trim hide-line-numbers
+            data-line-numbers
+        ><script type="text/template">
+            TEST("any_of_parser", "slideware")
+            {
+                check_parse_success(
+                    Single{},
+                    []() constexpr { return "ab"; },
+                    []() constexpr { return "a"; },
+                    []() constexpr { return "b"; }
+                );
+            }
+        </script></code></pre>
+    </div>
+</section>
+
+<section my-columns>
+    <h2>Reusability and compile-time</h2>
+    <div style="width:100%;">
+        <pre class="cpp"><code data-trim hide-line-numbers
+            data-line-numbers
+        ><script type="text/template">
+            #define CHECK_PARSE_SUCCESS(PARSER, INPUT, RESULT, REMAINING) \
+                check_parse_success(                                      \
+                    (PARSER{}),                                           \
+                    ([]() constexpr { return INPUT; }),                   \
+                    ([]() constexpr { return RESULT; }),                  \
+                    ([]() constexpr { return REMAINING; })                \
+                )
+        </script></code></pre>
+        <pre class="cpp fragment"><code data-trim hide-line-numbers
+            data-line-numbers="1-7|5-6|"
+            data-line-hide=   "5-6|   |"
+        ><script type="text/template">
+            TEST("any_of_parser", "slideware")
+            {
+                CHECK_PARSE_SUCCESS(Single, "ab", "a", "b");
+
+                CHECK_PARSE_SUCCESS(Single, "a", "a", "bc");
+                CHECK_PARSE_SUCCESS(Single, "abc", "a", "");
+            }
+        </script></code></pre>
+    </div>
+</section>
+
+<section my-columns>
+    <h2>Reusability and compile-time</h2>
+    <div style="width:100%;">
+        <pre class="text"><code data-trim hide-line-numbers
+            data-line-numbers="|12,15|"
+        ><script type="text/template">
+            Running fixture "any_of_parser"
+                Test "slideware" - 9 checks / 2 errors.
+            Fixture "any_of_parser" - 1 test / 1 failure.
+
+            ================================
+
+            1 test failed.
+
+            Fixture "any_of_parser"
+            Test "slideware" failed with 2 errors.
+            [Compile-time and run-time non-fatal error]
+                at path\to\test_file.cpp:20
+                P::parse(a) did not have bc remaining
+            [Compile-time and run-time non-fatal error]
+                at path\to\test_file.cpp:20
+                P::parse(abc) did not have  remaining
+        </script></code></pre>
+    </div>
+</section>
+
+<section full>
+    <h2>Reusability and compile-time</h2>
+    <ul>
+        <li class>Function calls cannot have any run-time arguments</li>
+        <li class="fragment">We want the full trace</li>
+    </ul>
+</section>
