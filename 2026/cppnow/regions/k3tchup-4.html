@@ -1,0 +1,242 @@
+<section data-markdown class="list-fade-in-then-semi-out">
+    <textarea data-template>
+        ## Dependent checks
+        * `k3tchup` reports errors at run-time
+        * ...even compile-time errors
+        * How do we handle dependent checks?
+    </textarea>
+</section>
+
+<section my-columns>
+    <h2>Dependent checks</h2>
+    <div style="width:100%;">
+        <pre class="cpp"><code data-trim hide-line-numbers
+            data-line-numbers
+        ><script type="text/template">
+            using Single = any_of_parser<'a'>;
+
+            TEST("any_of_parser", "slideware")
+            {
+                ASSERT_COMPILE_TIME(Single::parse("b").has_value());
+                EXPECT_COMPILE_TIME(*Single::parse("b") == "b");
+            }
+        </script></code></pre>
+        <span class="fragment">This doesn't compile!!</span>
+    </div>
+</section>
+
+<section full>
+    <h2>Dependent checks - what can we do?</h2>
+    <ul>
+        <li class="fragment">Put the dependent check in a dependent scope</li>
+    </ul>
+</section>
+
+<section my-columns>
+    <h2>Dependent scope</h2>
+    <div style="width:100%;">
+        <pre class="cpp"><code data-trim hide-line-numbers
+            data-line-numbers="1-10|6-9|"
+            data-line-hide=   "6-9 |   |"
+        ><script type="text/template">
+            using Single = any_of_parser<'a'>;
+
+            TEST("any_of_parser", "slideware")
+            {
+                ASSERT_COMPILE_TIME(Single::parse("b").has_value());
+                if constexpr (Single::parse("b").has_value())
+                {
+                    EXPECT_COMPILE_TIME(*Single::parse("b") == "b");
+                }
+            }
+        </script></code></pre>
+        <div class="fragment" style="position:absolute; top:10%; left:27%; font-size:1000%;">
+            ❌
+        </div>
+    </div>
+</section>
+
+<section my-columns="90%">
+    <h2>Dependent scope</h2>
+    <div style="width:100%;">
+        <pre class="cpp"><code data-trim hide-line-numbers
+            data-line-numbers="1-12|6-11|7   |9|"
+            data-line-hide=   "6-11|7-10|8-10| |"
+        ><script type="text/template">
+            using Single = any_of_parser<'a'>;
+
+            TEST("any_of_parser", "slideware")
+            {
+                ASSERT_COMPILE_TIME(Single::parse("b").has_value());
+                [&]<class T>(T) {
+                    if constexpr (sizeof(T) == sizeof(int) && Single::parse("b").has_value())
+                    {
+                        EXPECT_COMPILE_TIME(*Single::parse("b") == "b");
+                    }
+                }(0);
+            }
+        </script></code></pre>
+        <div class="fragment" style="position:absolute; top:10%; left:27%; font-size:1000%;">
+            ✔️
+        </div>
+    </div>
+</section>
+
+<section full>
+    <h2>Dependent checks - what can we do?</h2>
+    <ul>
+        <li>Put the dependent check in a dependent scope</li>
+        <li class="fragment">Automate the above point</li>
+    </ul>
+</section>
+
+<section my-columns="70%">
+    <h2>Dependent scope</h2>
+    <div style="width:100%;">
+        <pre class="cpp"><code data-trim hide-line-numbers
+            data-line-numbers="1-8|6|5"
+            data-line-hide=   "6  | |"
+        ><script type="text/template">
+            using Single = any_of_parser<'a'>;
+
+            TEST("any_of_parser", "slideware")
+            {
+                ASSERT_COMPILE_TIME(Single::parse("b").has_value()
+                    EXPECT_COMPILE_TIME(*Single::parse("b") == "b")
+                );
+            }
+        </script></code></pre>
+    </div>
+</section>
+
+<section my-columns="70%">
+    <h2>Dependent scope</h2>
+    <div style="width:100%;">
+        <pre class="cpp"><code data-trim hide-line-numbers
+            data-line-numbers="5|5-7"
+        ><script type="text/template">
+            using Single = any_of_parser<'a'>;
+
+            TEST("any_of_parser", "slideware")
+            {
+                EXPECT_COMPILE_TIME(Single::parse("b").has_value()
+                    EXPECT_COMPILE_TIME(*Single::parse("b") == "b")
+                );
+            }
+        </script></code></pre>
+    </div>
+</section>
+
+<section my-columns="70%">
+    <h2>Dependent scope</h2>
+    <div style="width:100%;">
+        <pre class="cpp"><code data-trim hide-line-numbers
+            data-line-numbers="5-7|"
+        ><script type="text/template">
+            using Single = any_of_parser<'a'>;
+
+            TEST("any_of_parser", "slideware")
+            {
+                EXPECT_COMPILE_TIME(Single::parse("b").has_value()
+                    EXPECT_COMPILE_TIME(*Single::parse("b") == "b") << "inner"
+                ) << "outer";
+            }
+        </script></code></pre>
+    </div>
+</section>
+
+<section my-columns>
+    <h2>Dependent scope</h2>
+    <div style="width:100%;">
+        <pre class="text"><code data-trim hide-line-numbers
+            data-line-numbers=""
+        ><script type="text/template">
+            Running fixture "any_of_parser"
+                Test "slideware" - 1 check / 1 error.
+            Fixture "any_of_parser" - 1 test / 1 failure.
+
+            ================================
+
+            1 test failed.
+
+            Fixture "any_of_parser"
+            Test "slideware" failed with 1 error.
+            [Compile-time non-fatal error]
+                at path\to\test_file.cpp:98
+                outer
+        </script></code></pre>
+    </div>
+</section>
+
+<section data-markdown class="list-fade-in-then-semi-out">
+    <textarea data-template>
+        ## Dependent scope
+        * Requires a template context
+        * ...therefore fatal errors don't propagate
+    </textarea>
+</section>
+
+<section my-columns>
+    <h2>Dependent scope</h2>
+    <div style="width:100%;">
+        <pre class="cpp"><code data-trim hide-line-numbers
+            data-line-numbers="1-12|9-11|"
+            data-line-hide=   "9-11|    |"
+        ><script type="text/template">
+            TEST("fixture", "slideware")
+            {
+                constexpr std::optional<int> o = std::nullopt;
+
+                ASSERT_COMPILE_TIME(o.has_value(),
+                    ASSERT_COMPILE_TIME(*o == 5)
+                );
+
+                ASSERT_COMPILE_TIME(
+                    something_important_depending_on_o_being_5()
+                );
+            }
+        </script></code></pre>
+        <span class="fragment">The important check does not run</span>
+    </div>
+</section>
+
+<section my-columns>
+    <h2>Dependent scope</h2>
+    <div style="width:100%;">
+        <pre class="cpp"><code data-trim hide-line-numbers
+            data-line-numbers="3|"
+        ><script type="text/template">
+            TEST("fixture", "slideware")
+            {
+                constexpr std::optional<int> o = 4;
+
+                ASSERT_COMPILE_TIME(o.has_value(),
+                    ASSERT_COMPILE_TIME(*o == 5)
+                );
+
+                ASSERT_COMPILE_TIME(
+                    something_important_depending_on_o_being_5()
+                );
+            }
+        </script></code></pre>
+        <span class="fragment">The important check still runs!!</span>
+    </div>
+</section>
+
+<section data-markdown class="list-fade-in-then-semi-out">
+    <textarea data-template>
+        ## Dependent scope
+        * Fatal errors return from the current function
+        * This method depends on introducing a new frame
+        * Therefore fatal errors don't work
+    </textarea>
+</section>
+
+<section full>
+    <h2>Dependent checks - what can we do?</h2>
+    <ul>
+        <li style="text-decoration: line-through;">Put the dependent check in a dependent scope</li>
+        <li style="text-decoration: line-through;">Automate the above point</li>
+        <li class="fragment">Keep track of whether a fatal error has already occurred?</li>
+    </ul>
+</section>
