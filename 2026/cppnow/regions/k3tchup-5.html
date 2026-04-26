@@ -1,0 +1,244 @@
+<section my-columns>
+    <h2>Keeping track at compile-time</h2>
+    <div style="width:100%;">
+        <pre class="cpp"><code data-trim hide-line-numbers
+            data-line-numbers
+        ><script type="text/template">
+            using Single = any_of_parser<'a'>;
+
+            TEST("any_of_parser", "slideware")
+            {
+                ASSERT_COMPILE_TIME(Single::parse("b").has_value());
+                EXPECT_COMPILE_TIME(*Single::parse("b") == "b");
+            }
+        </script></code></pre>
+        <span class="fragment">Make this compile</span>
+    </div>
+</section>
+
+<section data-markdown class="list-fade-in-then-semi-out">
+    <textarea data-template>
+        ## Keeping track at compile-time
+        * If a compile-time fatal error already occurred...
+        * ...skip all remaining compile-time checks in the function
+        * The goal is to write straight-line code
+        * Compile-time checks should be syntactically equivalent to run-time checks
+    </textarea>
+</section>
+
+<section my-columns>
+    <h2>Keeping track at compile-time</h2>
+    <div style="width:100%;">
+        <pre class="cpp"><code data-trim hide-line-numbers
+            data-line-numbers
+        ><script type="text/template">
+            ASSERT_COMPILE_TIME(Single::parse("b").has_value());
+        </script></code></pre>
+        <span class="fragment">Expands to...</span>
+        <pre class="cpp fragment"><code data-trim hide-line-numbers
+            data-line-numbers="1   |2-8     |3-6   |7   |9-11|"
+            data-line-hide=   "2-11|3-7,9-11|7,9-11|9-11|    |"
+        ><script type="text/template">
+            switch(0) case 0: default:
+            if (
+                const auto _k3_k3tchup_1 = k3tchup::context::check(
+                    k3tchup::detail::eval_condition(Single::parse("b").has_value()),
+                    true
+                );
+                _k3_k3tchup_1
+            ) {}
+            else
+                return k3tchup::void_assignment_helper{} =
+                    k3tchup::context::add_error(_k3_k3tchup_1);
+        </script></code></pre>
+    </div>
+</section>
+
+<section my-columns>
+    <div style="width:100%;">
+        <pre class="cpp"><code data-trim hide-line-numbers
+            data-line-numbers="1-11 |13-23|4,16|10-11,22-23|"
+            data-line-hide=   "13-23|     |    |           |"
+        ><script type="text/template">
+            switch(0) case 0: default:
+            if (
+                const auto _k3_k3tchup_1 = k3tchup::context::check(
+                    k3tchup::detail::eval_condition(Single::parse("b").has_value()),
+                    true
+                );
+                _k3_k3tchup_1
+            ) {}
+            else
+                return k3tchup::void_assignment_helper{} =
+                    k3tchup::context::add_error(_k3_k3tchup_1);
+
+            switch(0) case 0: default:
+            if (
+                const auto _k3_k3tchup_1 = k3tchup::context::check(
+                    k3tchup::detail::eval_condition(*Single::parse("b") == "b"),
+                    true
+                );
+                _k3_k3tchup_1
+            ) {}
+            else
+                k3tchup::void_assignment_helper{} =
+                    k3tchup::context::add_error(_k3_k3tchup_1);
+        </script></code></pre>
+    </div>
+</section>
+
+<section data-markdown class="list-fade-in-then-semi-out">
+    <textarea data-template>
+        ## Keeping track at compile-time
+        * If we encounter a compile-time fatal error...
+        * ...register this function as "errored" using stateful metaprogramming
+    </textarea>
+</section>
+
+<section data-markdown class="list-fade-in-then-semi-out">
+    <textarea data-template>
+        ## Unique value per function
+        * `std::source_location::current().function_name()`
+        * This is unique for each instantiation of a function template
+    </textarea>
+</section>
+
+<section my-columns>
+    <h2>Unique type per function</h2>
+    <div style="width:100%;">
+        <pre class="cpp fragment"><code data-trim hide-line-numbers
+            data-line-numbers
+        ><script type="text/template">
+            constexpr std::size_t function_name_hash(std::string_view s) {
+                // ...
+            }
+        </script></code></pre>
+        <pre class="cpp fragment"><code data-trim hide-line-numbers
+            data-line-numbers
+        ><script type="text/template">
+            std::integral_constant<std::size_t, function_name_hash(
+                std::source_location::current().function_name())>
+        </script></code></pre>
+    </div>
+</section>
+
+<section my-columns>
+    <h2>Stateful metaprogramming</h2>
+    <div style="width:100%;">
+        <pre class="cpp fragment"><code data-trim hide-line-numbers
+            data-line-numbers="1-4 |6-9  |11-15|"
+            data-line-hide=   "6-15|11-15|     |"
+        ><script type="text/template">
+            template <class T>
+            struct error_key {
+                friend auto find(error_key<T>);
+            };
+
+            template <class T>
+            struct set_error_for {
+                friend auto find(error_key<T>) { return 0; }
+            };
+
+            template <class T, class Unique = decltype([]{})>
+            concept has_error = requires {
+                find(error_key<T>{});
+                typename Unique;
+            };
+        </script></code></pre>
+    </div>
+</section>
+
+<section my-columns>
+    <h2>Stateful metaprogramming</h2>
+    <div style="width:100%;">
+        <pre class="cpp"><code data-trim hide-line-numbers
+            data-line-numbers
+        ><script type="text/template">
+            k3tchup::detail::eval_condition(Single::parse("b").has_value())
+        </script></code></pre>
+        <span class="fragment">Replaced with...</span>
+        <pre class="cpp fragment"><code data-trim hide-line-numbers
+            data-line-numbers="1-11|2-3|4-5|6-9|"
+            data-line-hide=   "2-9 |4-9|6-9|   |"
+        ><script type="text/template">
+            [&]<class T>(T) consteval {
+                if constexpr (k3tchup::detail::has_error<T>) {
+                    return true;
+                } else if constexpr (Single::parse("b").has_value()) {
+                    return true;
+                } else {
+                    static_assert(sizeof(k3tchup::detail::set_error_for<T>));
+                    return false;
+                }
+            }(std::integral_constant<std::size_t, k3tchup::function_name_hash(
+                std::source_location::current().function_name())>{})
+        </script></code></pre>
+    </div>
+</section>
+
+<section my-columns>
+    <h2>Stateful metaprogramming</h2>
+    <div style="width:100%;">
+        <pre class="cpp"><code data-trim hide-line-numbers
+            data-line-numbers
+        ><script type="text/template">
+            k3tchup::detail::eval_condition(*Single::parse("b") == "b")
+        </script></code></pre>
+        <span class="fragment">Replaced with...</span>
+        <pre class="cpp fragment"><code data-trim hide-line-numbers
+            data-line-numbers="1-8|2-3|4-6|"
+            data-line-hide=   "2-6|4-6|   |"
+        ><script type="text/template">
+            [&]<class T>(T) consteval {
+                if constexpr (k3tchup::detail::has_error<T>) {
+                    return true;
+                } else {
+                    return *Single::parse("b") == "b";
+                }
+            }(std::integral_constant<std::size_t, k3tchup::function_name_hash(
+                std::source_location::current().function_name())>{})
+        </script></code></pre>
+    </div>
+</section>
+
+<section my-columns>
+    <h2>The holy grail: straight-line compile-time checks</h2>
+    <div style="width:100%;">
+        <pre class="cpp fragment"><code data-trim hide-line-numbers
+            data-line-numbers
+        ><script type="text/template">
+            using Single = any_of_parser<'a'>;
+
+            TEST("any_of_parser", "slideware")
+            {
+                ASSERT_COMPILE_TIME(Single::parse("b").has_value());
+                EXPECT_COMPILE_TIME(*Single::parse("b") == "b");
+            }
+        </script></code></pre>
+        <div class="fragment" style="position:absolute; top:10%; left:27%; font-size:1000%;">
+            ✔️
+        </div>
+    </div>
+</section>
+
+<section my-columns>
+    <h2>The holy grail: straight-line compile-time checks</h2>
+    <div style="width:100%;">
+        <pre class="cpp"><code data-trim hide-line-numbers
+            data-line-numbers
+        ><script type="text/template">
+            using Single = any_of_parser<'a'>;
+
+            TEST("any_of_parser", "slideware")
+            {
+                ASSERT_COMPILE_TIME(Single::parse("b").has_value())
+                    << R"(The parser `Single` did not parse "b")";
+                EXPECT_COMPILE_TIME(*Single::parse("b") == "b");
+                    << R"(`Single::parse("b")` did not result in "b")";
+            }
+        </script></code></pre>
+        <div class="fragment" style="position:absolute; top:10%; left:27%; font-size:1000%;">
+            ✔️
+        </div>
+    </div>
+</section>
