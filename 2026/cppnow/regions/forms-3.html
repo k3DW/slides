@@ -261,7 +261,7 @@
 
             constexpr auto result = abc.parse("abcd");
 
-            static_assert(result);
+            static_assert(result.has_value());
             static_assert(*result == "abc");
             static_assert(result.remaining() == "d");
         </script></code></pre>
@@ -273,7 +273,7 @@
 
             auto result = abc.parse("abcd");
 
-            assert(result);
+            assert(result.has_value());
             assert(*result == "abc");
             assert(result.remaining() == "d");
         </script></code></pre>

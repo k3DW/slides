@@ -42,7 +42,7 @@
     <textarea data-template>
         ## Writing a test framework
         * Early return at run-time only
-        * All compile-time conditions are checked
+        * All conditions are checked at compile-time
     </textarea>
 </section>
 
@@ -190,8 +190,7 @@
         <pre class="cpp"><code data-trim hide-line-numbers
             data-line-numbers
         ><script type="text/template">
-            TEST("any_of_parser", "slideware")
-            {
+            TEST("any_of_parser", "slideware") {
                 ASSERT_PARSE_SUCCESS(Single, "b", "b", "");
             }
         </script></code></pre>
@@ -219,8 +218,6 @@
             expected compile-time constant expression
               (compiling source file 'path/to/any_of_parser.cpp')
               ...
-
-            ...
         </script></code></pre>
     </div>
 </section>

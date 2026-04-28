@@ -13,6 +13,7 @@
     <h2>Testing at the beginning</h2>
     <div style="width:100%;">
         <pre class="cpp"><code data-trim hide-line-numbers data-line-numbers=""><script type="text/template">
+            template <class P>
             consteval bool same_as(auto&& rhs)
             {
                 return std::same_as<P, std::remove_cvref_t<decltype(rhs)>>;
