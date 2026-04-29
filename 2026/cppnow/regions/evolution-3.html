@@ -20,11 +20,11 @@
                 std::string_view remaining)
             {
                 return (result.has_value())
-                    && (*result == t)
+                    && (result.value() == t)
                     && (result.remaining() == remaining);
             }
         </script></code></pre>
-        <pre class="cpp fragment"><code data-trim hide-line-numbers data-line-numbers="1|2-4|6-7|"><script type="text/template">
+        <!-- <pre class="cpp fragment"><code data-trim hide-line-numbers data-line-numbers="1|2-4|6-7|"><script type="text/template">
             consteval bool validate(
                 k3::parser::success_t,
                 const Result<void>& result,
@@ -33,7 +33,7 @@
                 return (result.has_value())
                     && (result.remaining() == remaining);
             }
-        </script></code></pre>
+        </script></code></pre> -->
     </div>
 </section>
 

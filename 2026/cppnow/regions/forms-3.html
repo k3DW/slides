@@ -1,7 +1,7 @@
 <section data-markdown class="list-fade-in-then-semi-out">
     <textarea data-template>
         ## In-source compile-time testing
-        * Either `static_assert`s, compile-time failures
+        * Either `static_assert`s / other compile-time failures,
         * or run-time failures
         * ...with detection idiom, type traits, concepts, etc
         * ...with `constexpr` code
@@ -38,15 +38,17 @@
     </div>
     <div style="width:100%;">
         <pre class="cmake fragment"><code data-trim hide-line-numbers
-            data-line-numbers="|1-4|8-13|"
+            data-line-numbers
         ><script type="text/template">
             add_executable(wrapper_test
                 EXCLUDE_FROM_ALL
                 file_test.cpp
             )
+
             target_include_directories(
                 wrapper_test PRIVATE .
             )
+
             add_test(
                 NAME wrapper_test
                 COMMAND ${CMAKE_COMMAND}
@@ -54,7 +56,7 @@
                     --target wrapper_test
             )
         </script></code></pre>
-        <pre class="cmake fragment"><code data-trim hide-line-numbers
+        <!-- <pre class="cmake fragment"><code data-trim hide-line-numbers
             data-line-numbers="1-4|5-8|"
             data-line-hide=   "5-8|   |"
         ><script type="text/template">
@@ -66,7 +68,7 @@
                 PROPERTIES
                     DEPENDS wrapper_test
             )
-        </script></code></pre>
+        </script></code></pre> -->
     </div>
 </section>
 
@@ -113,7 +115,7 @@
 <section my-columns>
     <h2>Detection idiom, type traits, concepts</h2>
     <div style="width:100%;">
-        <pre class="cpp"><code data-trim hide-line-numbers
+        <pre class="cpp"><code data-trim
             data-line-numbers="    |1-2 |4-9   |6     |7   |8 |11|"
             data-line-hide=   "1-11|4-11|6-8,11|7-8,11|8,11|11|  |"
         ><script type="text/template">
@@ -130,7 +132,38 @@
             static_assert(call_assignable<wrapper<int>, int>);
         </script></code></pre>
         <pre class="text fragment"><code data-trim hide-line-numbers
-            data-line-numbers="1-2|3|4-5|"
+            data-line-numbers="1-2|3|4-5"
+        ><script type="text/template">
+            path\to\file_test.cpp(11,15): error C2607: static assertion failed
+                  path\to\file_test.cpp(11,15):
+                  the concept 'call_assignable<wrapper<int>,int>' evaluated to false
+                      path\to\file_test.cpp(8,18):
+                      't': you cannot assign to a variable that is const
+        </script></code></pre>
+    </div>
+</section>
+
+<section my-columns>
+    <h2>Detection idiom, type traits, concepts</h2>
+    <div style="width:100%;">
+        <pre class="cpp"><code data-trim
+            data-line-numbers="|8"
+        ><script type="text/template">
+            template <class T>
+            concept reference = std::is_reference_v<T>;
+
+            template <class T, class U>
+            concept call_assignable = requires (T t, U u) {
+                t();
+                { t() } -> reference;
+                requires not requires { t() = u; };
+            };
+
+            static_assert(call_assignable<wrapper<int>, int>);
+        </script></code></pre>
+        <pre class="text"><code data-trim hide-line-numbers
+            data-line-numbers=""
+            data-line-hide=   "1-5"
         ><script type="text/template">
             path\to\file_test.cpp(11,15): error C2607: static assertion failed
                   path\to\file_test.cpp(11,15):
@@ -262,7 +295,7 @@
             constexpr auto result = abc.parse("abcd");
 
             static_assert(result.has_value());
-            static_assert(*result == "abc");
+            static_assert(result.value() == "abc");
             static_assert(result.remaining() == "d");
         </script></code></pre>
     </div>
@@ -274,7 +307,7 @@
             auto result = abc.parse("abcd");
 
             assert(result.has_value());
-            assert(*result == "abc");
+            assert(result.value() == "abc");
             assert(result.remaining() == "d");
         </script></code></pre>
     </div>
@@ -297,7 +330,7 @@
             constexpr bool b1 = result.has_value();
             assert(b1);
 
-            constexpr bool b2 = *result == "abc";
+            constexpr bool b2 = result.value() == "abc";
             assert(b2);
 
             constexpr bool b3 = result.remaining() == "d";

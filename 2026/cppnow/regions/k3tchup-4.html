@@ -176,7 +176,16 @@
     </textarea>
 </section>
 
-<section my-columns>
+<section data-markdown class="list-fade-in-then-semi-out">
+    <textarea data-template>
+        ## Dependent scope
+        * Fatal errors return from the current function
+        * This method depends on introducing a new frame
+        * Therefore fatal errors don't work properly
+    </textarea>
+</section>
+
+<!-- <section my-columns>
     <h2>Dependent scope</h2>
     <div style="width:100%;">
         <pre class="cpp"><code data-trim hide-line-numbers
@@ -198,13 +207,14 @@
         </script></code></pre>
         <span class="fragment">The important check does not run</span>
     </div>
-</section>
+</section> -->
 
 <section my-columns>
     <h2>Dependent scope</h2>
     <div style="width:100%;">
         <pre class="cpp"><code data-trim hide-line-numbers
-            data-line-numbers="3|"
+            data-line-numbers="3   |5-7 |9-11|6,9-11|"
+            data-line-hide=   "5-11|9-11|    |      |"
         ><script type="text/template">
             TEST("fixture", "slideware")
             {
@@ -221,15 +231,6 @@
         </script></code></pre>
         <span class="fragment">The important check still runs!!</span>
     </div>
-</section>
-
-<section data-markdown class="list-fade-in-then-semi-out">
-    <textarea data-template>
-        ## Dependent scope
-        * Fatal errors return from the current function
-        * This method depends on introducing a new frame
-        * Therefore fatal errors don't work
-    </textarea>
 </section>
 
 <section full>

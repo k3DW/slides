@@ -18,13 +18,6 @@
             {
                 return std::same_as<P, std::remove_cvref_t<decltype(rhs)>>;
             }
-
-            consteval bool same_as(auto&& lhs, auto&& rhs)
-            {
-                return std::same_as<
-                    std::remove_cvref_t<decltype(lhs)>,
-                    std::remove_cvref_t<decltype(rhs)>>;
-            }
         </script></code></pre>
     </div>
 </section>
@@ -33,8 +26,8 @@
     <h2>Testing at the beginning</h2>
     <div style="width:100%;">
         <pre class="cpp"><code data-trim hide-line-numbers
-            data-line-numbers="1-17|5-8  |10   |11   |12   |13-14|"
-            data-line-hide=   "5-14|10-14|11-14|12-14|13-14|     |"
+            data-line-numbers="1-16|5-8  |10   |11   |12|13|"
+            data-line-hide=   "5-13|10-13|11-13|12-13|13|  |"
         ><script type="text/template">
             void test_OneChar()
             {
@@ -48,8 +41,7 @@
                 constexpr P_a p_a;
                 constexpr P_b p_b;
                 constexpr P_c p_c;
-                constexpr P_abc p_abc;
-                constexpr auto p_abc2 = p_a | p_b | p_c;
+                constexpr auto p_abc = p_a | p_b | p_c;
 
                 //...
             }
@@ -61,8 +53,8 @@
     <h2>Testing at the beginning</h2>
     <div style="width:100%;">
         <pre class="cpp"><code data-trim hide-line-numbers
-            data-line-numbers="5-9  |11   |12|13|11-13"
-            data-line-hide=   "11-13|12-13|13|  |     "
+            data-line-numbers="5-8|10|"
+            data-line-hide=   "10 |  |"
         ><script type="text/template">
             void test_OneChar()
             {
@@ -71,12 +63,9 @@
                 constexpr P_a p_a;
                 constexpr P_b p_b;
                 constexpr P_c p_c;
-                constexpr P_abc p_abc;
-                constexpr auto p_abc2 = p_a | p_b | p_c;
+                constexpr auto p_abc = p_a | p_b | p_c;
 
                 static_assert(same_as<P_abc>(p_abc));
-                static_assert(same_as<P_abc>(p_abc2));
-                static_assert(same_as(p_abc, p_abc2));
 
                 //...
             }
