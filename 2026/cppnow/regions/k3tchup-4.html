@@ -218,13 +218,13 @@
         ><script type="text/template">
             TEST("fixture", "slideware")
             {
-                constexpr std::optional<int> o = 4;
+                std::optional<int> o = 4;
 
-                ASSERT_COMPILE_TIME(o.has_value(),
-                    ASSERT_COMPILE_TIME(*o == 5)
+                ASSERT_RUN_TIME(o.has_value(),
+                    ASSERT_RUN_TIME(*o == 5)
                 );
 
-                ASSERT_COMPILE_TIME(
+                ASSERT_RUN_TIME(
                     something_important_depending_on_o_being_5()
                 );
             }

@@ -86,7 +86,7 @@
             #define ASSERT_PARSE_IMPL_PARSE_RESULT_(P, INPUT, OUTPUT) \
                 ASSERT(*(P::parse(INPUT)) == (OUTPUT),                \
                     "`*(" STR(P) "::parse(" STR(INPUT) "))` does "    \
-                    ""not equal `" STR(OUTPUT) "`")
+                    "not equal `" STR(OUTPUT) "`")
 
             ...
         </script></code></pre>
@@ -195,6 +195,7 @@
         <pre class="cpp"><code data-trim hide-line-numbers
             data-line-numbers
         ><script type="text/template">
+            using Single = any_of_parser<'a'>;
             TEST("any_of_parser", "slideware") {
                 ASSERT_PARSE_SUCCESS(Single, "b", "b", "");
             }
@@ -301,5 +302,6 @@
         * All messages are macro-based
         * Framework is tightly coupled to `tok3n`
         * Dependency on Boost.Preprocessor
+        * _Suboptimal handling of dependent checks_
     </textarea>
 </section>

@@ -70,12 +70,12 @@
             Fixture "any_of_parser"
             Test "slideware" failed with 2 errors.
             [Compile-time and run-time non-fatal error]
-                at path\to\test_file.cpp:88
-                at path\to\test_file.cpp:71
+                at path\to\test_file.cpp:78
+                at path\to\test_file.cpp:20
                 P::parse(a) did not have bc remaining
             [Compile-time and run-time non-fatal error]
-                at path\to\test_file.cpp:89
-                at path\to\test_file.cpp:71
+                at path\to\test_file.cpp:79
+                at path\to\test_file.cpp:20
                 P::parse(abc) did not have  remaining
         </script></code></pre>
     </div>
@@ -103,22 +103,18 @@
             data-line-numbers
         ><script type="text/template">
             using Single = any_of_parser<'a'>;
-            using Multi  = any_of_parser<"abc">;
         </script></code></pre>
         <pre class="cpp fragment"><code data-trim hide-line-numbers
-            data-line-numbers="1-13|3-4 |6-7 |9-10|"
-            data-line-hide=   "3-10|6-10|9-10|    |"
+            data-line-numbers="1-10|3  |5|7|"
+            data-line-hide=   "3-7 |5-7|7| |"
         ><script type="text/template">
             TEST("any_of_parser", "Requirements")
             {
                 EXPECT_THAT(the_parser<Single> | has_value_type<char>);
-                EXPECT_THAT(the_parser<Multi> | has_value_type<char>);
 
                 EXPECT_THAT(the_parser<Single> | has_family<any_of_family>);
-                EXPECT_THAT(the_parser<Multi> | has_family<any_of_family>);
 
                 EXPECT_THAT(the_parser<Single> | is_parser_for<char>.with_result<output_span<char>>);
-                EXPECT_THAT(the_parser<Multi> | is_parser_for<char>.with_result<output_span<char>>);
 
                 // ...
             }
