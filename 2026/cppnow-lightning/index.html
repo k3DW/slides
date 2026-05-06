@@ -1,0 +1,119 @@
+---
+layout: reveal.js
+title: "C++Now 2026 Lightning Talk"
+layout-version: 1
+footer:
+    left: "Run-time Template Parameters"
+    right: "Braden Ganetsky - C++Now 2026"
+    sub: false
+thank-you:
+    version: 1
+---
+
+<!-- #region Intro -->
+
+<section full data-background-color="#FFFFFF" no-footer change-footer="Introduction">
+    <div style="display: flex; flex-flow: column; height: 100%;">
+
+        <div style="flex: 0 1 75%; display: flex; flex-flow: row;">
+            <div style="font-size:200%; display: flex; flex-flow: column; flex: 0 1 auto;">
+                <div style="flex: 1 1 auto;"></div>
+                <div                          >Run-time</div>
+                <div style="margin-top:-10px;">Template Parameters</div>
+                <div style="flex: 1 1 auto;"></div>
+                <div style="flex: 0 1 0.5em;"></div>
+            </div>
+            <div style="flex: 50 1 auto;"></div>
+            <div style="display: flex; flex-flow: column; flex: 0 1 36%;">
+                <div style="flex: 1 1 auto;"></div>
+                <div style="display: flex; flex-flow: row; flex: 0 1 auto;">
+                    <div style="flex: 1 1 auto;"></div>
+                    <img src="{{ site.baseurl }}/img/profile-picture.png"></img>
+                </div>
+                <div style="flex: 3 1 auto;"></div>
+            </div>
+            <div style="flex: 1 1 auto;"></div>
+        </div>
+
+        <div style="flex: 1 1 auto; padding:1.8% 3% 2% 3%; background-color: #DDDDDD; display: flex; flex-flow: column;">
+            <div style="font-size:125%; ">Braden Ganetsky</div>
+            <div style="flex: 1 1 auto;"></div>
+            <div style="font-size:100%; ">C++Now 2026 Lightning Talk</div>
+        </div>
+
+    </div>
+</section>
+
+<!-- #endregion Intro -->
+
+
+
+<include src="./regions/ref-param.html"></include>
+
+<section data-markdown class="list-fade-in-then-semi-out">
+    <textarea data-template>
+        ## This talk is about
+        * Playing around with code - Ben Deane
+        * "Wishful thinking. Think of the API you want to use [and make it]" - Michael Caisse
+        * Let's have fun with a syntactic ambiguity
+    </textarea>
+</section>
+
+
+
+<section signpost>
+    C++ syntactic ambiguity
+</section>
+
+<include src="./regions/ambiguity-1.html"></include>
+
+<section signpost>
+    A trait to add two numbers
+</section>
+
+<include src="./regions/trait-1.html"></include>
+<include src="./regions/trait-2.html"></include>
+<include src="./regions/trait-3.html"></include>
+
+<section signpost>
+    Codegen
+</section>
+
+<include src="./regions/codegen.html"></include>
+
+
+
+<section data-markdown class="list-fade-in-then-semi-out">
+    <textarea data-template>
+        ## Can you make code that looks like run-time template parameters?
+        * Yes
+        * Should you?
+        * Maybe...
+        * But not in production code, please
+    </textarea>
+</section>
+
+<section data-markdown class="list-fade-in-then-semi-out">
+    <textarea data-template>
+        ## Conclusion
+        * Play around with code!
+        * You may find something useful
+        * ...or you may just enjoy the journey
+    </textarea>
+</section>
+
+
+
+<!--
+
+Michael Caisse said (summary):
+
+At BoostCon, people were presenting the tricks they used to implement their libraries.
+Not for the tricks in and of themselves, but as a tool to solve a problem.
+If we just take the trick as a solution, that's not enough. We need to understand the problem.
+
+...
+
+Elegance and structural quality
+
+-->
