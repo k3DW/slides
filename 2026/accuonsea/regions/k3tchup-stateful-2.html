@@ -1,0 +1,50 @@
+<section my-columns>
+    <h2>Convenience macros <code>ASSERT</code> and <code>EXPECT</code></h2>
+    <div style="width:100%;">
+        <pre class="cpp fragment"><code data-trim hide-line-numbers
+            data-line-numbers
+        ><script type="text/template">
+            EXPECT_THAT([]() {
+                EXPECT(cond2); // Compile-time and run-time
+            });
+        </script></code></pre>
+        <pre class="cpp fragment"><code data-trim hide-line-numbers
+            data-line-numbers
+        ><script type="text/template">
+            EXPECT_THAT([](auto& state) {
+                EXPECT(state, cond1); // Deduced
+            });
+        </script></code></pre>
+    </div>
+</section>
+
+<section data-markdown class="list-fade-in-then-semi-out">
+    <textarea data-template>
+        ## Convenience macros `ASSERT` and `EXPECT`
+        * Overload based on arity
+        * If unary, use `{ASSERT|EXPECT}_COMPILE_AND_RUN_TIME`
+        * If binary, use `{ASSERT|EXPECT}_STATEFUL`
+    </textarea>
+</section>
+
+<section my-columns>
+    <h2>Convenience macros <code>ASSERT</code> and <code>EXPECT</code></h2>
+    <div style="width:100%;">
+        <pre class="cpp"><code data-trim hide-line-numbers
+            data-line-numbers="1|2-6|7|"
+        ><script type="text/template">
+            #define EXPECT(ARG0, ...)            \
+                SELECT(                          \
+                    IS_EMPTY(__VA_ARGS__),       \
+                    EXPECT_COMPILE_AND_RUN_TIME, \
+                    EXPECT_STATEFUL              \
+                )                                \
+                (ARG0 __VA_OPT__(,) __VA_ARGS__)
+        </script></code></pre>
+    </div>
+</section>
+
+<section no-footer one-by-one-fragment-list="font-size:75%;">
+    <h2>Compile-time testing techniques</h2>
+    <li>Overload macros based on arity</li>
+</section>

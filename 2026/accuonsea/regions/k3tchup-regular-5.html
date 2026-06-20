@@ -1,0 +1,243 @@
+<section my-columns>
+    <h2>Keeping track at compile-time</h2>
+    <div style="width:100%;">
+        <pre class="cpp"><code data-trim hide-line-numbers
+            data-line-numbers
+        ><script type="text/template">
+            constexpr std::optional<int> foo() {
+                return std::nullopt;
+            }
+
+            TEST("my fixture", "my test") {
+
+                ASSERT(foo().has_value());
+                EXPECT(*foo() == 5);
+
+            }
+        </script></code></pre>
+        <span>Make this compile</span>
+    </div>
+</section>
+
+<section my-columns>
+    <h2>Keeping track at compile-time</h2>
+    <div style="width:100%;">
+        <pre class="cpp"><code data-trim hide-line-numbers
+            data-line-numbers
+        ><script type="text/template">
+            ASSERT(foo().has_value())
+        </script></code></pre>
+        <span class="">Expands to...</span>
+        <pre class="cpp fragment"><code data-trim hide-line-numbers
+            data-line-numbers="1   "
+            data-line-hide=   "2-11"
+        ><script type="text/template">
+            switch(0) case 0: default:
+            if (
+                const auto _k3_k3tchup_1 = k3tchup::context::check(
+                    k3tchup::detail::eval_condition(foo().has_value()),
+                    foo().has_value()
+                );
+                _k3_k3tchup_1
+            ) {}
+            else
+                return k3tchup::void_assigner{} =
+                    k3tchup::context::add_error(_k3_k3tchup_1)
+        </script></code></pre>
+    </div>
+</section>
+
+<section no-footer one-by-one-fragment-list="font-size:75%;">
+    <h2>Compile-time testing techniques</h2>
+    <li>"Ambiguous else blocker" <code>switch(0) case 0: default:</code></li>
+</section>
+
+<section my-columns>
+    <h2>Keeping track at compile-time</h2>
+    <div style="width:100%;">
+        <pre class="cpp"><code data-trim hide-line-numbers
+            data-line-numbers
+        ><script type="text/template">
+            ASSERT(foo().has_value())
+        </script></code></pre>
+        <span class="">Expands to...</span>
+        <pre class="cpp"><code data-trim hide-line-numbers
+            data-line-numbers="1   |2-8     |3-6   |7   |9-11|"
+            data-line-hide=   "2-11|3-7,9-11|7,9-11|9-11|    |"
+        ><script type="text/template">
+            switch(0) case 0: default:
+            if (
+                const auto _k3_k3tchup_1 = k3tchup::context::check(
+                    k3tchup::detail::eval_condition(foo().has_value()),
+                    foo().has_value()
+                );
+                _k3_k3tchup_1
+            ) {}
+            else
+                return k3tchup::void_assigner{} =
+                    k3tchup::context::add_error(_k3_k3tchup_1)
+        </script></code></pre>
+    </div>
+</section>
+
+<section no-footer one-by-one-fragment-list="font-size:75%;">
+    <h2>Compile-time testing techniques</h2>
+    <li>"Void assignment helper" for message streaming</li>
+</section>
+
+<section my-columns>
+    <div style="width:100%;">
+        <pre class="cpp"><code data-trim hide-line-numbers
+            data-line-numbers="1-11 |13-23|4-5,16-17|10-11,22-23"
+            data-line-hide=   "13-23|     |         |           "
+        ><script type="text/template">
+            switch(0) case 0: default:
+            if (
+                const auto _k3_k3tchup_1 = k3tchup::context::check(
+                    k3tchup::detail::eval_condition(foo().has_value()),
+                    foo().has_value()
+                );
+                _k3_k3tchup_1
+            ) {}
+            else
+                return k3tchup::void_assigner{} =
+                    k3tchup::context::add_error(_k3_k3tchup_1);
+
+            switch(0) case 0: default:
+            if (
+                const auto _k3_k3tchup_1 = k3tchup::context::check(
+                    k3tchup::detail::eval_condition(*foo() == 5),
+                    *foo() == 5
+                );
+                _k3_k3tchup_1
+            ) {}
+            else
+                k3tchup::void_assigner{} =
+                    k3tchup::context::add_error(_k3_k3tchup_1);
+        </script></code></pre>
+    </div>
+</section>
+
+<section data-markdown class="list-fade-in-then-semi-out">
+    <textarea data-template>
+        ## Keeping track at compile-time
+        * If we encounter a compile-time fatal error...
+        * ...register this function as "errored"...
+        * ...using stateful metaprogramming
+    </textarea>
+</section>
+
+<section my-columns>
+    <h2>Friend injection</h2>
+    <div style="width:100%;">
+        <pre class="cpp fragment"><code data-trim hide-line-numbers
+            data-line-numbers="1-4 |6-9  |11-15|13|"
+            data-line-hide=   "6-15|11-15|     |  |"
+        ><script type="text/template">
+            template <class T>
+            struct error_key {
+                friend auto find(error_key<T>);
+            };
+
+            template <class T>
+            struct set_error_for {
+                friend auto find(error_key<T>) { return 0; }
+            };
+
+            template <class T, class Unique = decltype([]{})>
+            concept has_error = requires {
+                find(error_key<T>{});
+                typename Unique;
+            };
+        </script></code></pre>
+    </div>
+</section>
+
+<section no-footer one-by-one-fragment-list="font-size:75%;">
+    <h2>Compile-time testing techniques</h2>
+    <li>Lambda <code>[]{}</code> in a default template parameter</li>
+</section>
+
+<section my-columns>
+    <h2>Friend injection</h2>
+    <div style="width:100%;">
+        <pre class="cpp"><code data-trim hide-line-numbers
+            data-line-numbers
+        ><script type="text/template">
+            k3tchup::detail::eval_condition(foo().has_value())
+        </script></code></pre>
+        <span class="">Replaced with...</span>
+        <pre class="cpp fragment"><code data-trim hide-line-numbers
+            data-line-numbers="1-10|2-3|4-5|6-9|"
+            data-line-hide=   "2-9 |4-9|6-9|   |"
+        ><script type="text/template">
+            [&]<class T>(T) consteval {
+                if constexpr (k3tchup::detail::has_error<T>) {
+                    return true;
+                } else if constexpr (foo().has_value()) {
+                    return true;
+                } else {
+                    static_assert(sizeof(k3tchup::detail::set_error_for<T>));
+                    return false;
+                }
+            }(unique_type_for_this_function{})
+        </script></code></pre>
+    </div>
+</section>
+
+<section no-footer one-by-one-fragment-list="font-size:75%;">
+    <h2>Compile-time testing techniques</h2>
+    <li>Instantiate a class template with <code>sizeof</code></li>
+</section>
+
+<section my-columns>
+    <h2>Friend injection</h2>
+    <div style="width:100%;">
+        <pre class="cpp"><code data-trim hide-line-numbers
+            data-line-numbers
+        ><script type="text/template">
+            k3tchup::detail::eval_condition(*foo() == 5)
+        </script></code></pre>
+        <span class="">Replaced with...</span>
+        <pre class="cpp fragment"><code data-trim hide-line-numbers
+            data-line-numbers="1-7|2-3|4-6|"
+            data-line-hide=   "2-6|4-6|   |"
+        ><script type="text/template">
+            [&]<class T>(T) consteval {
+                if constexpr (k3tchup::detail::has_error<T>) {
+                    return true;
+                } else {
+                    return *foo() == 5;
+                }
+            }(unique_type_for_this_function{})
+        </script></code></pre>
+    </div>
+</section>
+
+<section no-footer one-by-one-fragment-list="font-size:75%;">
+    <h2>Compile-time testing techniques</h2>
+    <li>Friend injection for stateful metaprogramming</li>
+</section>
+
+<section my-columns>
+    <h2>Straight-line compile-time checks!</h2>
+    <div style="width:100%;">
+        <pre class="cpp"><code data-trim hide-line-numbers
+            data-line-numbers
+        ><script type="text/template">
+            constexpr std::optional<int> foo() {
+                return std::nullopt;
+            }
+
+            TEST("my fixture", "my test") {
+
+                ASSERT(foo().has_value());
+                EXPECT(*foo() == 5);
+
+            }
+        </script></code></pre>
+        <div class="fragment" style="position:absolute; top:10%; left:27%; font-size:1000%;">
+            ✔️
+        </div>
+    </div>
+</section>

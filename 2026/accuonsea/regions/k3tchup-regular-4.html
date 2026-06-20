@@ -1,0 +1,145 @@
+<section my-columns>
+    <h2>Dependent checks</h2>
+    <div style="width:100%;">
+        <pre class="cpp fragment"><code data-trim hide-line-numbers
+            data-line-numbers="1-3|1-3,7|1-3,8"
+        ><script type="text/template">
+            constexpr std::optional<int> foo() {
+                return std::nullopt;
+            }
+
+            TEST("my fixture", "my test") {
+
+                ASSERT(foo().has_value());
+                EXPECT(*foo() == 5);
+
+            }
+        </script></code></pre>
+        <span class="fragment">Early return for run-time... but not compile-time</span>
+    </div>
+</section>
+
+<section my-columns="100%">
+    <div style="width:100%;">
+        <pre class="text"><code data-trim hide-line-numbers
+        ><script type="text/template">
+            path\to\slideware.cpp(11,5): error C7595:
+            'test_impl_<221864>::_run::<lambda_2>::operator ()':
+            call to immediate function is not a constant expression [path\to\build\slideware.vcxproj]
+                C:\Program Files\...\include\optional(203,9):
+                failure was caused by call of undefined function or one not declared 'constexpr'
+                C:\Program Files\...\include\optional(203,9):
+                see usage of '_CrtDbgReport'
+                path\to\slideware.cpp(11,5):
+                the call stack of the evaluation (the oldest call first) is
+                   path\to\slideware.cpp(11,5):
+                   while evaluating function 'bool test_impl_<221864>::_run::<lambda_2>::operator ()<
+                      std::integral_constant<size_t,57049165933>>(_k3_k3tchup_type_parameter_) const'
+                   with
+                   [
+                      _k3_k3tchup_type_parameter_=std::integral_constant<size_t,57049165933>
+                   ]
+                   path\to\slideware.cpp(11,5):
+                   ...
+            ...
+        </script></code></pre>
+    </div>
+</section>
+
+<section data-markdown class="list-fade-in-then-semi-out">
+    <textarea data-template>
+        ## Dependent checks
+        * `k3tchup` reports errors at run-time
+        * ...even compile-time errors
+        * How do we handle dependent checks?
+    </textarea>
+</section>
+
+<section full>
+    <h2>Dependent checks - what can we do?</h2>
+    <ul>
+        <li class="fragment">Put the dependent check in a dependent scope</li>
+    </ul>
+</section>
+
+<section my-columns="80%">
+    <h2>Dependent scope</h2>
+    <div style="width:100%;">
+        <pre class="cpp"><code data-trim hide-line-numbers
+            data-line-numbers="1-8|4-6|"
+            data-line-hide=   "4-6|   |"
+        ><script type="text/template">
+            TEST("my fixture", "my test") {
+
+                ASSERT(foo().has_value());
+                if constexpr (foo().has_value()) {
+                    EXPECT(*foo() == 5);
+                }
+
+            }
+        </script></code></pre>
+        <div class="fragment" style="position:absolute; top:10%; left:27%; font-size:1000%;">
+            ❌
+        </div>
+    </div>
+</section>
+
+<section my-columns="80%">
+    <h2>Dependent scope</h2>
+    <div style="width:100%;">
+        <pre class="cpp"><code data-trim hide-line-numbers
+            data-line-numbers="1-10|4-8|5-7|6|"
+            data-line-hide=   "4-8 |5-7|6  | |"
+        ><script type="text/template">
+            TEST("my fixture", "my test") {
+
+                ASSERT(foo().has_value());
+                [&]<class T>(T) {
+                    if constexpr (sizeof(T) == sizeof(int) && foo().has_value()) {
+                        EXPECT(*foo() == 5);
+                    }
+                }(0);
+
+            }
+        </script></code></pre>
+        <div class="fragment" style="position:absolute; top:10%; left:27%; font-size:1000%;">
+            ✔️
+        </div>
+    </div>
+</section>
+
+<section my-columns>
+    <h2>Dependent scope</h2>
+    <div style="width:100%;">
+        <pre class="cpp"><code data-trim hide-line-numbers
+            data-line-numbers="3   |5-10 |8    |12-14|8,12-14|"
+            data-line-hide=   "5-14|12-14|12-14|    |       |"
+        ><script type="text/template">
+            TEST("my fixture", "my test") {
+
+                std::optional<int> o = 4;
+
+                ASSERT(o.has_value());
+                [&]<class T>(T) {
+                    if constexpr (sizeof(T) == sizeof(int) && o.has_value()) {
+                        ASSERT(*o == 5);
+                    }
+                }(0);
+
+                ASSERT(
+                    something_important_depending_on_o_being_5()
+                );
+
+            }
+        </script></code></pre>
+        <span class="fragment">The important check still runs!!</span>
+    </div>
+</section>
+
+<section full>
+    <h2>Dependent checks - what can we do?</h2>
+    <ul>
+        <li style="text-decoration: line-through;">Put the dependent check in a dependent scope</li>
+        <li class="fragment">Keep track of whether a fatal error has already occurred?</li>
+    </ul>
+</section>

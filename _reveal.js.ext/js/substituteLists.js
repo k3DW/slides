@@ -31,4 +31,28 @@ export function substituteLists() {
 
         slide.appendChild(ol);
     });
+
+    document.querySelectorAll("section[one-by-one-fragment-list-overview]").forEach(slide => {
+        console.assert(slide.childElementCount == 1);
+        console.assert(slide.children[0].tagName == "H2");
+
+        const attr = slide.getAttribute("one-by-one-fragment-list-overview");
+
+        slide.children[0].setAttribute("style", "text-align: center !important;");
+
+        let listName = slide.children[0].innerHTML;
+        let items = lists[listName];
+
+        let ol = document.createElement('OL');
+        for (const item of items) {
+            let li = item.cloneNode(true);
+            if (attr != null) {
+                li.setAttribute("style", attr);
+                li.setAttribute("class", "fragment fade-in-then-semi-out")
+            }
+            ol.appendChild(li);
+        }
+
+        slide.appendChild(ol);
+    });
 }

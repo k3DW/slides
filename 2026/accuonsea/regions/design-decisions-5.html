@@ -1,0 +1,55 @@
+<section data-markdown class="list-fade-in-then-semi-out">
+    <textarea data-template>
+        ## Test runner
+        * A test runner only makes sense at run-time
+        * Otherwise we just have compile-time failures
+        * ... therefore all code must compile, even the compile-time errors
+    </textarea>
+</section>
+
+<section data-markdown class="list-fade-in-then-semi-out">
+    <textarea data-template>
+        ## With a full-fledged run-time test runner:
+        * Filtering of the tests
+        * Repetition of the tests
+        * Fully custom error messages
+        * User-defined ordering of the checks (`static_assert` doesn't do this)
+        * Early return and bailing out
+    </textarea>
+</section>
+
+<section no-footer one-by-one-fragment-list="font-size:90%;">
+    <h2>Compile-time testing design decisions</h2>
+    <li>All test code should compile, even the code that tests compile-time errors</li>
+</section>
+
+<section my-columns>
+    <h2>Early exit mechanism</h2>
+    <div style="width:100%;">
+        <pre class="cpp fragment"><code data-trim hide-line-numbers
+            data-line-numbers="2-3"
+        ><script type="text/template">
+            TEST("...", "...") {
+                ASSERT(foo()); // "Fatal"
+                EXPECT(bar()); // "Non-fatal"
+            }
+        </script></code></pre>
+        <span class="fragment">If <code>foo()</code> is <code>false</code>, <code>bar</code> should not execute</span>
+    </div>
+</section>
+
+<section data-markdown class="list-fade-in-then-semi-out">
+    <textarea data-template>
+        ## Early exit mechanism
+        * `return` or `throw`?
+        * `return` only exits the current scope, while `throw` "bubbles up"
+        * With `return`, the checks can only be used in certain functions
+        * With `throw`, the checks cannot be used at compile-time pre C++26
+        * I chose `return`
+    </textarea>
+</section>
+
+<section no-footer one-by-one-fragment-list="font-size:90%;">
+    <h2>Compile-time testing design decisions</h2>
+    <li>Exit early from failed fatal checks using <code>return</code></li>
+</section>

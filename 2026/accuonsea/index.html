@@ -1,0 +1,243 @@
+---
+layout: reveal.js
+title: "ACCU on Sea 2026"
+layout-version: 1
+footer:
+    left: "Compile-time Unit Testing"
+    right: "Braden Ganetsky - ACCU on Sea 2026"
+    sub: true
+---
+
+<!-- #region Intro -->
+
+<section full data-background-image="./img/Techniques of Compile-time Unit Testing in C++_Title Card.png" no-footer change-footer="Introduction">
+</section>
+
+<include src="./regions/thank-you.html"></include>
+<include src="./regions/intro.html"></include>
+
+<section data-markdown class="list-fade-in-then-semi-out">
+    <textarea data-template>
+        ## About me
+        * Canadian
+        * Work at LSEG
+        * Secretary of WG21
+        * Facilitator of Winnipeg C++ Developers
+        * Licensed professional engineer
+        * I like twisty puzzles
+        ![test]({{ site.baseurl }}/img/NEP7570939.jpg) <!-- .element style="position:absolute; height:75%; right:0; top:12%;"-->
+    </textarea>
+</section>
+
+<section data-markdown class="list-fade-in-then-semi-out">
+    <textarea data-template>
+        ## Overview
+        * Compile-time testing design decisions
+        * My compile-time-first unit testing library `k3tchup`
+        * "Regular" checks in `k3tchup`
+        * "Stateful" checks in `k3tchup`
+        * Questions at any time!
+    </textarea>
+</section>
+
+<!-- #endregion Intro -->
+
+
+
+<section signpost change-footer="Design decisions">
+    Compile-time testing design decisions
+</section>
+
+<section data-markdown class="list-fade-in-then-semi-out">
+    <textarea data-template>
+        ## Compile-time testing design decisions
+        * "Out-of-source" vs "in-source"
+        * When to report the errors
+        * Test runner
+        * Early exit mechanism
+    </textarea>
+</section>
+
+<include src="./regions/design-decisions-1.html"></include>
+<include src="./regions/design-decisions-2.html"></include>
+<include src="./regions/design-decisions-3.html"></include>
+<include src="./regions/design-decisions-4.html"></include>
+<include src="./regions/design-decisions-5.html"></include>
+
+
+
+<section signpost change-footer="My library k3tchup">
+    My compile-time-first unit testing library
+</section>
+
+<section data-markdown class="list-fade-in-then-semi-out">
+    <textarea data-template>
+        ## My unit testing library `k3tchup`
+        * https://github.com/k3DW/k3tchup
+        * C++20 library, decoupled from parsing library `tok3n`
+        * Cross-platform (MSVC, Clang, GCC)
+        * API inspired by GoogleTest
+        * Functionality inspired by Snitch
+        * Prioritizes compile-time testing
+        * All errors are reported at run-time
+        * Still a work in progress...
+    </textarea>
+</section>
+
+<section data-markdown class="list-fade-in-then-semi-out" change-footer="My library k3tchup - regular checks">
+    <textarea data-template>
+        ## `k3tchup` "regular" checks
+        * Basic usage
+        * Reusability for compile-time
+        * Keeping the full trace
+        * Dependent checks
+    </textarea>
+</section>
+
+<include src="./regions/k3tchup-regular-1.html"></include>
+<include src="./regions/k3tchup-regular-2.html"></include>
+<include src="./regions/k3tchup-regular-3.html"></include>
+<include src="./regions/k3tchup-regular-4.html"></include>
+<include src="./regions/k3tchup-regular-5.html"></include>
+
+<section my-columns>
+    <h2>Something still missing...</h2>
+    <div style="width:100%;">
+        <pre class="cpp fragment"><code data-trim hide-line-numbers
+            data-line-numbers="1-13|7-11|8-10|"
+            data-line-hide=   "7-11|8-10|    |"
+        ><script type="text/template">
+            constexpr std::optional<int> foo() {
+                // ...
+            }
+
+            TEST("my fixture", "something missing") {
+
+                RUN_THE_WHOLE_LAMBDA_CT_AND_RT([]{
+                    auto o = foo();
+                    ASSERT(foo().has_value());
+                    EXPECT(*foo() == 5);
+                });
+
+            }
+        </script></code></pre>
+    </div>
+</section>
+
+<section no-footer one-by-one-fragment-list="font-size:90%;">
+    <h2>Compile-time testing design decisions</h2>
+    <li>Ability to decide compile-time vs run-time for a whole function</li>
+</section>
+
+<section my-columns>
+    <h2><code>k3tchup</code> "stateful" checks</h2>
+    <div style="width:100%;">
+        <pre class="cpp fragment"><code data-trim hide-line-numbers
+            data-line-numbers="3,7|4|5|6"
+        ><script type="text/template">
+            TEST("my fixture", "my test") {
+
+                EXPECT_THAT([](k3::k3tchup::state& state) {
+                    auto o = foo();
+                    ASSERT(state, o.has_value()) << "optional did not have a value";
+                    EXPECT(state, *o == 5) << "optional's value was not 5";
+                });
+
+            }
+        </script></code></pre>
+    </div>
+</section>
+
+<section data-markdown class="list-fade-in-then-semi-out" change-footer="My library k3tchup - stateful checks">
+    <textarea data-template>
+        ## `k3tchup` "stateful" checks
+        * New overload of `ASSERT_THAT` and `EXPECT_THAT`
+        * Convenience macros `ASSERT` and `EXPECT`
+        * A whole new type of test
+        * Accumulating errors at compile-time
+        * The "constexpr two-step"
+        * Merging the compile-time and run-time errors
+    </textarea>
+</section>
+
+<include src="./regions/k3tchup-stateful-1.html"></include>
+<include src="./regions/k3tchup-stateful-2.html"></include>
+<include src="./regions/k3tchup-stateful-6.html"></include>
+<include src="./regions/k3tchup-stateful-3.html"></include>
+<include src="./regions/k3tchup-stateful-4.html"></include>
+<include src="./regions/k3tchup-stateful-5.html"></include>
+
+
+
+<!-- #region Conclusion -->
+
+<section signpost change-footer="Conclusion">
+    Conclusion
+</section>
+
+<section data-markdown class="list-fade-in-then-semi-out">
+    <textarea data-template>
+        ## Expand your toolbox
+        * Many specialized tools, but they may come in handy
+    </textarea>
+</section>
+
+<section data-markdown class="list-fade-in-then-semi-out">
+    <textarea data-template>
+        ## Test your code!
+        * If you claim that your code runs at compile-time...
+        * ...test it at compile-time
+        * Your future self and your users will thank you
+    </textarea>
+</section>
+
+<section data-markdown class="list-fade-in-then-semi-out">
+    <textarea data-template>
+        ## `constexpr` code is vast and complex
+        * But we can rein it in with compile-time testing
+        * We can more rigorously test for correct program behaviour
+        * Catch ill-formed programs early
+    </textarea>
+</section>
+
+<section data-markdown class="list-fade-in-then-semi-out">
+    <textarea data-template>
+        ## `k3tchup` makes it easy
+        * Straight-line code for compile-time conditions
+        * Equivalent to how you would do for run-time code
+        * Entire tests can be run at compile-time and run-time
+        * Scalable and ergonomic compile-time testing
+    </textarea>
+</section>
+
+<section no-footer one-by-one-fragment-list-overview="font-size:90%;">
+    <h2>Compile-time testing design decisions</h2>
+</section>
+
+<section no-footer one-by-one-fragment-list-overview="font-size:65%;">
+    <h2>Compile-time testing techniques</h2>
+</section>
+
+<section data-markdown class="list-fade-in-then-semi-out">
+    <textarea data-template>
+        ## `k3tchup` upcoming work
+        * Refining the identifier choices (e.g. `TEST_CONSTEXPR`)
+        * Integrating C++26 reflection
+        * Tests for whether an expression _can_ run at compile-time
+        * ...and more!
+    </textarea>
+</section>
+
+<section data-markdown class="list-fade-in-then-semi-out">
+    <textarea data-template>
+        ## `k3tchup` is a work in progress
+        * Follow along at [https://github.com/k3DW/k3tchup](https://github.com/k3DW/k3tchup)
+        * Please come talk to me about `constexpr` testing
+    </textarea>
+</section>
+
+<!-- #endregion Conclusion -->
+
+
+
+<include src="./regions/thank-you.html"></include>
