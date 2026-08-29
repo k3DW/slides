@@ -40,6 +40,7 @@
 				"{{ site.baseurl }}/_reveal.js/plugin/markdown/markdown.js",
 				"{{ site.baseurl }}/_reveal.js/plugin/highlight/highlight.js",
 				"{{ site.baseurl }}/_reveal.js.ext/plugin/codelinehide/plugin.js",
+				"{{ site.baseurl }}/_reveal.js.ext/plugin/codelinereveal/plugin.js",
 			],
 
             {% if page.layout-version == 1 %}
@@ -88,6 +89,7 @@
 				// Learn about plugins: https://revealjs.com/plugins/
 				plugins: [
 					RevealMarkdown,
+					RevealCodeLineReveal, // Must run **before** RevealHighlight
 					RevealHighlight,
 					RevealNotes,
 					RevealCodeLineHide,
