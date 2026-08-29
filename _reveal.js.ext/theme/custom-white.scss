@@ -423,3 +423,14 @@
  .reveal code[hide-line-numbers] .hljs-ln-numbers {
    display: none;
  }
+
+ /*********************************************
+  * Custom
+  *********************************************/
+ .emoji-format {
+   position: absolute;
+   top: 50%;
+   left: 50%;
+   transform: translate(-50%, -50%);
+   font-size: 1000%;
+ }
