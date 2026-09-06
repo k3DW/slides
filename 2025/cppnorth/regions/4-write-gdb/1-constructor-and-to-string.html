@@ -1,21 +1,21 @@
 <section my-columns="80% 20%">
     <h2>Constructor and <code>to_string()</code></h2>
     <div style="width:100%;">
-        <pre class="python"><code data-trim hide-line-numbers data-line-numbers=""><script type="text/template">
+        <pre class="python"><code hide-line-numbers data-line-numbers=""><script type="text/template">
             class MyTypePrinter:
                 def __init__(self, val):
                     pass
                 def to_string(self):
                     return "Hello, printer!"
         </script></code></pre>
-        <pre class="python"><code data-trim hide-line-numbers data-line-numbers=""><script type="text/template">
+        <pre class="python"><code hide-line-numbers data-line-numbers=""><script type="text/template">
             def build_pretty_printer():
                 pp = gdb.printing.RegexpCollectionPrettyPrinter("my_printers")
                 pp.add_printer('MyType', '^MyType$', MyPrinter)
                 pp.add_printer('MyTemplateType', '^MyTemplateType<.*>$', MyPrinter)
                 return pp
         </script></code></pre>
-        <pre class="python"><code data-trim hide-line-numbers data-line-numbers=""><script type="text/template">
+        <pre class="python"><code hide-line-numbers data-line-numbers=""><script type="text/template">
             gdb.printing.register_pretty_printer(
                 gdb.current_objfile(),
                 build_pretty_printer()
@@ -23,7 +23,7 @@
         </script></code></pre>
     </div>
     <div style="width:100%;">
-        <pre class="cpp fragment"><code data-trim hide-line-numbers data-line-numbers=""><script type="text/template">
+        <pre class="cpp fragment"><code hide-line-numbers data-line-numbers=""><script type="text/template">
             struct Line {
                 int left;
                 int right;
@@ -35,21 +35,21 @@
 <section my-columns="80% 20%">
     <h2>Constructor and <code>to_string()</code></h2>
     <div style="width:100%;">
-        <pre class="python"><code data-trim hide-line-numbers data-line-numbers=""><script type="text/template">
+        <pre class="python"><code hide-line-numbers data-line-numbers=""><script type="text/template">
             class LinePrinter:
                 def __init__(self, val):
                     pass
                 def to_string(self):
                     return "Hello, printer!"
         </script></code></pre>
-        <pre class="python"><code data-trim hide-line-numbers data-line-numbers=""><script type="text/template">
+        <pre class="python"><code hide-line-numbers data-line-numbers=""><script type="text/template">
             def build_pretty_printer():
                 pp = gdb.printing.RegexpCollectionPrettyPrinter("my_printers")
                 pp.add_printer('Line', '^Line$', LinePrinter)
 
                 return pp
         </script></code></pre>
-        <pre class="python"><code data-trim hide-line-numbers data-line-numbers=""><script type="text/template">
+        <pre class="python"><code hide-line-numbers data-line-numbers=""><script type="text/template">
             gdb.printing.register_pretty_printer(
                 gdb.current_objfile(),
                 build_pretty_printer()
@@ -57,7 +57,7 @@
         </script></code></pre>
     </div>
     <div style="width:100%;">
-        <pre class="cpp"><code data-trim hide-line-numbers data-line-numbers=""><script type="text/template">
+        <pre class="cpp"><code hide-line-numbers data-line-numbers=""><script type="text/template">
             struct Line {
                 int left;
                 int right;
@@ -69,7 +69,7 @@
 <section my-columns="50%">
     <h2>Constructor</h2>
     <div style="width:100%;">
-        <pre class="python"><code data-trim hide-line-numbers data-line-numbers="|2-3"><script type="text/template">
+        <pre class="python"><code hide-line-numbers data-line-numbers="|2-3"><script type="text/template">
             class LinePrinter:
                 def __init__(self, val):
                     pass
@@ -85,7 +85,7 @@
 <section my-columns="50%">
     <h2>Constructor</h2>
     <div style="width:100%;">
-        <pre class="python"><code data-trim hide-line-numbers data-line-numbers="2-3|"><script type="text/template">
+        <pre class="python"><code hide-line-numbers data-line-numbers="2-3|"><script type="text/template">
             class LinePrinter:
                 def __init__(self, val):
                     self.val = val
@@ -101,7 +101,7 @@
 <section my-columns="50%">
     <h2><code>to_string()</code> method</h2>
     <div style="width:100%;">
-        <pre class="python"><code data-trim hide-line-numbers data-line-numbers="|5-6"><script type="text/template">
+        <pre class="python"><code hide-line-numbers data-line-numbers="|5-6"><script type="text/template">
             class LinePrinter:
                 def __init__(self, val):
                     self.val = val
@@ -117,7 +117,7 @@
 <section my-columns="50%">
     <h2><code>to_string()</code> method</h2>
     <div style="width:100%;">
-        <pre class="python"><code data-trim hide-line-numbers data-line-numbers="6"><script type="text/template">
+        <pre class="python"><code hide-line-numbers data-line-numbers="6"><script type="text/template">
             class LinePrinter:
                 def __init__(self, val):
                     self.val = val
@@ -133,7 +133,7 @@
 <section my-columns="50%">
     <h2><code>to_string()</code> method</h2>
     <div style="width:100%;">
-        <pre class="python"><code data-trim hide-line-numbers data-line-numbers="7"><script type="text/template">
+        <pre class="python"><code hide-line-numbers data-line-numbers="7"><script type="text/template">
             class LinePrinter:
                 def __init__(self, val):
                     self.val = val
@@ -149,7 +149,7 @@
 <section my-columns="50%">
     <h2><code>to_string()</code> method</h2>
     <div style="width:100%;">
-        <pre class="python"><code data-trim hide-line-numbers data-line-numbers="8|5-8"><script type="text/template">
+        <pre class="python"><code hide-line-numbers data-line-numbers="8|5-8"><script type="text/template">
             class LinePrinter:
                 def __init__(self, val):
                     self.val = val
@@ -165,7 +165,7 @@
 <section my-columns="50%">
     <h2><code>to_string()</code> method</h2>
     <div style="width:100%;">
-        <pre class="python"><code data-trim hide-line-numbers data-line-numbers=""><script type="text/template">
+        <pre class="python"><code hide-line-numbers data-line-numbers=""><script type="text/template">
             class LinePrinter:
                 def __init__(self, val):
                     self.val = val
@@ -176,10 +176,10 @@
                     return f"{{{left}, {right}}}"
         </script></code></pre>
         <br/>
-        <pre class="cpp fragment"><code data-trim hide-line-numbers data-line-numbers=""><script type="text/template">
+        <pre class="cpp fragment"><code hide-line-numbers data-line-numbers=""><script type="text/template">
             Line line{ 100, 600 };
         </script></code></pre>
-        <pre class="text fragment"><code data-trim hide-line-numbers data-line-numbers=""><script type="text/template">
+        <pre class="text fragment"><code hide-line-numbers data-line-numbers=""><script type="text/template">
             (gdb) print line
             $1 = {100, 600}
         </script></code></pre>

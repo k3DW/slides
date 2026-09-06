@@ -1,7 +1,7 @@
 <section my-columns>
     <h2>Merging the compile-time and run-time errors</h2>
     <div style="width:100%;">
-        <pre class="cpp fragment"><code data-trim hide-line-numbers
+        <pre class="cpp fragment"><code hide-line-numbers
             data-line-numbers
         ><script type="text/template">
             EXPECT_THAT([](auto& state) {
@@ -9,7 +9,7 @@
             });
         </script></code></pre>
         <span class="fragment">Without merging...</span>
-        <pre class="text fragment"><code data-trim hide-line-numbers
+        <pre class="text fragment"><code hide-line-numbers
             data-line-numbers
         ><script type="text/template">
             [Compile-time non-fatal error]
@@ -33,7 +33,7 @@
 <section my-columns>
     <h2>Merging the compile-time and run-time errors</h2>
     <div style="width:100%;">
-        <pre class="cpp fragment"><code data-trim hide-line-numbers
+        <pre class="cpp fragment"><code hide-line-numbers
             data-line-numbers
         ><script type="text/template">
             EXPECT_THAT([](auto& state) {
@@ -41,7 +41,7 @@
             });
         </script></code></pre>
         <span class="fragment">With merging...</span>
-        <pre class="text fragment"><code data-trim hide-line-numbers
+        <pre class="text fragment"><code hide-line-numbers
             data-line-numbers
         ><script type="text/template">
             [Compile-time and run-time non-fatal error]

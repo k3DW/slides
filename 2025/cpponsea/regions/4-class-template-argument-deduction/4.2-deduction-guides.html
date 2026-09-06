@@ -10,7 +10,7 @@
 <section my-columns="100%">
     <h2>Deduction guides</h2>
     <div style="width:100%;">
-        <pre class="cpp"><code data-trim hide-line-numbers data-line-numbers="1-4|5-6|"><script type="text/template">
+        <pre class="cpp"><code hide-line-numbers data-line-numbers="1-4|5-6|"><script type="text/template">
             template <class T, class U> struct MyStruct {
                 template <class A> MyStruct(std::vector<T, A>, U);
                 template <class V> MyStruct(T, std::pair<U, V>);
@@ -18,19 +18,19 @@
             template <class T, class U, class A, class V>
             MyStruct(std::vector<T, A>, std::pair<U, V>) -> MyStruct<T, std::pair<U, V>>;
         </script></code></pre>
-        <pre class="cpp fragment"><code data-trim hide-line-numbers data-line-numbers=""><script type="text/template">
+        <pre class="cpp fragment"><code hide-line-numbers data-line-numbers=""><script type="text/template">
             template <class T, class U, class A>
             MyStruct<T, U> __imaginary_function(std::vector<T, A>, U);
         </script></code></pre>
-        <pre class="cpp fragment"><code data-trim hide-line-numbers data-line-numbers=""><script type="text/template">
+        <pre class="cpp fragment"><code hide-line-numbers data-line-numbers=""><script type="text/template">
             template <class T, class U, class V>
             MyStruct<T, U> __imaginary_function(T, std::pair<U, V>);
         </script></code></pre>
-        <pre class="cpp fragment"><code data-trim hide-line-numbers data-line-numbers="|2|"><script type="text/template">
+        <pre class="cpp fragment"><code hide-line-numbers data-line-numbers="|2|"><script type="text/template">
             template <class T, class U, class A, class V>
             MyStruct<T, std::pair<U, V>> __imaginary_function(std::vector<T, A>, std::pair<U, V>);
         </script></code></pre>
-        <pre class="cpp fragment"><code data-trim hide-line-numbers data-line-numbers="|3|4|"><script type="text/template">
+        <pre class="cpp fragment"><code hide-line-numbers data-line-numbers="|3|4|"><script type="text/template">
             std::vector<int> vec;
             std::pair<char, double> p;
             MyStruct s{ vec, p };
@@ -42,7 +42,7 @@
 <section my-columns="100%">
     <h2>Deduction guides</h2>
     <div style="width:100%;">
-        <pre class="cpp"><code data-trim hide-line-numbers data-line-numbers="|6|"><script type="text/template">
+        <pre class="cpp"><code hide-line-numbers data-line-numbers="|6|"><script type="text/template">
             template <class T, class U> struct MyStruct {
                 template <class A> MyStruct(std::vector<T, A>, U);
                 template <class V> MyStruct(T, std::pair<U, V>);
@@ -50,19 +50,19 @@
             template <class T, class U, class A, class V>
             MyStruct(std::vector<T, A>, std::pair<U, V>) -> MyStruct<T, U>;
         </script></code></pre>
-        <pre class="cpp"><code data-trim hide-line-numbers data-line-numbers=""><script type="text/template">
+        <pre class="cpp"><code hide-line-numbers data-line-numbers=""><script type="text/template">
             template <class T, class U, class A>
             MyStruct<T, U> __imaginary_function(std::vector<T, A>, U);
         </script></code></pre>
-        <pre class="cpp"><code data-trim hide-line-numbers data-line-numbers=""><script type="text/template">
+        <pre class="cpp"><code hide-line-numbers data-line-numbers=""><script type="text/template">
             template <class T, class U, class V>
             MyStruct<T, U> __imaginary_function(T, std::pair<U, V>);
         </script></code></pre>
-        <pre class="cpp fragment"><code data-trim hide-line-numbers data-line-numbers="|2|"><script type="text/template">
+        <pre class="cpp fragment"><code hide-line-numbers data-line-numbers="|2|"><script type="text/template">
             template <class T, class U, class A, class V>
             MyStruct<T, U> __imaginary_function(std::vector<T, A>, std::pair<U, V>);
         </script></code></pre>
-        <pre class="cpp fragment"><code data-trim hide-line-numbers data-line-numbers="|3|4"><script type="text/template">
+        <pre class="cpp fragment"><code hide-line-numbers data-line-numbers="|3|4"><script type="text/template">
             std::vector<int> vec;
             std::pair<char, double> p;
             MyStruct s{ vec, p };

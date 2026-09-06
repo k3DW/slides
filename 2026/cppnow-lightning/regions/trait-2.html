@@ -11,7 +11,7 @@
 <section my-columns="90%">
     <h2>Making <code>add&lt;foo()</code> valid</h2>
     <div style="width:100%;">
-        <pre class="cpp fragment"><code data-trim hide-line-numbers
+        <pre class="cpp fragment"><code hide-line-numbers
             data-line-numbers=""
         ><script type="text/template">
              
@@ -19,13 +19,13 @@
                 int value;
             };
         </script></code></pre>
-        <pre class="cpp fragment"><code data-trim hide-line-numbers
+        <pre class="cpp fragment"><code hide-line-numbers
             data-line-numbers=""
         ><script type="text/template">
             struct add_t {};
             inline constexpr add_t add{};
         </script></code></pre>
-        <pre class="cpp fragment"><code data-trim hide-line-numbers
+        <pre class="cpp fragment"><code hide-line-numbers
             data-line-numbers=""
         ><script type="text/template">
              
@@ -33,7 +33,7 @@
                 return { value };
             }
         </script></code></pre>
-        <pre class="cpp fragment"><code data-trim hide-line-numbers
+        <pre class="cpp fragment"><code hide-line-numbers
             data-line-numbers=""
         ><script type="text/template">
             add<foo()
@@ -44,7 +44,7 @@
 <section my-columns="90%">
     <h2>Making <code>add&lt;foo()</code> valid</h2>
     <div style="width:100%;">
-        <pre class="cpp"><code data-trim hide-line-numbers
+        <pre class="cpp"><code hide-line-numbers
             data-line-numbers=""
         ><script type="text/template">
             template <class Tag>
@@ -52,13 +52,13 @@
                 int value;
             };
         </script></code></pre>
-        <pre class="cpp"><code data-trim hide-line-numbers
+        <pre class="cpp"><code hide-line-numbers
             data-line-numbers=""
         ><script type="text/template">
             struct add_t {};
             inline constexpr add_t add{};
         </script></code></pre>
-        <pre class="cpp"><code data-trim hide-line-numbers
+        <pre class="cpp"><code hide-line-numbers
             data-line-numbers=""
         ><script type="text/template">
             template <class Tag>
@@ -66,7 +66,7 @@
                 return { value };
             }
         </script></code></pre>
-        <pre class="cpp"><code data-trim hide-line-numbers
+        <pre class="cpp"><code hide-line-numbers
             data-line-numbers=""
         ><script type="text/template">
             add<foo()
@@ -77,7 +77,7 @@
 <section my-columns="90%">
     <h2>Making <code>add&lt;foo()</code> valid</h2>
     <div style="width:100%;">
-        <pre class="cpp"><code data-trim hide-line-numbers
+        <pre class="cpp"><code hide-line-numbers
             data-line-numbers=""
         ><script type="text/template">
             template <class Tag, class T>
@@ -85,13 +85,13 @@
                 T value;
             };
         </script></code></pre>
-        <pre class="cpp"><code data-trim hide-line-numbers
+        <pre class="cpp"><code hide-line-numbers
             data-line-numbers=""
         ><script type="text/template">
             struct add_t {};
             inline constexpr add_t add{};
         </script></code></pre>
-        <pre class="cpp"><code data-trim hide-line-numbers
+        <pre class="cpp"><code hide-line-numbers
             data-line-numbers=""
         ><script type="text/template">
             template <class Tag, class T>
@@ -99,7 +99,7 @@
                 return { std::forward<T>(value) };
             }
         </script></code></pre>
-        <pre class="cpp"><code data-trim hide-line-numbers
+        <pre class="cpp"><code hide-line-numbers
             data-line-numbers=""
         ><script type="text/template">
             add<foo()
@@ -110,13 +110,13 @@
 <section my-columns="100%">
     <h2>Making <code>3>::value</code> valid</h2>
     <div style="width:100%;">
-        <pre class="cpp fragment"><code data-trim hide-line-numbers
+        <pre class="cpp fragment"><code hide-line-numbers
             data-line-numbers=""
         ><script type="text/template">
             struct value_t {};
             inline constexpr value_t value{};
         </script></code></pre>
-        <pre class="cpp fragment"><code data-trim hide-line-numbers
+        <pre class="cpp fragment"><code hide-line-numbers
             data-line-numbers=""
         ><script type="text/template">
             template <class T>
@@ -124,7 +124,7 @@
                 return { std::forward<T>(value) };
             }
         </script></code></pre>
-        <pre class="cpp fragment"><code data-trim hide-line-numbers
+        <pre class="cpp fragment"><code hide-line-numbers
             data-line-numbers=""
         ><script type="text/template">
             3>::value
@@ -135,7 +135,7 @@
 <section my-columns="100%">
     <h2>Making <code>add&lt;foo(),3&gt;::value</code> valid</h2>
     <div style="width:100%;">
-        <pre class="cpp fragment"><code data-trim hide-line-numbers
+        <pre class="cpp fragment"><code hide-line-numbers
             data-line-numbers=""
         ><script type="text/template">
             template <class T, class U>
@@ -143,7 +143,7 @@
                 return lhs.value + rhs.value;
             }
         </script></code></pre>
-        <pre class="cpp fragment"><code data-trim hide-line-numbers
+        <pre class="cpp fragment"><code hide-line-numbers
             data-line-numbers=""
         ><script type="text/template">
             int __attribute__((noinline)) foo() {

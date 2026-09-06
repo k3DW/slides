@@ -1,11 +1,11 @@
 <section my-columns>
     <h2>Copying and moving</h2>
     <div style="width:100%;">
-        <pre class="cpp fragment"><code data-trim hide-line-numbers data-line-numbers=""><script type="text/template">
+        <pre class="cpp fragment"><code hide-line-numbers data-line-numbers=""><script type="text/template">
             int x = 5;
             auto p = make_unique<int>(6);
         </script></code></pre>
-        <pre class="cpp fragment"><code data-trim hide-line-numbers data-line-numbers=""><script type="text/template">
+        <pre class="cpp fragment"><code hide-line-numbers data-line-numbers=""><script type="text/template">
             auto do_move = [](auto& value) {
                 return ???;
             };
@@ -16,7 +16,7 @@
 <section my-columns="50%">
     <h2>Copying and moving</h2>
     <div style="width:100%;">
-        <pre class="cpp"><code data-trim hide-line-numbers data-line-numbers=""><script type="text/template">
+        <pre class="cpp"><code hide-line-numbers data-line-numbers=""><script type="text/template">
             constexpr auto maybe_copy_construct =
                 []<class T>(const T& t) static -> decltype(auto) {
 
@@ -32,7 +32,7 @@
 <section my-columns="50%">
     <h2>Copying and moving</h2>
     <div style="width:100%;">
-        <pre class="cpp"><code data-trim hide-line-numbers data-line-numbers="3-5"><script type="text/template">
+        <pre class="cpp"><code hide-line-numbers data-line-numbers="3-5"><script type="text/template">
             constexpr auto maybe_copy_construct =
                 []<class T>(const T& t) static -> decltype(auto) {
                     if constexpr (requires { auto(t); }) {
@@ -48,7 +48,7 @@
 <section my-columns="50%">
     <h2>Copying and moving</h2>
     <div style="width:100%;">
-        <pre class="cpp"><code data-trim hide-line-numbers data-line-numbers="5-7|"><script type="text/template">
+        <pre class="cpp"><code hide-line-numbers data-line-numbers="5-7|"><script type="text/template">
             constexpr auto maybe_copy_construct =
                 []<class T>(const T& t) static -> decltype(auto) {
                     if constexpr (requires { auto(t); }) {
@@ -64,7 +64,7 @@
 <section my-columns>
     <h2>Copying and moving</h2>
     <div style="width:100%;">
-        <pre class="cpp"><code data-trim hide-line-numbers data-line-numbers="|2|4-5|6-7|"><script type="text/template">
+        <pre class="cpp"><code hide-line-numbers data-line-numbers="|2|4-5|6-7|"><script type="text/template">
             constexpr auto maybe_move_construct =
                 []<class T> requires (not is_const_v<remove_reference_t<T>>)
                 (T&& t) static noexcept -> decltype(auto) {
@@ -81,11 +81,11 @@
 <section my-columns>
     <h2>Copying and moving</h2>
     <div style="width:100%;">
-        <pre class="cpp"><code data-trim hide-line-numbers data-line-numbers=""><script type="text/template">
+        <pre class="cpp"><code hide-line-numbers data-line-numbers=""><script type="text/template">
             int x = 5;
             auto p = make_unique<int>(6);
         </script></code></pre>
-        <pre class="cpp"><code data-trim hide-line-numbers data-line-numbers=""><script type="text/template">
+        <pre class="cpp"><code hide-line-numbers data-line-numbers=""><script type="text/template">
             auto do_move = [](auto& value) {
                 return maybe_move_construct(value);
             };
@@ -96,7 +96,7 @@
 <section my-columns>
     <h2>Copying and moving</h2>
     <div style="width:100%;">
-        <pre class="cpp"><code data-trim hide-line-numbers data-line-numbers="|3-4|5-6|"><script type="text/template">
+        <pre class="cpp"><code hide-line-numbers data-line-numbers="|3-4|5-6|"><script type="text/template">
             constexpr auto maybe_forward_construct =
                 []<class T>(T&& t) static -> decltype(auto) {
                     if constexpr (is_reference_v<T>) {
@@ -112,7 +112,7 @@
 <section my-columns="95%">
     <h2>Copying and moving</h2>
     <div style="width:100%;">
-        <pre class="cpp"><code data-trim hide-line-numbers data-line-numbers=""><script type="text/template">
+        <pre class="cpp"><code hide-line-numbers data-line-numbers=""><script type="text/template">
             template <class T>
             constexpr auto construct =
                 []<class U>(U&& u) static -> decltype(auto) {
@@ -132,7 +132,7 @@
 <section my-columns="95%">
     <h2>Copying and moving</h2>
     <div style="width:100%;">
-        <pre class="cpp"><code data-trim hide-line-numbers data-line-numbers="4-6"><script type="text/template">
+        <pre class="cpp"><code hide-line-numbers data-line-numbers="4-6"><script type="text/template">
             template <class T>
             constexpr auto construct =
                 []<class U>(U&& u) static -> decltype(auto) {
@@ -152,7 +152,7 @@
 <section my-columns="95%">
     <h2>Copying and moving</h2>
     <div style="width:100%;">
-        <pre class="cpp"><code data-trim hide-line-numbers data-line-numbers="6-8"><script type="text/template">
+        <pre class="cpp"><code hide-line-numbers data-line-numbers="6-8"><script type="text/template">
             template <class T>
             constexpr auto construct =
                 []<class U>(U&& u) static -> decltype(auto) {
@@ -172,7 +172,7 @@
 <section my-columns="95%">
     <h2>Copying and moving</h2>
     <div style="width:100%;">
-        <pre class="cpp"><code data-trim hide-line-numbers data-line-numbers="8-11|"><script type="text/template">
+        <pre class="cpp"><code hide-line-numbers data-line-numbers="8-11|"><script type="text/template">
             template <class T>
             constexpr auto construct =
                 []<class U>(U&& u) static -> decltype(auto) {

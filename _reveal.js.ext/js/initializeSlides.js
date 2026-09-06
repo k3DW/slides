@@ -156,3 +156,9 @@ export function setFooters(leftSideText, rightSideText, useSubFooter) {
         rightFooterDiv.innerText = rightSideText;
     });
 }
+
+export function addDataTrim() {
+    document.querySelectorAll("section pre > code").forEach(code => {
+        code.setAttribute("data-trim", "");
+    });
+}

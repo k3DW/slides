@@ -1,7 +1,7 @@
 <section my-columns>
     <h2>Overloading</h2>
     <div style="width:100%;">
-        <pre class="cpp fragment"><code data-trim hide-line-numbers data-line-numbers=""><script type="text/template">
+        <pre class="cpp fragment"><code hide-line-numbers data-line-numbers=""><script type="text/template">
             template <class... Fs>
             struct overloaded : Fs... {
                 using Fs::operator()...;
@@ -13,7 +13,7 @@
 <section my-columns>
     <h2>Overloading</h2>
     <div style="width:100%;">
-        <pre class="cpp"><code data-trim hide-line-numbers data-line-numbers=""><script type="text/template">
+        <pre class="cpp"><code hide-line-numbers data-line-numbers=""><script type="text/template">
             template <class F, class... Args>
             concept invocable = requires (F&& f, Args&&... args) {
                 // Assuming no member pointers
@@ -26,7 +26,7 @@
 <section my-columns="90%">
     <h2>Overloading</h2>
     <div style="width:100%;">
-        <pre class="cpp"><code data-trim hide-line-numbers data-line-numbers=""><script type="text/template">
+        <pre class="cpp"><code hide-line-numbers data-line-numbers=""><script type="text/template">
             constexpr auto overloaded =
                 []<class... Fs>(Fs... fs) static {
                     // return lambda calling one of `fs...`
@@ -38,14 +38,14 @@
 <section my-columns="90%">
     <h2>Overloading</h2>
     <div style="width:100%;">
-        <pre class="cpp"><code data-trim hide-line-numbers data-line-numbers="|3"><script type="text/template">
+        <pre class="cpp"><code hide-line-numbers data-line-numbers="|3"><script type="text/template">
             constexpr auto overloaded =
                 []<class... Fs>(Fs... fs) static {
 
 
 
 
-                    
+
                 };
         </script></code></pre>
     </div>
@@ -54,7 +54,7 @@
 <section my-columns="90%">
     <h2>Overloading</h2>
     <div style="width:100%;">
-        <pre class="cpp"><code data-trim hide-line-numbers data-line-numbers="3,5,7"><script type="text/template">
+        <pre class="cpp"><code hide-line-numbers data-line-numbers="3,5,7"><script type="text/template">
             constexpr auto overloaded =
                 []<class... Fs>(Fs... fs) static {
                     if constexpr ((is_empty_v<Fs> and ...)) {
@@ -70,18 +70,18 @@
 <section my-columns="90%">
     <h2>Overloading</h2>
     <div style="width:100%;">
-        <pre class="cpp"><code data-trim hide-line-numbers data-line-numbers="3,10,17|4"><script type="text/template">
+        <pre class="cpp"><code hide-line-numbers data-line-numbers="3,10,17|4"><script type="text/template">
             constexpr auto overloaded =
                 []<class... Fs>(Fs... fs) static {
                     if constexpr ((is_empty_v<Fs> and ...)) {
-                        
+
 
 
 
 
 
                     } else {
-                        
+
 
 
 
@@ -96,7 +96,7 @@
 <section my-columns="90%">
     <h2>Overloading</h2>
     <div style="width:100%;">
-        <pre class="cpp"><code data-trim hide-line-numbers data-line-numbers="4-9|4|5|6|4-9|11"><script type="text/template">
+        <pre class="cpp"><code hide-line-numbers data-line-numbers="4-9|4|5|6|4-9|11"><script type="text/template">
             constexpr auto overloaded =
                 []<class... Fs>(Fs... fs) static {
                     if constexpr ((is_empty_v<Fs> and ...)) {
@@ -107,7 +107,7 @@
 
                         };
                     } else {
-                        
+
 
 
 
@@ -122,7 +122,7 @@
 <section my-columns="90%">
     <h2>Overloading</h2>
     <div style="width:100%;">
-        <pre class="cpp"><code data-trim hide-line-numbers data-line-numbers="11-16|11|7"><script type="text/template">
+        <pre class="cpp"><code hide-line-numbers data-line-numbers="11-16|11|7"><script type="text/template">
             constexpr auto overloaded =
                 []<class... Fs>(Fs... fs) static {
                     if constexpr ((is_empty_v<Fs> and ...)) {
@@ -137,7 +137,7 @@
                             requires (... or invocable<Fs, Args...>)
                         (Args&&... args) constexpr -> decltype(auto) {
 
-                            
+
                         };
                     }
                 };
@@ -148,7 +148,7 @@
 <section my-columns="90%">
     <h2>Overloading</h2>
     <div style="width:100%;">
-        <pre class="cpp"><code data-trim hide-line-numbers data-line-numbers="7-8,14-15"><script type="text/template">
+        <pre class="cpp"><code hide-line-numbers data-line-numbers="7-8,14-15"><script type="text/template">
             constexpr auto overloaded =
                 []<class... Fs>(Fs... fs) static {
                     if constexpr ((is_empty_v<Fs> and ...)) {
@@ -163,7 +163,7 @@
                             requires (... or invocable<Fs, Args...>)
                         (Args&&... args) constexpr -> decltype(auto) {
                             return first_invocable_for<Args...>(fs...)
-                            
+
                         };
                     }
                 };
@@ -174,7 +174,7 @@
 <section my-columns="90%">
     <h2>Overloading</h2>
     <div style="width:100%;">
-        <pre class="cpp"><code data-trim hide-line-numbers data-line-numbers="7-8,14-15"><script type="text/template">
+        <pre class="cpp"><code hide-line-numbers data-line-numbers="7-8,14-15"><script type="text/template">
             constexpr auto overloaded =
                 []<class... Fs>(Fs... fs) static {
                     if constexpr ((is_empty_v<Fs> and ...)) {
@@ -200,12 +200,12 @@
 <section my-columns="90%">
     <h2>Overloading</h2>
     <div style="width:100%;">
-        <pre class="cpp fragment"><code data-trim hide-line-numbers data-line-numbers=""><script type="text/template">
+        <pre class="cpp fragment"><code hide-line-numbers data-line-numbers=""><script type="text/template">
             template <class... Args>
             constexpr auto first_invocable_for =
 
 
-                
+
 
 
 
@@ -219,7 +219,7 @@
 <section my-columns="90%">
     <h2>Overloading</h2>
     <div style="width:100%;">
-        <pre class="cpp"><code data-trim hide-line-numbers data-line-numbers="3,5|6"><script type="text/template">
+        <pre class="cpp"><code hide-line-numbers data-line-numbers="3,5|6"><script type="text/template">
             template <class... Args>
             constexpr auto first_invocable_for =
                 []<class Self, class F, class... Fs>
@@ -238,7 +238,7 @@
 <section my-columns="90%">
     <h2>Overloading</h2>
     <div style="width:100%;">
-        <pre class="cpp"><code data-trim hide-line-numbers data-line-numbers="6-8"><script type="text/template">
+        <pre class="cpp"><code hide-line-numbers data-line-numbers="6-8"><script type="text/template">
             template <class... Args>
             constexpr auto first_invocable_for =
                 []<class Self, class F, class... Fs>
@@ -257,7 +257,7 @@
 <section my-columns="90%">
     <h2>Overloading</h2>
     <div style="width:100%;">
-        <pre class="cpp"><code data-trim hide-line-numbers data-line-numbers="8-10|"><script type="text/template">
+        <pre class="cpp"><code hide-line-numbers data-line-numbers="8-10|"><script type="text/template">
             template <class... Args>
             constexpr auto first_invocable_for =
                 []<class Self, class F, class... Fs>
@@ -276,11 +276,11 @@
 <section my-columns="45% 45%">
     <h2>Overloading</h2>
     <div style="width:100%;">
-        <pre class="cpp"><code data-trim hide-line-numbers data-line-numbers="1-3|4-6|7-10|"><script type="text/template">
+        <pre class="cpp"><code hide-line-numbers data-line-numbers="1-3|4-6|7-10|"><script type="text/template">
             using F1 = decltype([](int x, double y) {
                 return x + y;
             });
-            using F2 = decltype([](auto&&... ts) { 
+            using F2 = decltype([](auto&&... ts) {
                 return sizeof...(ts);
             });
             struct F : F1, F2 {
@@ -289,17 +289,17 @@
             };
             constexpr auto fn = F{};
         </script></code></pre>
-        <pre class="cpp fragment"><code data-trim hide-line-numbers data-line-numbers=""><script type="text/template">
+        <pre class="cpp fragment"><code hide-line-numbers data-line-numbers=""><script type="text/template">
             static_assert(fn(3, 4) == 2);
         </script></code></pre>
     </div>
     <div style="width:100%;" class="fragment">
-        <pre class="cpp"><code data-trim hide-line-numbers data-line-numbers="2-4|5-7|"><script type="text/template">
+        <pre class="cpp"><code hide-line-numbers data-line-numbers="2-4|5-7|"><script type="text/template">
             constexpr auto fn = overloaded(
                 [](int x, double y) {
                     return x + y;
                 },
-                [](auto&&... ts) { 
+                [](auto&&... ts) {
                     return sizeof...(ts);
                 }
 
@@ -307,7 +307,7 @@
 
             );
         </script></code></pre>
-        <pre class="cpp fragment"><code data-trim hide-line-numbers data-line-numbers=""><script type="text/template">
+        <pre class="cpp fragment"><code hide-line-numbers data-line-numbers=""><script type="text/template">
             static_assert(fn(3, 4) == 7.0);
         </script></code></pre>
     </div>
@@ -321,11 +321,11 @@
 <section my-columns="45% 45%">
     <h2>Overloading</h2>
     <div style="width:100%;">
-        <pre class="cpp"><code data-trim hide-line-numbers data-line-numbers=""><script type="text/template">
+        <pre class="cpp"><code hide-line-numbers data-line-numbers=""><script type="text/template">
             using F1 = decltype([](int x, double y) {
                 return x + y;
             });
-            using F2 = decltype([](auto&&... ts) { 
+            using F2 = decltype([](auto&&... ts) {
                 return sizeof...(ts);
             });
             struct F : F1, F2 {
@@ -334,17 +334,17 @@
             };
             constexpr auto fn = F{};
         </script></code></pre>
-        <pre class="cpp"><code data-trim hide-line-numbers data-line-numbers=""><script type="text/template">
+        <pre class="cpp"><code hide-line-numbers data-line-numbers=""><script type="text/template">
             static_assert(fn(3, 4) == 2);
         </script></code></pre>
     </div>
     <div style="width:100%;">
-        <pre class="cpp"><code data-trim hide-line-numbers data-line-numbers="|2-4"><script type="text/template">
+        <pre class="cpp"><code hide-line-numbers data-line-numbers="|2-4"><script type="text/template">
             constexpr auto fn = overloaded(
                 [](int x, double y) {
                     return x + y;
                 },
-                [](auto&&... ts) { 
+                [](auto&&... ts) {
                     return sizeof...(ts);
                 }
 
@@ -352,7 +352,7 @@
 
             );
         </script></code></pre>
-        <pre class="cpp"><code data-trim hide-line-numbers data-line-numbers=""><script type="text/template">
+        <pre class="cpp"><code hide-line-numbers data-line-numbers=""><script type="text/template">
             static_assert(fn(3, 4) == 7.0);
         </script></code></pre>
     </div>
@@ -361,11 +361,11 @@
 <section my-columns="45% 45%">
     <h2>Overloading</h2>
     <div style="width:100%;">
-        <pre class="cpp"><code data-trim hide-line-numbers data-line-numbers=""><script type="text/template">
+        <pre class="cpp"><code hide-line-numbers data-line-numbers=""><script type="text/template">
             using F1 = decltype([](int x, double y) {
                 return x + y;
             });
-            using F2 = decltype([](auto&&... ts) { 
+            using F2 = decltype([](auto&&... ts) {
                 return sizeof...(ts);
             });
             struct F : F1, F2 {
@@ -374,25 +374,25 @@
             };
             constexpr auto fn = F{};
         </script></code></pre>
-        <pre class="cpp"><code data-trim hide-line-numbers data-line-numbers=""><script type="text/template">
+        <pre class="cpp"><code hide-line-numbers data-line-numbers=""><script type="text/template">
             static_assert(fn(3, 4) == 2);
         </script></code></pre>
     </div>
     <div style="width:100%;">
-        <pre class="cpp"><code data-trim hide-line-numbers data-line-numbers="2-6"><script type="text/template">
+        <pre class="cpp"><code hide-line-numbers data-line-numbers="2-6"><script type="text/template">
             constexpr auto fn = overloaded(
                 [](same_as<int> auto x,
                    same_as<double> auto y)
                 {
                     return x + y;
                 },
-                [](auto&&... ts) { 
+                [](auto&&... ts) {
                     return sizeof...(ts);
                 }
 
             );
         </script></code></pre>
-        <pre class="cpp"><code data-trim hide-line-numbers data-line-numbers=""><script type="text/template">
+        <pre class="cpp"><code hide-line-numbers data-line-numbers=""><script type="text/template">
             static_assert(fn(3, 4) == 2);
         </script></code></pre>
     </div>

@@ -66,13 +66,13 @@ thank-you:
 	<h2>Epsilon</h2>
 	<div style="width:100%;">
 		<div style="text-align: center;"><code>tok3n</code></div>
-		<pre class="cpp fragment"><code data-trim hide-line-numbers data-line-numbers=""><script type="text/template">
+		<pre class="cpp fragment"><code hide-line-numbers data-line-numbers=""><script type="text/template">
 			auto p = eps.of<char>;
 		</script></code></pre>
-		<pre class="cpp fragment"><code data-trim hide-line-numbers data-line-numbers=""><script type="text/template">
+		<pre class="cpp fragment"><code hide-line-numbers data-line-numbers=""><script type="text/template">
 			constexpr auto result = p.parse("ABC");
 		</script></code></pre>
-		<pre class="cpp fragment"><code data-trim hide-line-numbers data-line-numbers="1|2|3|"><script type="text/template">
+		<pre class="cpp fragment"><code hide-line-numbers data-line-numbers="1|2|3|"><script type="text/template">
 			static_assert(result.has_value());
 			static_assert(*result == "");
 			static_assert(result.remaining() == "ABC");
@@ -80,13 +80,13 @@ thank-you:
 	</div>
 	<div style="width:100%;" class="fragment">
 		<div style="text-align: center;">Brainplus</div>
-		<pre class="cpp fragment"><code data-trim hide-line-numbers data-line-numbers=""><script type="text/template">
+		<pre class="cpp fragment"><code hide-line-numbers data-line-numbers=""><script type="text/template">
 			auto p = plus;
 		</script></code></pre>
-		<pre class="cpp fragment"><code data-trim hide-line-numbers data-line-numbers=""><script type="text/template">
+		<pre class="cpp fragment"><code hide-line-numbers data-line-numbers=""><script type="text/template">
 			constexpr auto result = p.plarse("ABC");
 		</script></code></pre>
-		<pre class="cpp fragment"><code data-trim hide-line-numbers data-line-numbers=""><script type="text/template">
+		<pre class="cpp fragment"><code hide-line-numbers data-line-numbers=""><script type="text/template">
 			static_assert(result.has_value());
 			static_assert(*result == "");
 			static_assert(result.remaining() == "ABC");
@@ -98,13 +98,13 @@ thank-you:
 	<h2>Single "A"</h2>
 	<div style="width:100%;">
 		<div style="text-align: center;"><code>tok3n</code></div>
-		<pre class="cpp fragment"><code data-trim hide-line-numbers data-line-numbers=""><script type="text/template">
+		<pre class="cpp fragment"><code hide-line-numbers data-line-numbers=""><script type="text/template">
 			auto p = "A"_any_of;
 		</script></code></pre>
-		<pre class="cpp fragment"><code data-trim hide-line-numbers data-line-numbers=""><script type="text/template">
+		<pre class="cpp fragment"><code hide-line-numbers data-line-numbers=""><script type="text/template">
 			constexpr auto result = p.parse("ABC");
 		</script></code></pre>
-		<pre class="cpp fragment"><code data-trim hide-line-numbers data-line-numbers="|2|3|"><script type="text/template">
+		<pre class="cpp fragment"><code hide-line-numbers data-line-numbers="|2|3|"><script type="text/template">
 			static_assert(result.has_value());
 			static_assert(*result == "A");
 			static_assert(result.remaining() == "BC");
@@ -112,17 +112,17 @@ thank-you:
 	</div>
 	<div style="width:100%;">
 		<div style="text-align: center;">Brainplus</div>
-		<pre class="cpp fragment"><code data-trim hide-line-numbers data-line-numbers=""><script type="text/template">
+		<pre class="cpp fragment"><code hide-line-numbers data-line-numbers=""><script type="text/template">
 			auto p =
 				plus++++++++++++++++++++++++++++++++++++++
 				++++++++++++++++++++++++++++++++++++++++++
 				++++++++++++++++++++++++++++++++++++++++++
 				++++++++++;
 		</script></code></pre>
-		<pre class="cpp fragment"><code data-trim hide-line-numbers data-line-numbers=""><script type="text/template">
+		<pre class="cpp fragment"><code hide-line-numbers data-line-numbers=""><script type="text/template">
 			constexpr auto result = p.plarse("ABC");
 		</script></code></pre>
-		<pre class="cpp fragment"><code data-trim hide-line-numbers data-line-numbers=""><script type="text/template">
+		<pre class="cpp fragment"><code hide-line-numbers data-line-numbers=""><script type="text/template">
 			static_assert(result.has_value());
 			static_assert(*result == "A");
 			static_assert(result.remaining() == "BC");
@@ -134,13 +134,13 @@ thank-you:
 	<h2>Literal "ABC"</h2>
 	<div style="width:100%;">
 		<div style="text-align: center;"><code>tok3n</code></div>
-		<pre class="cpp fragment"><code data-trim hide-line-numbers data-line-numbers=""><script type="text/template">
+		<pre class="cpp fragment"><code hide-line-numbers data-line-numbers=""><script type="text/template">
 			auto p = "ABC"_all_of;
 		</script></code></pre>
-		<pre class="cpp fragment"><code data-trim hide-line-numbers data-line-numbers=""><script type="text/template">
+		<pre class="cpp fragment"><code hide-line-numbers data-line-numbers=""><script type="text/template">
 			constexpr auto result = p.parse("ABC");
 		</script></code></pre>
-		<pre class="cpp fragment"><code data-trim hide-line-numbers data-line-numbers="|2|3|"><script type="text/template">
+		<pre class="cpp fragment"><code hide-line-numbers data-line-numbers="|2|3|"><script type="text/template">
 			static_assert(result.has_value());
 			static_assert(*result == "ABC");
 			static_assert(result.remaining() == "");
@@ -148,7 +148,7 @@ thank-you:
 	</div>
 	<div style="width:100%;">
 		<div style="text-align: center;">Brainplus</div>
-		<pre class="cpp fragment"><code data-trim hide-line-numbers data-line-numbers=""><script type="text/template">
+		<pre class="cpp fragment"><code hide-line-numbers data-line-numbers=""><script type="text/template">
 			auto p = ++(
 				++++++++++++++++++++++++++++++++++++++++++
 				++++++++++++++++++++++++++++++++++++++++++
@@ -162,10 +162,10 @@ thank-you:
 				++++++++++++++++++++++++++++++++++++plus
 			);
 		</script></code></pre>
-		<pre class="cpp fragment"><code data-trim hide-line-numbers data-line-numbers=""><script type="text/template">
+		<pre class="cpp fragment"><code hide-line-numbers data-line-numbers=""><script type="text/template">
 			constexpr auto result = p.plarse("ABC");
 		</script></code></pre>
-		<pre class="cpp fragment"><code data-trim hide-line-numbers data-line-numbers=""><script type="text/template">
+		<pre class="cpp fragment"><code hide-line-numbers data-line-numbers=""><script type="text/template">
 			static_assert(result.has_value());
 			static_assert(*result == "ABC");
 			static_assert(result.remaining() == "");
@@ -181,15 +181,15 @@ thank-you:
 	<h2>Version string</h2>
 	<div style="width:100%;">
 		<div style="text-align: center;"><code>tok3n</code></div>
-		<pre class="cpp fragment"><code data-trim hide-line-numbers data-line-numbers=""><script type="text/template">
+		<pre class="cpp fragment"><code hide-line-numbers data-line-numbers=""><script type="text/template">
 			auto d = "0123456789"_any_of;
 			auto s = "."_all_of % ignore;
 			auto p = d >> s >> d >> s >> d;
 		</script></code></pre>
-		<pre class="cpp fragment"><code data-trim hide-line-numbers data-line-numbers=""><script type="text/template">
+		<pre class="cpp fragment"><code hide-line-numbers data-line-numbers=""><script type="text/template">
 			constexpr auto result = p.parse("1.2.3");
 		</script></code></pre>
-		<pre class="cpp fragment"><code data-trim hide-line-numbers data-line-numbers="|2|3|"><script type="text/template">
+		<pre class="cpp fragment"><code hide-line-numbers data-line-numbers="|2|3|"><script type="text/template">
 			static_assert(result.has_value());
 			static_assert(*result == std::tuple("1", "2", "3"));
 			static_assert(result.remaining() == "");
@@ -201,7 +201,7 @@ thank-you:
 	<h2>Version string</h2>
 	<div style="width:100%;">
 		<div style="text-align: center;">Brainplus</div>
-		<pre class="cpp fragment"><code data-trim hide-line-numbers data-line-numbers="1-13|14-15|16|"><script type="text/template">
+		<pre class="cpp fragment"><code hide-line-numbers data-line-numbers="1-13|14-15|16|"><script type="text/template">
 			auto d = plus++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 				+++++++++++++++++++++++plus++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 				+++++++++++++++++++++++++++++++++++++++++plus++++++++++++++++++++++++++++++++++++++++++
@@ -226,15 +226,15 @@ thank-you:
 	<h2>Version string</h2>
 	<div style="width:100%;">
 		<div style="text-align: center;">Brainplus</div>
-		<pre class="cpp"><code data-trim hide-line-numbers data-line-numbers=""><script type="text/template">
+		<pre class="cpp"><code hide-line-numbers data-line-numbers=""><script type="text/template">
 			auto d = ...;
 			auto s = ...;
 			auto p = ++(d+s+d+s+d);
 		</script></code></pre>
-		<pre class="cpp fragment"><code data-trim hide-line-numbers data-line-numbers=""><script type="text/template">
+		<pre class="cpp fragment"><code hide-line-numbers data-line-numbers=""><script type="text/template">
 			constexpr auto result = p.parse("1.2.3");
 		</script></code></pre>
-		<pre class="cpp fragment"><code data-trim hide-line-numbers data-line-numbers="|2|3|"><script type="text/template">
+		<pre class="cpp fragment"><code hide-line-numbers data-line-numbers="|2|3|"><script type="text/template">
 			static_assert(result.has_value());
 			static_assert(*result == std::tuple("1", "2", "3"));
 			static_assert(result.remaining() == "");
@@ -249,19 +249,19 @@ thank-you:
 <section my-columns>
 	<h2>Modifiers in <code>tok3n</code></h2>
 	<div style="width:100%;">
-		<pre class="cpp fragment"><code data-trim><script type="text/template">
+		<pre class="cpp fragment"><code><script type="text/template">
 			p % ignore   // or `ignore(p)`
 			p % join     // or `join(p)`
 			p % complete // or `complete(p)`, etc
 		</script></code></pre>
-		<pre class="cpp fragment"><code data-trim><script type="text/template">
+		<pre class="cpp fragment"><code><script type="text/template">
 			p % constant<value>
 		</script></code></pre>
-		<pre class="cpp fragment"><code data-trim><script type="text/template">
+		<pre class="cpp fragment"><code><script type="text/template">
 			p % fn<foo>
 			p % apply<bar>
 		</script></code></pre>
-		<pre class="cpp fragment"><code data-trim><script type="text/template">
+		<pre class="cpp fragment"><code><script type="text/template">
 			p % into<S>
 			p % apply_into<T>
 			p % defaulted<U>
@@ -294,7 +294,7 @@ thank-you:
 <section my-columns="50% 50%">
 	<h2>Modifiers in <code>Brainplus</code></h2>
 	<div style="width:100%;">
-		<pre class="cpp fragment"><code data-trim><script type="text/template">
+		<pre class="cpp fragment"><code><script type="text/template">
 			p % constant<value>
 
 			p % fn<foo>
@@ -306,7 +306,7 @@ thank-you:
 		</script></code></pre>
 	</div>
 	<div style="width:100%;">
-		<pre class="cpp fragment"><code data-trim><script type="text/template">
+		<pre class="cpp fragment"><code><script type="text/template">
 			p + plus.operator++<value>()
 
 			p + ++plus.operator++<foo>()
@@ -322,21 +322,21 @@ thank-you:
 <section my-columns="100%">
 	<h2>Version string v2</h2>
 	<div style="width:100%;">
-		<pre class="cpp"><code data-trim hide-line-numbers data-line-numbers=""><script type="text/template">
+		<pre class="cpp"><code hide-line-numbers data-line-numbers=""><script type="text/template">
 			struct Version { int major; int minor; int patch; };
 		</script></code></pre>
-		<pre class="cpp fragment"><code data-trim hide-line-numbers data-line-numbers=""><script type="text/template">
+		<pre class="cpp fragment"><code hide-line-numbers data-line-numbers=""><script type="text/template">
 			constexpr auto f = [](auto span) { return std::atoi(span); };
 		</script></code></pre>
-		<pre class="cpp fragment"><code data-trim hide-line-numbers data-line-numbers="|1|3|"><script type="text/template">
+		<pre class="cpp fragment"><code hide-line-numbers data-line-numbers="|1|3|"><script type="text/template">
 			auto d = (...)+ ++plus.operator++<f>();
 			auto s = ...;
 			auto p = ++(d+s+d+s+d)+ ++plus.operator++<Version>();
 		</script></code></pre>
-		<pre class="cpp fragment"><code data-trim hide-line-numbers data-line-numbers=""><script type="text/template">
+		<pre class="cpp fragment"><code hide-line-numbers data-line-numbers=""><script type="text/template">
 			constexpr auto result = p.parse("1.2.3");
 		</script></code></pre>
-		<pre class="cpp fragment"><code data-trim hide-line-numbers data-line-numbers="|2|"><script type="text/template">
+		<pre class="cpp fragment"><code hide-line-numbers data-line-numbers="|2|"><script type="text/template">
 			static_assert(result.has_value());
 			static_assert(*result == Version{1,2,3});
 			static_assert(result.remaining() == "");
@@ -351,7 +351,7 @@ thank-you:
 <section my-columns="20%">
 	<h2>Recursion in <code>tok3n</code></h2>
 	<div style="width:100%;">
-		<pre class="cpp fragment"><code data-trim><script type="text/template">
+		<pre class="cpp fragment"><code><script type="text/template">
 			struct P : Custom<P>
 			{
 				using result_type = int;
@@ -364,7 +364,7 @@ thank-you:
 <section my-columns="20%">
 	<h2>Recursion in Brainplus</h2>
 	<div style="width:100%;">
-		<pre class="cpp fragment"><code data-trim><script type="text/template">
+		<pre class="cpp fragment"><code><script type="text/template">
 			struct P : Plustom<P>
 			{
 
@@ -377,7 +377,7 @@ thank-you:
 <section my-columns="20%">
 	<h2>Recursion in Brainplus</h2>
 	<div style="width:100%;">
-		<pre class="cpp"><code data-trim><script type="text/template">
+		<pre class="cpp"><code><script type="text/template">
 			struct P : Plustom<P>
 			{
 				using plusult_type = int;
@@ -390,7 +390,7 @@ thank-you:
 <section my-columns="20%">
 	<h2>Recursion in Brainplus</h2>
 	<div style="width:100%;">
-		<pre class="cpp"><code data-trim><script type="text/template">
+		<pre class="cpp"><code><script type="text/template">
 			struct P : Plustom<P>
 			{
 				using plusult_type = int;
@@ -403,11 +403,11 @@ thank-you:
 <section my-columns="100%">
 	<h2>Version string v3</h2>
 	<div style="width:100%;">
-		<pre class="cpp"><code data-trim hide-line-numbers data-line-numbers=""><script type="text/template">
+		<pre class="cpp"><code hide-line-numbers data-line-numbers=""><script type="text/template">
 			struct Version { int major; int minor; int patch; };
 			constexpr auto f = [](auto span) { return std::atoi(span); };
 		</script></code></pre>
-		<pre class="cpp fragment" style="font-size: 28%;"><code data-trim><script type="text/template">
+		<pre class="cpp fragment" style="font-size: 28%;"><code><script type="text/template">
 			auto p =
 				++((plus+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++plus++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 				+++++++++++++++++++++++++++++++++++++++++plus+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++plus++++++++++++++++++++++
@@ -432,10 +432,10 @@ thank-you:
 				+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++plus++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 				+++++++++++++++++++++++++++++++++++++++ ++plus.operator++<f>()))+ ++plus.operator++<Version>();
 		</script></code></pre>
-		<pre class="cpp fragment"><code data-trim hide-line-numbers data-line-numbers=""><script type="text/template">
+		<pre class="cpp fragment"><code hide-line-numbers data-line-numbers=""><script type="text/template">
 			constexpr auto result = p.parse("1.2.3");
 		</script></code></pre>
-		<pre class="cpp fragment"><code data-trim hide-line-numbers data-line-numbers=""><script type="text/template">
+		<pre class="cpp fragment"><code hide-line-numbers data-line-numbers=""><script type="text/template">
 			static_assert(*result == Version{1,2,3});
 		</script></code></pre>
 	</div>

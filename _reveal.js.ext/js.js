@@ -9,6 +9,8 @@ export async function preInitSlides(object) {
     substituteLists();
     await loadScripts(object.scripts);
 
+    init.addDataTrim();
+
     init.setBackground(object.backgroundImage);
     init.setSlideSize(object.height, object.width);
     init.setColumns();
