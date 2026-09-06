@@ -1,7 +1,7 @@
 <section my-columns>
     <h2>Cast functions</h2>
     <div style="width:100%;">
-        <pre class="cpp fragment"><code hide-line-numbers data-line-numbers=""><script type="text/template">
+        <pre class="cpp fragment"><code data-line-numbers=""><script type="text/template">
             template <class T>
             constexpr auto declval =
                 []<class U = T>() static noexcept -> add_rvalue_reference_t<U> {
@@ -14,14 +14,14 @@
 <section my-columns>
     <h2>Cast functions</h2>
     <div style="width:100%;">
-        <pre class="cpp"><code hide-line-numbers data-line-numbers=""><script type="text/template">
+        <pre class="cpp"><code data-line-numbers=""><script type="text/template">
             constexpr auto move =
                 []<class T>(T&& t) static noexcept -> remove_reference_t<T>&& {
                     return static_cast<remove_reference_t<T>&&>(t);
                 };
         </script></code></pre>
         <br>
-        <pre class="cpp fragment"><code hide-line-numbers data-line-numbers=""><script type="text/template">
+        <pre class="cpp fragment"><code data-line-numbers=""><script type="text/template">
             constexpr auto as_const =
                 []<class T>(T& t) static noexcept -> add_const_t<T>& {
                     return t;
@@ -33,7 +33,7 @@
 <section my-columns="85%">
     <h2>Cast functions</h2>
     <div style="width:100%;">
-        <pre class="cpp"><code hide-line-numbers data-line-numbers="2-3|2|3-5|2-3"><script type="text/template">
+        <pre class="cpp"><code data-line-numbers="2-3|2|3-5|2-3"><script type="text/template">
             // [forward]/1
             template<class T> constexpr T&& forward(remove_reference_t<T>& t) noexcept;
             template<class T> constexpr T&& forward(remove_reference_t<T>&& t) noexcept;
@@ -46,7 +46,7 @@
 <section my-columns>
     <h2>Cast functions</h2>
     <div style="width:100%;">
-        <pre class="cpp"><code hide-line-numbers data-line-numbers="1-5|7-12|"><script type="text/template">
+        <pre class="cpp"><code data-line-numbers="1-5|7-12|"><script type="text/template">
             template <class T>
             constexpr auto forward_lvalue =
                 [](remove_reference_t<T>& t) static noexcept -> T&& {
@@ -60,7 +60,7 @@
                     return static_cast<T&&>(t);
                 };
         </script></code></pre>
-        <pre class="cpp fragment"><code hide-line-numbers data-line-numbers=""><script type="text/template">
+        <pre class="cpp fragment"><code data-line-numbers=""><script type="text/template">
             template <class T>
             constexpr auto forward = ???;
         </script></code></pre>
@@ -70,7 +70,7 @@
 <section my-columns="85%">
     <h2>Cast functions</h2>
     <div style="width:100%;">
-        <pre class="cpp"><code hide-line-numbers data-line-numbers="|3|4,7|6|"><script type="text/template">
+        <pre class="cpp"><code data-line-numbers="|3|4,7|6|"><script type="text/template">
             template <class T>
             constexpr auto forward =
                 []<class U>(U&& u) static noexcept -> T&&
@@ -86,7 +86,7 @@
 <section my-columns>
     <h2>Cast functions</h2>
     <div style="width:100%;">
-        <pre class="cpp"><code hide-line-numbers data-line-numbers=""><script type="text/template">
+        <pre class="cpp"><code data-line-numbers=""><script type="text/template">
             // From cppreference
             template <class T>
             constexpr auto forward_like =

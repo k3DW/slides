@@ -1,7 +1,7 @@
 <section my-columns="50% 50%">
     <h2>List of viable candidate functions</h2>
     <div style="width:100%;">
-        <pre class="cpp"><code data-line-numbers="|3|5|8-10|"><script type="text/template">
+        <pre class="cpp"><code data-ln-start-from data-line-numbers="|3|5|8-10|"><script type="text/template">
             int foo();
             int foo(double);
             int foo(int, double = 4.0);
@@ -13,7 +13,7 @@
                 requires (sizeof(T) == 3)
             int foo(T);
         </script></code></pre>
-        <pre class="cpp fragment"><code hide-line-numbers data-line-numbers=""><script type="text/template">
+        <pre class="cpp fragment"><code data-line-numbers=""><script type="text/template">
             void bar() {
                 foo(nullptr);
             }
@@ -34,7 +34,7 @@
 <section my-columns="50% 50%">
     <h2>List of viable candidate functions</h2>
     <div style="width:100%;">
-        <pre class="cpp"><code data-line-numbers=""><script type="text/template">
+        <pre class="cpp"><code data-ln-start-from data-line-numbers=""><script type="text/template">
             int foo();
             int foo(double);
             int foo(int, double = 4.0);
@@ -46,7 +46,7 @@
                 requires (sizeof(T) == 3)
             int foo(T);
         </script></code></pre>
-        <pre class="cpp"><code hide-line-numbers data-line-numbers=""><script type="text/template">
+        <pre class="cpp"><code data-line-numbers=""><script type="text/template">
             void bar() {
                 foo(nullptr);
             }

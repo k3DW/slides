@@ -1,7 +1,7 @@
 <section my-columns>
     <h2>New overload of <code>ASSERT_THAT</code> and <code>EXPECT_THAT</code></h2>
     <div style="width:100%;">
-        <pre class="cpp fragment"><code hide-line-numbers
+        <pre class="cpp fragment"><code
             data-line-numbers
         ><script type="text/template">
             EXPECT_THAT([]() {
@@ -17,7 +17,7 @@
 <section my-columns="80%">
     <h2>New overload of <code>ASSERT_THAT</code> and <code>EXPECT_THAT</code></h2>
     <div style="width:100%;">
-        <pre class="cpp"><code hide-line-numbers
+        <pre class="cpp"><code
             data-line-numbers="|4-5|6-7|"
         ><script type="text/template">
             #define EXPECT_THAT(PACKET)                                              \
@@ -30,7 +30,7 @@
                     }                                                                \
                 } static_assert(true, "require semicolon")
         </script></code></pre>
-        <pre class="text fragment"><code hide-line-numbers
+        <pre class="text fragment"><code
             date-line-numbers
         ><script type="text/template">
             error C2064: term does not evaluate to a function taking 0 arguments
@@ -44,7 +44,7 @@
 <section my-columns="80%">
     <h2>New overload of <code>ASSERT_THAT</code> and <code>EXPECT_THAT</code></h2>
     <div style="width:100%;">
-        <pre class="cpp"><code hide-line-numbers
+        <pre class="cpp"><code
             data-line-numbers="4,10"
         ><script type="text/template">
             #define EXPECT_THAT(PACKET)                                   \

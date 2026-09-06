@@ -88,7 +88,7 @@ thank-you:
 	<h2>Conditions on a function template</h2>
 	<div style="width:100%;">
 		<div style="text-align: center;"><code>static_assert</code></div>
-		<pre class="cpp fragment"><code hide-line-numbers data-line-numbers="|1|2,4|3|"><script type="text/template">
+		<pre class="cpp fragment"><code data-line-numbers="|1|2,4|3|"><script type="text/template">
 			template <class T>
 			std::string foo(T t) {
 				static_assert(std::integral<T>);
@@ -98,7 +98,7 @@ thank-you:
 	</div>
 	<div style="width:100%;" class="fragment">
 		<div style="text-align: center;">Constraints</div>
-		<pre class="cpp fragment"><code hide-line-numbers data-line-numbers="|2|"><script type="text/template">
+		<pre class="cpp fragment"><code data-line-numbers="|2|"><script type="text/template">
 			template <class T>
 			requires std::integral<T>
 			std::string foo(T t) {
@@ -126,12 +126,12 @@ thank-you:
 <section my-columns="30%">
 	<h2>Benefits of constraints</h2>
 	<div style="width:100%">
-		<pre class="cpp"><code hide-line-numbers data-line-numbers=""><script type="text/template">
+		<pre class="cpp"><code data-line-numbers=""><script type="text/template">
 			template <class T>
 			concept Fooable = requires (T t) { foo(t); };
 		</script></code></pre>
 		<br/>
-		<pre class="cpp fragment"><code hide-line-numbers data-line-numbers=""><script type="text/template">
+		<pre class="cpp fragment"><code data-line-numbers=""><script type="text/template">
 			// In foo_test.cpp, for example
 			static_assert(Fooable<int>);
 			static_assert(!Fooable<double>);
@@ -160,19 +160,19 @@ thank-you:
 <section my-columns="30%">
 	<h2>What do I want?</h2>
 	<div style="width:100%">
-		<pre class="cpp"><code hide-line-numbers data-line-numbers=""><script type="text/template">
+		<pre class="cpp"><code data-line-numbers=""><script type="text/template">
 			template <class T>
 			concept Fooable = requires (T t) { foo(t); };
 		</script></code></pre>
-		<pre class="cpp fragment"><code hide-line-numbers data-line-numbers=""><script type="text/template">
+		<pre class="cpp fragment"><code data-line-numbers=""><script type="text/template">
 			static_assert(Fooable<int>);
 			static_assert(!Fooable<double>);
 		</script></code></pre>
 		<br>
-		<pre class="cpp fragment"><code hide-line-numbers data-line-numbers=""><script type="text/template">
+		<pre class="cpp fragment"><code data-line-numbers=""><script type="text/template">
 			foo(0);   // Compiles
 		</script></code></pre>
-		<pre class="cpp fragment"><code hide-line-numbers data-line-numbers=""><script type="text/template">
+		<pre class="cpp fragment"><code data-line-numbers=""><script type="text/template">
 			foo(0.0); // Error: "You worthless developer"
 		</script></code></pre>
 	</div>
@@ -188,7 +188,7 @@ thank-you:
 <section my-columns="50%">
 	<h2>Idea #1 - example</h2>
 	<div style="width:100%">
-		<pre class="cpp"><code hide-line-numbers data-line-numbers=""><script type="text/template">
+		<pre class="cpp"><code data-line-numbers=""><script type="text/template">
 			template <class T>
 			concept MyIntegral =
 				[] {
@@ -196,7 +196,7 @@ thank-you:
 					return std::integral<T>;
 				}();
 		</script></code></pre>
-		<pre class="cpp fragment"><code hide-line-numbers data-line-numbers=""><script type="text/template">
+		<pre class="cpp fragment"><code data-line-numbers=""><script type="text/template">
 			template <class T>
 			requires MyIntegral<T>
 			std::string foo(T t) {
@@ -223,7 +223,7 @@ thank-you:
 <section my-columns="60%">
 	<h2>Idea #2 - example</h2>
 	<div style="width:100%">
-		<pre class="cpp"><code hide-line-numbers data-line-numbers="1-4|5-6|"><script type="text/template">
+		<pre class="cpp"><code data-line-numbers="1-4|5-6|"><script type="text/template">
 			constexpr auto MyIntegralImpl = []<class T>() {
 				static_assert(std::integral<T>, "Message");
 				return std::integral<T>;
@@ -253,24 +253,24 @@ thank-you:
 <section my-columns="60%">
 	<h2>Idea #3 - example</h2>
 	<div style="width:100%">
-		<pre class="cpp"><code hide-line-numbers data-line-numbers=""><script type="text/template">
+		<pre class="cpp"><code data-line-numbers=""><script type="text/template">
 			template <class T,
 						class = typename std::enable_if<std::integral<T>>::type>
 			concept MyIntegral = std::integral<T>;
 		</script></code></pre>
 		<br/>
-		<pre class="cpp fragment"><code hide-line-numbers data-line-numbers=""><script type="text/template">
+		<pre class="cpp fragment"><code data-line-numbers=""><script type="text/template">
 			static_assert(MyIntegral<int>); // Succeeds
 		</script></code></pre>
-		<pre class="cpp fragment"><code hide-line-numbers data-line-numbers=""><script type="text/template">
+		<pre class="cpp fragment"><code data-line-numbers=""><script type="text/template">
 			static_assert(!MyIntegral<double>); // error C2039:
 			// 'type': is not a member of 'std::enable_if<false, void>'
 		</script></code></pre>
 		<br/>
-		<pre class="cpp fragment"><code hide-line-numbers data-line-numbers=""><script type="text/template">
+		<pre class="cpp fragment"><code data-line-numbers=""><script type="text/template">
 			static_assert(Fooable<int>); // Succeeds
 		</script></code></pre>
-		<pre class="cpp fragment"><code hide-line-numbers data-line-numbers=""><script type="text/template">
+		<pre class="cpp fragment"><code data-line-numbers=""><script type="text/template">
 			static_assert(!Fooable<double>); // Succeeds
 		</script></code></pre>
 	</div>
@@ -294,7 +294,7 @@ thank-you:
 <section my-columns="65%">
 	<h2>Idea #4 - example</h2>
 	<div style="width:100%">
-		<pre class="cpp"><code hide-line-numbers data-line-numbers="|3|"><script type="text/template">
+		<pre class="cpp"><code data-line-numbers="|3|"><script type="text/template">
 			template <bool, class T>
 			struct enable_if_integral_impl {
 				using must_be_an_integral_type = T;
@@ -302,13 +302,13 @@ thank-you:
 			template <class T>
 			struct enable_if_integral_impl<false, T> {};
 		</script></code></pre>
-		<pre class="cpp fragment"><code hide-line-numbers data-line-numbers=""><script type="text/template">
+		<pre class="cpp fragment"><code data-line-numbers=""><script type="text/template">
 			template <bool b, class T = void>
 			using enable_if_integral =
 				typename enable_if_integral_impl<b, T>::must_be_an_integral_type;
 		</script></code></pre>
 		<br/>
-		<pre class="cpp fragment"><code hide-line-numbers data-line-numbers=""><script type="text/template">
+		<pre class="cpp fragment"><code data-line-numbers=""><script type="text/template">
 			template <class T,
 						class = enable_if_integral<std::integral<T>>>
 			concept MyIntegral = std::integral<T>;
@@ -319,19 +319,19 @@ thank-you:
 <section my-columns="60%">
 	<h2>Idea #4 - example</h2>
 	<div style="width:100%">
-		<pre class="cpp"><code hide-line-numbers data-line-numbers=""><script type="text/template">
+		<pre class="cpp"><code data-line-numbers=""><script type="text/template">
 			static_assert(MyIntegral<int>); // Succeeds
 		</script></code></pre>
-		<pre class="cpp fragment"><code hide-line-numbers data-line-numbers=""><script type="text/template">
+		<pre class="cpp fragment"><code data-line-numbers=""><script type="text/template">
 			static_assert(!MyIntegral<double>); // error C2794:
 			// 'must_be_an_integral_type': is not a member of any direct or
 			// indirect base class of 'enable_if_integral_impl<false,void>'
 		</script></code></pre>
 		<br/>
-		<pre class="cpp fragment"><code hide-line-numbers data-line-numbers=""><script type="text/template">
+		<pre class="cpp fragment"><code data-line-numbers=""><script type="text/template">
 			static_assert(Fooable<int>); // Succeeds
 		</script></code></pre>
-		<pre class="cpp fragment"><code hide-line-numbers data-line-numbers=""><script type="text/template">
+		<pre class="cpp fragment"><code data-line-numbers=""><script type="text/template">
 			static_assert(!Fooable<double>); // Succeeds
 		</script></code></pre>
 	</div>
@@ -347,10 +347,10 @@ thank-you:
 <section my-columns="30%">
 	<h2>Idea #4 - problems</h2>
 	<div style="width:100%">
-		<pre class="cpp"><code hide-line-numbers data-line-numbers=""><script type="text/template">
+		<pre class="cpp"><code data-line-numbers=""><script type="text/template">
 			foo(0); // Succeeds
 		</script></code></pre>
-		<pre class="cpp fragment"><code hide-line-numbers data-line-numbers=""><script type="text/template">
+		<pre class="cpp fragment"><code data-line-numbers=""><script type="text/template">
 			foo(0.0); // error C2672: 'foo':
 			// no matching overloaded function found
 		</script></code></pre>

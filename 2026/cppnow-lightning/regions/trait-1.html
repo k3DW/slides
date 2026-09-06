@@ -1,7 +1,7 @@
 <section my-columns>
     <h2>A trait to add two numbers</h2>
     <div style="width:100%;">
-        <pre class="cpp"><code hide-line-numbers
+        <pre class="cpp"><code
             data-line-numbers=""
         ><script type="text/template">
             template <auto a, auto b>
@@ -9,7 +9,7 @@
                 static constexpr auto value = a + b;
             };
         </script></code></pre>
-        <pre class="cpp fragment"><code hide-line-numbers
+        <pre class="cpp fragment"><code
             data-line-numbers=""
         ><script type="text/template">
             int main() {
@@ -22,7 +22,7 @@
 <section my-columns>
     <h2>A trait to add two numbers... at run-time?</h2>
     <div style="width:100%;">
-        <pre class="cpp"><code hide-line-numbers
+        <pre class="cpp"><code
             data-line-numbers=""
         ><script type="text/template">
             template <auto a, auto b>
@@ -30,14 +30,14 @@
                 static constexpr auto value = a + b;
             };
         </script></code></pre>
-        <pre class="cpp fragment"><code hide-line-numbers
+        <pre class="cpp fragment"><code
             data-line-numbers=""
         ><script type="text/template">
             int __attribute__((noinline)) foo() {
                 return 2;
             }
         </script></code></pre>
-        <pre class="cpp fragment"><code hide-line-numbers
+        <pre class="cpp fragment"><code
             data-line-numbers=""
         ><script type="text/template">
             int main() {

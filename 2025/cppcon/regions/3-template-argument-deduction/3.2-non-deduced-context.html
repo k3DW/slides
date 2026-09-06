@@ -1,11 +1,11 @@
 <!-- <section my-columns>
     <h2>Non-deduced context</h2>
     <div style="width:100%;">
-        <pre class="cpp"><code hide-line-numbers data-line-numbers=""><script type="text/template">
+        <pre class="cpp"><code data-line-numbers=""><script type="text/template">
             template <class T>
             void foo(std::vector<T>, typename std::vector<T>::value_type);
         </script></code></pre>
-        <pre class="cpp fragment"><code hide-line-numbers data-line-numbers=""><script type="text/template">
+        <pre class="cpp fragment"><code data-line-numbers=""><script type="text/template">
             std::vector<int> vec;
             foo(vec, 0);
         </script></code></pre>
@@ -32,7 +32,7 @@
 <section my-columns>
     <h2>Non-deduced context</h2>
     <div style="width:100%;">
-        <pre class="cpp"><code hide-line-numbers data-line-numbers="|1-4|5-6|"><script type="text/template">
+        <pre class="cpp"><code data-line-numbers="|1-4|5-6|"><script type="text/template">
             template <class T>
             struct S {
                 using type = int;
@@ -40,7 +40,7 @@
             template <class T>
             void foo(typename S<T>::type);
         </script></code></pre>
-        <pre class="cpp fragment"><code hide-line-numbers data-line-numbers=""><script type="text/template">
+        <pre class="cpp fragment"><code data-line-numbers=""><script type="text/template">
             foo(123); // error, cannot deduce T
         </script></code></pre>
         <br/>
@@ -55,7 +55,7 @@
 <section my-columns>
     <h2>Non-deduced context</h2>
     <div style="width:100%;">
-        <pre class="cpp"><code hide-line-numbers data-line-numbers="|1-4|5-6|"><script type="text/template">
+        <pre class="cpp"><code data-line-numbers="|1-4|5-6|"><script type="text/template">
             template <class T>
             struct S {
                 using type = int;
@@ -63,7 +63,7 @@
             template <class T>
             void foo(typename S<T>::type, T);
         </script></code></pre>
-        <pre class="cpp fragment"><code hide-line-numbers data-line-numbers=""><script type="text/template">
+        <pre class="cpp fragment"><code data-line-numbers=""><script type="text/template">
             foo(123, 456);
         </script></code></pre>
         <br/>
@@ -81,7 +81,7 @@
 <section my-columns>
     <h2>Non-deduced context</h2>
     <div style="width:100%;">
-        <pre class="cpp"><code hide-line-numbers data-line-numbers="|1-4|5-6|"><script type="text/template">
+        <pre class="cpp"><code data-line-numbers="|1-4|5-6|"><script type="text/template">
             template <class T>
             struct S {
                 using type = int;
@@ -89,7 +89,7 @@
             template <class T>
             void foo(decltype(S<T>{}));
         </script></code></pre>
-        <pre class="cpp fragment"><code hide-line-numbers data-line-numbers=""><script type="text/template">
+        <pre class="cpp fragment"><code data-line-numbers=""><script type="text/template">
             S<double> s;
             foo(s); // error, cannot deduce T
         </script></code></pre>
@@ -105,11 +105,11 @@
 <section my-columns>
     <h2>Non-deduced context</h2>
     <div style="width:100%;">
-        <pre class="cpp"><code hide-line-numbers data-line-numbers=""><script type="text/template">
+        <pre class="cpp"><code data-line-numbers=""><script type="text/template">
             template <class T>
             void foo(std::vector<T>);
         </script></code></pre>
-        <pre class="cpp fragment"><code hide-line-numbers data-line-numbers=""><script type="text/template">
+        <pre class="cpp fragment"><code data-line-numbers=""><script type="text/template">
             foo({1, 2, 3}); // error, cannot deduce T
         </script></code></pre>
         <br/>

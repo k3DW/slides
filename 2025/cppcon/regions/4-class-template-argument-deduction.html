@@ -18,22 +18,22 @@
 <section my-columns>
     <h2>Class template argument deduction</h2>
     <div style="width:100%;">
-        <pre class="cpp fragment"><code hide-line-numbers data-line-numbers=""><script type="text/template">
+        <pre class="cpp fragment"><code data-line-numbers=""><script type="text/template">
             std::pair p{ 1, 2.0 };
         </script></code></pre>
-        <pre class="cpp fragment"><code hide-line-numbers data-line-numbers=""><script type="text/template">
+        <pre class="cpp fragment"><code data-line-numbers=""><script type="text/template">
             // Deduced as std::pair<int, double>
         </script></code></pre>
         <br/>
-        <pre class="cpp fragment"><code hide-line-numbers data-line-numbers=""><script type="text/template">
+        <pre class="cpp fragment"><code data-line-numbers=""><script type="text/template">
             std::vector<int> foo() {
                 // ...
             }
         </script></code></pre>
-        <pre class="cpp fragment"><code hide-line-numbers data-line-numbers=""><script type="text/template">
+        <pre class="cpp fragment"><code data-line-numbers=""><script type="text/template">
             std::vector v = foo();
         </script></code></pre>
-        <pre class="cpp fragment"><code hide-line-numbers data-line-numbers=""><script type="text/template">
+        <pre class="cpp fragment"><code data-line-numbers=""><script type="text/template">
             // Deduced as std::vector<int>
         </script></code></pre>
     </div>

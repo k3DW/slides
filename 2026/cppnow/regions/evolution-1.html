@@ -15,13 +15,13 @@
 <section my-columns>
     <h2>Basic <code>tok3n</code></h2>
     <div style="width:100%;">
-        <pre class="cpp"><code hide-line-numbers data-line-numbers=""><script type="text/template">
+        <pre class="cpp"><code data-line-numbers=""><script type="text/template">
             constexpr auto abc = "abc"_all;
         </script></code></pre>
-        <pre class="cpp fragment"><code hide-line-numbers data-line-numbers=""><script type="text/template">
+        <pre class="cpp fragment"><code data-line-numbers=""><script type="text/template">
             constexpr auto result = abc.parse("abcd");
         </script></code></pre>
-        <pre class="cpp fragment"><code hide-line-numbers
+        <pre class="cpp fragment"><code
             data-line-numbers="1  |2|3|"
             data-line-hide=   "2-3|3| |"
         ><script type="text/template">
@@ -35,7 +35,7 @@
 <section my-columns>
     <h2><code>tok3n</code> combinators</h2>
     <div style="width:100%;">
-        <pre class="cpp"><code hide-line-numbers
+        <pre class="cpp"><code
             data-line-numbers="1  |2|3|"
             data-line-hide=   "2-3|3| |"
         ><script type="text/template">
@@ -49,15 +49,15 @@
 <section my-columns>
     <h2><code>tok3n</code> "modifier" combinator</h2>
     <div style="width:100%;">
-        <pre class="cpp fragment"><code hide-line-numbers data-line-numbers="2"><script type="text/template">
+        <pre class="cpp fragment"><code data-line-numbers="2"><script type="text/template">
             constexpr auto abc = "abc"_all;
             constexpr auto p = complete(abc);
         </script></code></pre>
-        <pre class="cpp fragment"><code hide-line-numbers data-line-numbers="2"><script type="text/template">
+        <pre class="cpp fragment"><code data-line-numbers="2"><script type="text/template">
             constexpr auto abc = "abc"_all;
             constexpr auto p = abc % complete;
         </script></code></pre>
-        <pre class="cpp fragment"><code hide-line-numbers
+        <pre class="cpp fragment"><code
             data-line-numbers="1  |2|3|"
             data-line-hide=   "2-3|3| |"
         ><script type="text/template">
@@ -71,24 +71,24 @@
 <section my-columns>
     <h2><code>tok3n</code> parser functions</h2>
     <div style="width:100%;">
-        <pre class="cpp"><code hide-line-numbers data-line-numbers=""><script type="text/template">
+        <pre class="cpp"><code data-line-numbers=""><script type="text/template">
             constexpr auto abc = "abc"_all;
         </script></code></pre>
         <br/>
-        <pre class="cpp fragment"><code hide-line-numbers data-line-numbers="1"><script type="text/template">
+        <pre class="cpp fragment"><code data-line-numbers="1"><script type="text/template">
             constexpr auto result = abc.parse("abcd");
             static_assert(result.has_value());
             static_assert(result.value() == "abc");
             static_assert(result.remaining() == "d");
         </script></code></pre>
-        <pre class="cpp fragment"><code hide-line-numbers data-line-numbers="2"><script type="text/template">
+        <pre class="cpp fragment"><code data-line-numbers="2"><script type="text/template">
             std::string_view out;
             auto result = abc.parse("abcd", out);
             assert(result.has_value());
             assert(out == "abc");
             assert(result.remaining() == "d");
         </script></code></pre>
-        <pre class="cpp fragment"><code hide-line-numbers data-line-numbers="1"><script type="text/template">
+        <pre class="cpp fragment"><code data-line-numbers="1"><script type="text/template">
             constexpr auto result = abc.lookahead("abcd");
             static_assert(result.has_value());
             static_assert(result.remaining() == "d");

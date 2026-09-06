@@ -1,7 +1,7 @@
 <section my-columns>
     <h2>The "constexpr two-step"</h2>
     <div style="width:100%;">
-        <pre class="cpp fragment"><code hide-line-numbers
+        <pre class="cpp fragment"><code
             data-line-numbers
         ><script type="text/template">
             constexpr std::string foo() {
@@ -9,14 +9,14 @@
             }
             static_assert(foo() == "abcdefghijklmnopqrstuvwxyz");
         </script></code></pre>
-        <pre class="cpp fragment"><code hide-line-numbers
+        <pre class="cpp fragment"><code
             data-line-numbers
         ><script type="text/template">
             int main() {
                 constexpr std::string str = foo();
             }
         </script></code></pre>
-        <pre class="text fragment"><code hide-line-numbers
+        <pre class="text fragment"><code
             data-line-numbers
         ><script type="text/template">
             <source>:8:33: error: 'foo()' is not a constant expression
@@ -29,14 +29,14 @@
 <section my-columns>
     <h2>The "constexpr two-step"</h2>
     <div style="width:100%;">
-        <pre class="cpp"><code hide-line-numbers
+        <pre class="cpp"><code
             data-line-numbers
         ><script type="text/template">
             constexpr std::string foo() {
                 return "abcdefghijklmnopqrstuvwxyz";
             }
         </script></code></pre>
-        <pre class="cpp fragment"><code hide-line-numbers
+        <pre class="cpp fragment"><code
             data-line-numbers="1-6|2  |3  |4|5|2,4"
             data-line-hide=   "2-5|3-5|4-5|5| |"
         ><script type="text/template">
@@ -47,7 +47,7 @@
                 return arr;
             }
         </script></code></pre>
-        <pre class="cpp fragment"><code hide-line-numbers
+        <pre class="cpp fragment"><code
             data-line-numbers="2|3"
             data-line-hide=   "3| "
         ><script type="text/template">
@@ -76,7 +76,7 @@
 <section my-columns>
     <h2>The "three-step"?</h2>
     <div style="width:100%;">
-        <pre class="cpp fragment"><code hide-line-numbers
+        <pre class="cpp fragment"><code
             data-line-numbers="4-6     |3-7     |8-10     |2,11|1,12|"
             data-line-hide=   "1-3,7-12|1-2,8-12|1-2,11-12|1,12|    |"
         ><script type="text/template">
@@ -93,13 +93,13 @@
                 }()
             );
         </script></code></pre>
-        <pre class="cpp fragment"><code hide-line-numbers
+        <pre class="cpp fragment"><code
             data-line-numbers
         ><script type="text/template">
             state rt_state = state_accessor::make();
             (PACKET)(rt_state);
         </script></code></pre>
-        <pre class="cpp fragment"><code hide-line-numbers
+        <pre class="cpp fragment"><code
             data-line-numbers
         ><script type="text/template">
             state_accessor::report(ct_state, rt_state);

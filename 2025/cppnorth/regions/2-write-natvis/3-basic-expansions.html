@@ -1,7 +1,7 @@
 <section my-columns="62% 38%">
     <h2>Basic expansions</h2>
     <div style="width:100%;">
-        <pre class="xml fragment"><code hide-line-numbers data-line-numbers="|3-7"><script type="text/template">
+        <pre class="xml fragment"><code data-line-numbers="|3-7"><script type="text/template">
             <Type Name="Line">
                 <DisplayString>{{{left}, {right}}}</DisplayString>
                 <Expand>
@@ -22,7 +22,7 @@
 <section my-columns="62% 38%">
     <h2>Basic expansions</h2>
     <div style="width:100%;">
-        <pre class="xml"><code hide-line-numbers data-line-numbers="3-7|3"><script type="text/template">
+        <pre class="xml"><code data-line-numbers="3-7|3"><script type="text/template">
             <Type Name="Line">
                 <DisplayString>{{{left}, {right}}}</DisplayString>
                 <Expand>
@@ -43,7 +43,7 @@
 <section my-columns="62% 38%">
     <h2>Basic expansions</h2>
     <div style="width:100%;">
-        <pre class="xml"><code hide-line-numbers data-line-numbers="3|"><script type="text/template">
+        <pre class="xml"><code data-line-numbers="3|"><script type="text/template">
             <Type Name="Line">
                 <DisplayString>{{{left}, {right}}}</DisplayString>
                 <Expand HideRawView="true">
@@ -64,7 +64,7 @@
 <section my-columns>
     <h2><code>&lt;Item&gt;</code> tag</h2>
     <div style="width:100%;">
-        <pre class="xml"><code hide-line-numbers data-line-numbers=""><script type="text/template">
+        <pre class="xml"><code data-line-numbers=""><script type="text/template">
             <Item Name="[length]">right - left</Item>
         </script></code></pre>
     </div>
@@ -73,7 +73,7 @@
 <section my-columns="30%">
     <h2><code>&lt;Item&gt;</code> tag</h2>
     <div style="width:100%;">
-        <pre class="xml"><code hide-line-numbers data-line-numbers=""><script type="text/template">
+        <pre class="xml"><code data-line-numbers=""><script type="text/template">
             <Item
                 Name="[length]"
 
@@ -88,7 +88,7 @@
 <section my-columns="30%">
     <h2><code>&lt;Item&gt;</code> tag</h2>
     <div style="width:100%;">
-        <pre class="xml"><code hide-line-numbers data-line-numbers="3"><script type="text/template">
+        <pre class="xml"><code data-line-numbers="3"><script type="text/template">
             <Item
                 Name="[length]"
                 Condition="right - left &gt;= 0"
@@ -103,7 +103,7 @@
 <section my-columns="30%">
     <h2><code>&lt;Item&gt;</code> tag</h2>
     <div style="width:100%;">
-        <pre class="xml"><code hide-line-numbers data-line-numbers="4"><script type="text/template">
+        <pre class="xml"><code data-line-numbers="4"><script type="text/template">
             <Item
                 Name="[length]"
                 Condition="right - left &gt;= 0"
@@ -118,7 +118,7 @@
 <section my-columns="30%">
     <h2><code>&lt;Item&gt;</code> tag</h2>
     <div style="width:100%;">
-        <pre class="xml"><code hide-line-numbers data-line-numbers="4|"><script type="text/template">
+        <pre class="xml"><code data-line-numbers="4|"><script type="text/template">
             <Item
                 Name="[length]"
                 Condition="right - left &gt;= 0"
@@ -133,7 +133,7 @@
 <section my-columns>
     <h2><code>&lt;ArrayItems&gt;</code> tag</h2>
     <div style="width:100%;">
-        <pre class="xml fragment"><code hide-line-numbers data-line-numbers="|2|3|"><script type="text/template">
+        <pre class="xml fragment"><code data-line-numbers="|2|3|"><script type="text/template">
             <!-- STL.natvis -->
             <Type Name="std::array&lt;*,*&gt;">
                 <DisplayString>{{ size={$T2} }}</DisplayString>
@@ -151,7 +151,7 @@
 <section my-columns>
     <h2><code>&lt;ArrayItems&gt;</code> tag</h2>
     <div style="width:100%;">
-        <pre class="xml"><code hide-line-numbers data-line-numbers="5-8|"><script type="text/template">
+        <pre class="xml"><code data-line-numbers="5-8|"><script type="text/template">
             <!-- STL.natvis -->
             <Type Name="std::array&lt;*,*&gt;">
                 <DisplayString>{{ size={$T2} }}</DisplayString>
@@ -169,7 +169,7 @@
 <section my-columns="60% 40%">
     <h2><code>&lt;ArrayItems&gt;</code> tag</h2>
     <div style="width:100%;">
-        <pre class="xml"><code hide-line-numbers data-line-numbers=""><script type="text/template">
+        <pre class="xml"><code data-line-numbers=""><script type="text/template">
             <Type Name="std::array&lt;*,*&gt;">
                 <DisplayString>{{ size={$T2} }}</DisplayString>
                 <Expand>
@@ -180,7 +180,7 @@
                 </Expand>
             </Type>
         </script></code></pre>
-        <pre class="cpp fragment"><code hide-line-numbers data-line-numbers=""><script type="text/template">
+        <pre class="cpp fragment"><code data-line-numbers=""><script type="text/template">
             std::array<Line, 2> lines{
                 Line{100, 600},
                 Line{2, 5},
@@ -197,7 +197,7 @@
 <section my-columns="60% 40%">
     <h2><code>&lt;ArrayItems&gt;</code> tag</h2>
     <div style="width:100%;">
-        <pre class="xml"><code hide-line-numbers data-line-numbers=""><script type="text/template">
+        <pre class="xml"><code data-line-numbers=""><script type="text/template">
             <Type Name="std::array&lt;*,*&gt;">
                 <DisplayString>{{ size={$T2} }}</DisplayString>
                 <Expand>
@@ -208,7 +208,7 @@
                 </Expand>
             </Type>
         </script></code></pre>
-        <pre class="cpp"><code hide-line-numbers data-line-numbers=""><script type="text/template">
+        <pre class="cpp"><code data-line-numbers=""><script type="text/template">
             std::array<Line, 2> lines{
                 Line{100, 600},
                 Line{2, 5},
@@ -225,7 +225,7 @@
 <section my-columns="60% 40%">
     <h2><code>&lt;ArrayItems&gt;</code> tag</h2>
     <div style="width:100%;">
-        <pre class="xml"><code hide-line-numbers data-line-numbers=""><script type="text/template">
+        <pre class="xml"><code data-line-numbers=""><script type="text/template">
             <Type Name="std::array&lt;*,*&gt;">
                 <DisplayString>{{ size={$T2} }}</DisplayString>
                 <Expand>
@@ -236,7 +236,7 @@
                 </Expand>
             </Type>
         </script></code></pre>
-        <pre class="cpp"><code hide-line-numbers data-line-numbers=""><script type="text/template">
+        <pre class="cpp"><code data-line-numbers=""><script type="text/template">
             std::array<Line, 2> lines{
                 Line{100, 600},
                 Line{2, 5},
@@ -267,12 +267,12 @@
 <section my-columns="60% 40%">
     <h2><code>&lt;ExpandedItem&gt;</code> tag</h2>
     <div style="width:100%;">
-        <pre class="cpp fragment"><code hide-line-numbers data-line-numbers=""><script type="text/template">
+        <pre class="cpp fragment"><code data-line-numbers=""><script type="text/template">
             struct LineWrapper {
                 Line line;
             };
         </script></code></pre>
-        <pre class="xml fragment"><code hide-line-numbers data-line-numbers="|2|4|"><script type="text/template">
+        <pre class="xml fragment"><code data-line-numbers="|2|4|"><script type="text/template">
             <Type Name="LineWrapper">
                 <DisplayString>{line}</DisplayString>
                 <Expand>
@@ -280,7 +280,7 @@
                 </Expand>
             </Type>
         </script></code></pre>
-        <pre class="cpp fragment"><code hide-line-numbers data-line-numbers=""><script type="text/template">
+        <pre class="cpp fragment"><code data-line-numbers=""><script type="text/template">
             Line line{ 100, 600 };
             LineWrapper lw{ line };
         </script></code></pre>
@@ -295,7 +295,7 @@
 <section my-columns="65% 35%">
     <h2><code>&lt;Synthetic&gt;</code> tag</h2>
     <div style="width:100%;">
-        <pre class="xml fragment"><code hide-line-numbers data-line-numbers=""><script type="text/template">
+        <pre class="xml fragment"><code data-line-numbers=""><script type="text/template">
             <Type Name="Line">
                 <DisplayString>{{{left}, {right}}}</DisplayString>
                 <Expand HideRawView="true">
@@ -311,7 +311,7 @@
                 </Expand>
             </Type>
         </script></code></pre>
-        <pre class="cpp fragment"><code hide-line-numbers data-line-numbers=""><script type="text/template">
+        <pre class="cpp fragment"><code data-line-numbers=""><script type="text/template">
             Line line{ 100, 600 };
         </script></code></pre>
     </div>
@@ -325,7 +325,7 @@
 <section my-columns="65% 35%">
     <h2><code>&lt;Synthetic&gt;</code> tag</h2>
     <div style="width:100%;">
-        <pre class="xml"><code hide-line-numbers data-line-numbers="6-12"><script type="text/template">
+        <pre class="xml"><code data-line-numbers="6-12"><script type="text/template">
             <Type Name="Line">
                 <DisplayString>{{{left}, {right}}}</DisplayString>
                 <Expand HideRawView="true">
@@ -341,7 +341,7 @@
                 </Expand>
             </Type>
         </script></code></pre>
-        <pre class="cpp"><code hide-line-numbers data-line-numbers=""><script type="text/template">
+        <pre class="cpp"><code data-line-numbers=""><script type="text/template">
             Line line{ 100, 600 };
         </script></code></pre>
     </div>
@@ -355,7 +355,7 @@
 <section my-columns="65% 35%">
     <h2><code>&lt;Synthetic&gt;</code> tag</h2>
     <div style="width:100%;">
-        <pre class="xml"><code hide-line-numbers data-line-numbers="6-12"><script type="text/template">
+        <pre class="xml"><code data-line-numbers="6-12"><script type="text/template">
             <Type Name="Line">
                 <DisplayString>{{{left}, {right}}}</DisplayString>
                 <Expand HideRawView="true">
@@ -371,7 +371,7 @@
                 </Expand>
             </Type>
         </script></code></pre>
-        <pre class="cpp"><code hide-line-numbers data-line-numbers=""><script type="text/template">
+        <pre class="cpp"><code data-line-numbers=""><script type="text/template">
             Line line{ 100, 600 };
         </script></code></pre>
     </div>
@@ -385,7 +385,7 @@
 <section my-columns="65% 35%">
     <h2><code>&lt;Synthetic&gt;</code> tag</h2>
     <div style="width:100%;">
-        <pre class="xml"><code hide-line-numbers data-line-numbers="6-12"><script type="text/template">
+        <pre class="xml"><code data-line-numbers="6-12"><script type="text/template">
             <Type Name="Line">
                 <DisplayString>{{{left}, {right}}}</DisplayString>
                 <Expand HideRawView="true">
@@ -401,7 +401,7 @@
                 </Expand>
             </Type>
         </script></code></pre>
-        <pre class="cpp"><code hide-line-numbers data-line-numbers=""><script type="text/template">
+        <pre class="cpp"><code data-line-numbers=""><script type="text/template">
             Line line{ 100, 600 };
         </script></code></pre>
     </div>
@@ -415,7 +415,7 @@
 <section my-columns="65% 35%">
     <h2><code>&lt;Synthetic&gt;</code> tag</h2>
     <div style="width:100%;">
-        <pre class="xml"><code hide-line-numbers data-line-numbers="6-12"><script type="text/template">
+        <pre class="xml"><code data-line-numbers="6-12"><script type="text/template">
             <Type Name="Line">
                 <DisplayString>{{{left}, {right}}}</DisplayString>
                 <Expand HideRawView="true">
@@ -431,7 +431,7 @@
                 </Expand>
             </Type>
         </script></code></pre>
-        <pre class="cpp"><code hide-line-numbers data-line-numbers=""><script type="text/template">
+        <pre class="cpp"><code data-line-numbers=""><script type="text/template">
             Line line{ 100, 600 };
         </script></code></pre>
     </div>

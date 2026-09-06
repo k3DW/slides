@@ -1,14 +1,14 @@
 <section my-columns>
     <h2>Convenience macros <code>ASSERT</code> and <code>EXPECT</code></h2>
     <div style="width:100%;">
-        <pre class="cpp fragment"><code hide-line-numbers
+        <pre class="cpp fragment"><code
             data-line-numbers
         ><script type="text/template">
             EXPECT_THAT([]() {
                 EXPECT(cond2); // Compile-time and run-time
             });
         </script></code></pre>
-        <pre class="cpp fragment"><code hide-line-numbers
+        <pre class="cpp fragment"><code
             data-line-numbers
         ><script type="text/template">
             EXPECT_THAT([](auto& state) {
@@ -30,7 +30,7 @@
 <section my-columns>
     <h2>Convenience macros <code>ASSERT</code> and <code>EXPECT</code></h2>
     <div style="width:100%;">
-        <pre class="cpp"><code hide-line-numbers
+        <pre class="cpp"><code
             data-line-numbers="1|2-6|7|"
         ><script type="text/template">
             #define EXPECT(ARG0, ...)            \

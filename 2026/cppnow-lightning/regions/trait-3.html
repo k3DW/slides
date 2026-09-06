@@ -1,34 +1,34 @@
 <section my-columns>
     <h2>Further syntax examples I want to try</h2>
     <div style="width:100%;">
-        <pre class="cpp fragment"><code hide-line-numbers
+        <pre class="cpp fragment"><code
             data-line-numbers=""
         ><script type="text/template">
             std::cout << add<foo(),3>::value;
             // https://godbolt.org/z/TaEMorrMv
         </script></code></pre>
-        <pre class="cpp fragment"><code hide-line-numbers
+        <pre class="cpp fragment"><code
             data-line-numbers=""
         ><script type="text/template">
             auto x = add<foo(),3>::value;
             // I think this isn't possible
         </script></code></pre>
-        <pre class="cpp fragment"><code hide-line-numbers
+        <pre class="cpp fragment"><code
             data-line-numbers=""
         ><script type="text/template">
             1 + add<foo(),3>::value + 4;
         </script></code></pre>
-        <pre class="cpp fragment"><code hide-line-numbers
+        <pre class="cpp fragment"><code
             data-line-numbers=""
         ><script type="text/template">
             std::cout << 1 + add<foo(),3>::value + 4 << "\n";
         </script></code></pre>
-        <pre class="cpp fragment"><code hide-line-numbers
+        <pre class="cpp fragment"><code
             data-line-numbers=""
         ><script type="text/template">
             std::cout << add<foo(),3,4,foo()>::value;
         </script></code></pre>
-        <pre class="cpp fragment"><code hide-line-numbers
+        <pre class="cpp fragment"><code
             data-line-numbers=""
         ><script type="text/template">
             std::cout << square<foo()>::value;

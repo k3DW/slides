@@ -18,16 +18,16 @@
 <section my-columns>
     <h2>Forwarding</h2>
     <div style="width:100%;">
-        <pre class="cpp"><code hide-line-numbers data-line-numbers="|3|"><script type="text/template">
+        <pre class="cpp"><code data-line-numbers="|3|"><script type="text/template">
             // [temp.deduct.call]/3
             template <class T>
             int f(T&& heisenreference);
         </script></code></pre>
-        <pre class="cpp fragment"><code hide-line-numbers data-line-numbers="|1|2|"><script type="text/template">
+        <pre class="cpp fragment"><code data-line-numbers="|1|2|"><script type="text/template">
             int i = 0;
             f(i); // calls f<int&>(int&)
         </script></code></pre>
-        <pre class="cpp fragment"><code hide-line-numbers data-line-numbers=""><script type="text/template">
+        <pre class="cpp fragment"><code data-line-numbers=""><script type="text/template">
             f(0); // calls f<int>(int&&)
         </script></code></pre>
     </div>
@@ -46,12 +46,12 @@
 <section my-columns>
     <h2>Reference collapsing</h2>
     <div style="width:100%;">
-        <pre class="cpp"><code hide-line-numbers data-line-numbers="|1|2|3|"><script type="text/template">
+        <pre class="cpp"><code data-line-numbers="|1|2|3|"><script type="text/template">
             using R1 = int&;
             using R2 = R1&;
             static_assert(std::same_as<R2, int&>);
         </script></code></pre>
-        <pre class="cpp fragment"><code hide-line-numbers data-line-numbers="|1|2|3|"><script type="text/template">
+        <pre class="cpp fragment"><code data-line-numbers="|1|2|3|"><script type="text/template">
             using R1 = int&;
             using R2 = R1&&;
             static_assert(std::same_as<R2, int&>);
@@ -62,12 +62,12 @@
 <section my-columns>
     <h2>Reference collapsing</h2>
     <div style="width:100%;">
-        <pre class="cpp"><code hide-line-numbers data-line-numbers="|1|2|3|"><script type="text/template">
+        <pre class="cpp"><code data-line-numbers="|1|2|3|"><script type="text/template">
             using R1 = int&&;
             using R2 = R1&;
             static_assert(std::same_as<R2, int&>);
         </script></code></pre>
-        <pre class="cpp fragment"><code hide-line-numbers data-line-numbers="|1|2|3|"><script type="text/template">
+        <pre class="cpp fragment"><code data-line-numbers="|1|2|3|"><script type="text/template">
             using R1 = int&&;
             using R2 = R1&&;
             static_assert(std::same_as<R2, int&&>);
@@ -78,11 +78,11 @@
 <section my-columns>
     <h2>Forwarding</h2>
     <div style="width:100%;">
-        <pre class="cpp"><code hide-line-numbers data-line-numbers=""><script type="text/template">
+        <pre class="cpp"><code data-line-numbers=""><script type="text/template">
             template <class T>
             void foo(T&&);
         </script></code></pre>
-        <pre class="cpp fragment"><code hide-line-numbers data-line-numbers=""><script type="text/template">
+        <pre class="cpp fragment"><code data-line-numbers=""><script type="text/template">
             int i = 0;
             foo(i);
         </script></code></pre>
@@ -101,11 +101,11 @@
 <section my-columns>
     <h2>Forwarding</h2>
     <div style="width:100%;">
-        <pre class="cpp"><code hide-line-numbers data-line-numbers=""><script type="text/template">
+        <pre class="cpp"><code data-line-numbers=""><script type="text/template">
             template <class T>
             void foo(T&&);
         </script></code></pre>
-        <pre class="cpp fragment"><code hide-line-numbers data-line-numbers=""><script type="text/template">
+        <pre class="cpp fragment"><code data-line-numbers=""><script type="text/template">
             foo(0);
         </script></code></pre>
         <br/>

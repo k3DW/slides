@@ -11,13 +11,13 @@
         </script></code></pre>
     </div>
     <div style="width:100%;">
-        <pre class="bash fragment"><code hide-line-numbers data-line-numbers=""><script type="text/template">
+        <pre class="bash fragment"><code data-line-numbers=""><script type="text/template">
             > clang++ main.cpp
         </script></code></pre>
-        <pre class="bash fragment"><code hide-line-numbers data-line-numbers=""><script type="text/template">
+        <pre class="bash fragment"><code data-line-numbers=""><script type="text/template">
             > gdb
         </script></code></pre>
-        <pre class="text fragment"><code hide-line-numbers data-line-numbers="|5-7"><script type="text/template">
+        <pre class="text fragment"><code data-line-numbers="|5-7"><script type="text/template">
             GNU gdb (GDB) 14.0.50.20221220-git
             Copyright (C) 2022 Free Software Foundation, Inc.
             ...etc...
@@ -42,13 +42,13 @@
         </script></code></pre>
     </div>
     <div style="width:100%;">
-        <pre class="bash"><code hide-line-numbers data-line-numbers=""><script type="text/template">
+        <pre class="bash"><code data-line-numbers=""><script type="text/template">
             > clang++ main.cpp
         </script></code></pre>
-        <pre class="bash"><code hide-line-numbers data-line-numbers=""><script type="text/template">
+        <pre class="bash"><code data-line-numbers=""><script type="text/template">
             > gdb
         </script></code></pre>
-        <pre class="text"><code hide-line-numbers data-line-numbers="5-7"><script type="text/template">
+        <pre class="text"><code data-line-numbers="5-7"><script type="text/template">
             GNU gdb (GDB) 14.0.50.20221220-git
             Copyright (C) 2022 Free Software Foundation, Inc.
             ...etc...
@@ -73,13 +73,13 @@
         </script></code></pre>
     </div>
     <div style="width:100%;">
-        <pre class="bash"><code hide-line-numbers data-line-numbers=""><script type="text/template">
+        <pre class="bash"><code data-line-numbers=""><script type="text/template">
             > clang++ main.cpp
         </script></code></pre>
-        <pre class="bash"><code hide-line-numbers data-line-numbers=""><script type="text/template">
+        <pre class="bash"><code data-line-numbers=""><script type="text/template">
             > gdb
         </script></code></pre>
-        <pre class="text"><code hide-line-numbers data-line-numbers="5-7"><script type="text/template">
+        <pre class="text"><code data-line-numbers="5-7"><script type="text/template">
             GNU gdb (GDB) 14.0.50.20221220-git
             Copyright (C) 2022 Free Software Foundation, Inc.
             ...etc...
@@ -104,13 +104,13 @@
         </script></code></pre>
     </div>
     <div style="width:100%;">
-        <pre class="bash fragment"><code hide-line-numbers data-line-numbers=""><script type="text/template">
+        <pre class="bash fragment"><code data-line-numbers=""><script type="text/template">
             > clang++ main.cpp -g
         </script></code></pre>
-        <pre class="bash fragment"><code hide-line-numbers data-line-numbers=""><script type="text/template">
+        <pre class="bash fragment"><code data-line-numbers=""><script type="text/template">
             > gdb
         </script></code></pre>
-        <pre class="text fragment"><code hide-line-numbers data-line-numbers="5-6"><script type="text/template">
+        <pre class="text fragment"><code data-line-numbers="5-6"><script type="text/template">
             GNU gdb (GDB) 14.0.50.20221220-git
             Copyright (C) 2022 Free Software Foundation, Inc.
             ...etc...
@@ -134,7 +134,7 @@
         </script></code></pre>
     </div>
     <div style="width:100%;">
-        <pre class="text"><code hide-line-numbers data-line-numbers=""><script type="text/template">
+        <pre class="text"><code data-line-numbers=""><script type="text/template">
             (gdb) start
 
 
@@ -170,43 +170,7 @@
         </script></code></pre>
     </div>
     <div style="width:100%;">
-        <pre class="text"><code hide-line-numbers data-line-numbers="2-5|7-8"><script type="text/template">
-            (gdb) start
-            Temporary breakpoint 1 at 0x1134: file main.cpp, line 2.
-            Starting program: path/to/a.out
-            [Thread debugging using libthread_db enabled]
-            Using host libthread_db library "path/to/libthread_db.so.1".
-
-            Temporary breakpoint 1, main () at main.cpp:2
-            2         int x = 5;
-
-
-
-
-
-
-
-
-
-             
-        </script></code></pre>
-    </div>
-</section>
-
-<section my-columns="25% 75%">
-    <h2>Basic GDB</h2>
-    <div style="width:100%;">
-        <pre class="cpp"><code data-line-numbers="2-6" data-ln-start-from="0"><script type="text/template">
-            // main.cpp
-            int main() {
-                int x = 5;
-                int y = 6;
-                int z = x + y;
-            }
-        </script></code></pre>
-    </div>
-    <div style="width:100%;">
-        <pre class="text"><code hide-line-numbers data-line-numbers="9"><script type="text/template">
+        <pre class="text"><code data-line-numbers="2-5|7-8"><script type="text/template">
             (gdb) start
             Temporary breakpoint 1 at 0x1134: file main.cpp, line 2.
             Starting program: path/to/a.out
@@ -215,7 +179,7 @@
 
             Temporary breakpoint 1, main () at main.cpp:2
             2         int x = 5;
-            (gdb) next
+
 
 
 
@@ -242,7 +206,7 @@
         </script></code></pre>
     </div>
     <div style="width:100%;">
-        <pre class="text"><code hide-line-numbers data-line-numbers="10"><script type="text/template">
+        <pre class="text"><code data-line-numbers="9"><script type="text/template">
             (gdb) start
             Temporary breakpoint 1 at 0x1134: file main.cpp, line 2.
             Starting program: path/to/a.out
@@ -252,7 +216,7 @@
             Temporary breakpoint 1, main () at main.cpp:2
             2         int x = 5;
             (gdb) next
-            3         int y = 6;
+
 
 
 
@@ -278,7 +242,7 @@
         </script></code></pre>
     </div>
     <div style="width:100%;">
-        <pre class="text"><code hide-line-numbers data-line-numbers="11"><script type="text/template">
+        <pre class="text"><code data-line-numbers="10"><script type="text/template">
             (gdb) start
             Temporary breakpoint 1 at 0x1134: file main.cpp, line 2.
             Starting program: path/to/a.out
@@ -289,7 +253,7 @@
             2         int x = 5;
             (gdb) next
             3         int y = 6;
-            (gdb) next
+
 
 
 
@@ -314,7 +278,7 @@
         </script></code></pre>
     </div>
     <div style="width:100%;">
-        <pre class="text"><code hide-line-numbers data-line-numbers="12"><script type="text/template">
+        <pre class="text"><code data-line-numbers="11"><script type="text/template">
             (gdb) start
             Temporary breakpoint 1 at 0x1134: file main.cpp, line 2.
             Starting program: path/to/a.out
@@ -326,7 +290,7 @@
             (gdb) next
             3         int y = 6;
             (gdb) next
-            4         int z = x + y;
+
 
 
 
@@ -350,7 +314,7 @@
         </script></code></pre>
     </div>
     <div style="width:100%;">
-        <pre class="text"><code hide-line-numbers data-line-numbers="13"><script type="text/template">
+        <pre class="text"><code data-line-numbers="12"><script type="text/template">
             (gdb) start
             Temporary breakpoint 1 at 0x1134: file main.cpp, line 2.
             Starting program: path/to/a.out
@@ -363,7 +327,7 @@
             3         int y = 6;
             (gdb) next
             4         int z = x + y;
-            (gdb) print z
+
 
 
 
@@ -386,7 +350,7 @@
         </script></code></pre>
     </div>
     <div style="width:100%;">
-        <pre class="text"><code hide-line-numbers data-line-numbers="14"><script type="text/template">
+        <pre class="text"><code data-line-numbers="13"><script type="text/template">
             (gdb) start
             Temporary breakpoint 1 at 0x1134: file main.cpp, line 2.
             Starting program: path/to/a.out
@@ -400,7 +364,7 @@
             (gdb) next
             4         int z = x + y;
             (gdb) print z
-            $1 = 0
+
 
 
 
@@ -422,7 +386,7 @@
         </script></code></pre>
     </div>
     <div style="width:100%;">
-        <pre class="text"><code hide-line-numbers data-line-numbers="15"><script type="text/template">
+        <pre class="text"><code data-line-numbers="14"><script type="text/template">
             (gdb) start
             Temporary breakpoint 1 at 0x1134: file main.cpp, line 2.
             Starting program: path/to/a.out
@@ -437,7 +401,7 @@
             4         int z = x + y;
             (gdb) print z
             $1 = 0
-            (gdb) next
+
 
 
              
@@ -458,7 +422,7 @@
         </script></code></pre>
     </div>
     <div style="width:100%;">
-        <pre class="text"><code hide-line-numbers data-line-numbers="16"><script type="text/template">
+        <pre class="text"><code data-line-numbers="15"><script type="text/template">
             (gdb) start
             Temporary breakpoint 1 at 0x1134: file main.cpp, line 2.
             Starting program: path/to/a.out
@@ -474,7 +438,7 @@
             (gdb) print z
             $1 = 0
             (gdb) next
-            5       }
+
 
              
         </script></code></pre>
@@ -494,7 +458,7 @@
         </script></code></pre>
     </div>
     <div style="width:100%;">
-        <pre class="text"><code hide-line-numbers data-line-numbers="17"><script type="text/template">
+        <pre class="text"><code data-line-numbers="16"><script type="text/template">
             (gdb) start
             Temporary breakpoint 1 at 0x1134: file main.cpp, line 2.
             Starting program: path/to/a.out
@@ -511,6 +475,42 @@
             $1 = 0
             (gdb) next
             5       }
+
+             
+        </script></code></pre>
+    </div>
+</section>
+
+<section my-columns="25% 75%">
+    <h2>Basic GDB</h2>
+    <div style="width:100%;">
+        <pre class="cpp"><code data-line-numbers="2-6" data-ln-start-from="0"><script type="text/template">
+            // main.cpp
+            int main() {
+                int x = 5;
+                int y = 6;
+                int z = x + y;
+            }
+        </script></code></pre>
+    </div>
+    <div style="width:100%;">
+        <pre class="text"><code data-line-numbers="17"><script type="text/template">
+            (gdb) start
+            Temporary breakpoint 1 at 0x1134: file main.cpp, line 2.
+            Starting program: path/to/a.out
+            [Thread debugging using libthread_db enabled]
+            Using host libthread_db library "path/to/libthread_db.so.1".
+
+            Temporary breakpoint 1, main () at main.cpp:2
+            2         int x = 5;
+            (gdb) next
+            3         int y = 6;
+            (gdb) next
+            4         int z = x + y;
+            (gdb) print z
+            $1 = 0
+            (gdb) next
+            5       }
             (gdb) print z
              
         </script></code></pre>
@@ -530,7 +530,7 @@
         </script></code></pre>
     </div>
     <div style="width:100%;">
-        <pre class="text"><code hide-line-numbers data-line-numbers="18"><script type="text/template">
+        <pre class="text"><code data-line-numbers="18"><script type="text/template">
             (gdb) start
             Temporary breakpoint 1 at 0x1134: file main.cpp, line 2.
             Starting program: path/to/a.out
@@ -566,7 +566,7 @@
         </script></code></pre>
     </div>
     <div style="width:100%;">
-        <pre class="text"><code hide-line-numbers data-line-numbers="1-2"><script type="text/template">
+        <pre class="text"><code data-line-numbers="1-2"><script type="text/template">
             (gdb) file a.out
             Reading symbols from a.out...
 
@@ -597,7 +597,7 @@
         </script></code></pre>
     </div>
     <div style="width:100%;">
-        <pre class="text"><code hide-line-numbers data-line-numbers="3-4"><script type="text/template">
+        <pre class="text"><code data-line-numbers="3-4"><script type="text/template">
             (gdb) file a.out
             Reading symbols from a.out...
             (gdb) break 5
@@ -628,7 +628,7 @@
         </script></code></pre>
     </div>
     <div style="width:100%;">
-        <pre class="text"><code hide-line-numbers data-line-numbers="5-8|10-11"><script type="text/template">
+        <pre class="text"><code data-line-numbers="5-8|10-11"><script type="text/template">
             (gdb) file a.out
             Reading symbols from a.out...
             (gdb) break 5
@@ -659,7 +659,7 @@
         </script></code></pre>
     </div>
     <div style="width:100%;">
-        <pre class="text"><code hide-line-numbers data-line-numbers="12-13"><script type="text/template">
+        <pre class="text"><code data-line-numbers="12-13"><script type="text/template">
             (gdb) file a.out
             Reading symbols from a.out...
             (gdb) break 5

@@ -1,7 +1,7 @@
 <section my-columns="100%">
     <h2>Equality operator</h2>
     <div style="width:100%;">
-        <pre class="cpp fragment"><code hide-line-numbers data-line-numbers=""><script type="text/template">
+        <pre class="cpp fragment"><code data-line-numbers=""><script type="text/template">
             [](const auto& self, operator_equals_tag, const auto& other, auto&&...) static -> bool {
 
 
@@ -26,7 +26,7 @@
 <section my-columns="100%">
     <h2>Equality operator</h2>
     <div style="width:100%;">
-        <pre class="cpp"><code hide-line-numbers data-line-numbers="2-16"><script type="text/template">
+        <pre class="cpp"><code data-line-numbers="2-16"><script type="text/template">
             [](const auto& self, operator_equals_tag, const auto& other, auto&&...) static -> bool {
                 return [&]<size_t I = 0>(this auto f) -> bool {
 
@@ -51,7 +51,7 @@
 <section my-columns="100%">
     <h2>Equality operator</h2>
     <div style="width:100%;">
-        <pre class="cpp"><code hide-line-numbers data-line-numbers="3-5,15"><script type="text/template">
+        <pre class="cpp"><code data-line-numbers="3-5,15"><script type="text/template">
             [](const auto& self, operator_equals_tag, const auto& other, auto&&...) static -> bool {
                 return [&]<size_t I = 0>(this auto f) -> bool {
                     if constexpr (I == sizeof...(Ts)) {
@@ -76,7 +76,7 @@
 <section my-columns="100%">
     <h2>Equality operator</h2>
     <div style="width:100%;">
-        <pre class="cpp"><code hide-line-numbers data-line-numbers="6-14|6-7|8-9|10-11|12-13|"><script type="text/template">
+        <pre class="cpp"><code data-line-numbers="6-14|6-7|8-9|10-11|12-13|"><script type="text/template">
             [](const auto& self, operator_equals_tag, const auto& other, auto&&...) static -> bool {
                 return [&]<size_t I = 0>(this auto f) -> bool {
                     if constexpr (I == sizeof...(Ts)) {
@@ -101,7 +101,7 @@
 <section my-columns="">
     <h2>Equality operator</h2>
     <div style="width:100%;">
-        <pre class="cpp"><code hide-line-numbers data-line-numbers=""><script type="text/template">
+        <pre class="cpp"><code data-line-numbers=""><script type="text/template">
             template <class Lhs, class Rhs>
             constexpr bool operator==(const Lhs& lhs, const Rhs& rhs)
             requires requires { { lhs(operator_equals_tag{}, rhs) } -> same_as<bool>; }
@@ -123,7 +123,7 @@
 <section my-columns="">
     <h2>Equality operator</h2>
     <div style="width:100%;">
-        <pre class="cpp"><code hide-line-numbers data-line-numbers=""><script type="text/template">
+        <pre class="cpp"><code data-line-numbers=""><script type="text/template">
             constexpr auto op_equals =
                 []<class Lhs, class Rhs>
                 (const Lhs& lhs, const Rhs& rhs) static -> bool {

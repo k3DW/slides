@@ -10,7 +10,7 @@ Question archetype
 <section my-columns>
     <h2>Examples of function overloading</h2>
     <div style="width:100%;">
-        <pre class="cpp"><code data-line-numbers=""><script type="text/template">
+        <pre class="cpp"><code data-ln-start-from data-line-numbers=""><script type="text/template">
             // From C++ standard [basic.scope.scope]
             using Int = int;
             void f(int);
@@ -27,7 +27,7 @@ Question archetype
 <section my-columns>
     <h2>Examples of function overloading</h2>
     <div style="width:100%;">
-        <pre class="cpp"><code data-line-numbers=""><script type="text/template">
+        <pre class="cpp"><code data-ln-start-from data-line-numbers=""><script type="text/template">
             // From C++ standard [basic.scope.scope]
             enum E : int {};
             void f(int);
@@ -44,7 +44,7 @@ Question archetype
 <section my-columns>
     <h2>Examples of function overloading</h2>
     <div style="width:100%;">
-        <pre class="cpp"><code data-line-numbers=""><script type="text/template">
+        <pre class="cpp"><code data-ln-start-from data-line-numbers=""><script type="text/template">
             // From C++98 standard [over.load]
             void f(int);
             void f(const int);
@@ -60,7 +60,7 @@ Question archetype
 <section my-columns>
     <h2>Examples of function overloading</h2>
     <div style="width:100%;">
-        <pre class="cpp"><code data-line-numbers=""><script type="text/template">
+        <pre class="cpp"><code data-ln-start-from data-line-numbers=""><script type="text/template">
             void f(int*);
             void f(const int*);
         </script></code></pre>
@@ -75,7 +75,7 @@ Question archetype
 <section my-columns>
     <h2>Examples of function overloading</h2>
     <div style="width:100%;">
-        <pre class="cpp"><code data-line-numbers=""><script type="text/template">
+        <pre class="cpp"><code data-ln-start-from data-line-numbers=""><script type="text/template">
             // From C++98 standard [over.load]
             int f(char*);
             int f(char[]);
@@ -92,7 +92,7 @@ Question archetype
 <section my-columns>
     <h2>Examples of function overloading</h2>
     <div style="width:100%;">
-        <pre class="cpp"><code data-line-numbers="|2-4|6|2-4,10|2-4,11|12|"><script type="text/template">
+        <pre class="cpp"><code data-ln-start-from data-line-numbers="|2-4|6|2-4,10|2-4,11|12|"><script type="text/template">
             // From C++98 standard [over.load]
             void f(int i, int j);
             void f(int i, int j = 99); // OK: redeclaration of f(int, int)
@@ -113,7 +113,7 @@ Question archetype
 <section my-columns>
     <h2>Examples of function overloading</h2>
     <div style="width:100%;">
-        <pre class="cpp"><code data-line-numbers=""><script type="text/template">
+        <pre class="cpp"><code data-ln-start-from data-line-numbers=""><script type="text/template">
             // From C++ standard [basic.scope.scope]
             struct X {
                 static void f();
@@ -131,7 +131,7 @@ Question archetype
 <section my-columns>
     <h2>Examples of function overloading</h2>
     <div style="width:100%;">
-        <pre class="cpp"><code data-line-numbers=""><script type="text/template">
+        <pre class="cpp"><code data-ln-start-from data-line-numbers=""><script type="text/template">
             // From C++ standard [basic.scope.scope]
             struct X {
                 void g();
@@ -149,7 +149,7 @@ Question archetype
 <section my-columns>
     <h2>Examples of function overloading</h2>
     <div style="width:100%;">
-        <pre class="cpp"><code data-line-numbers=""><script type="text/template">
+        <pre class="cpp"><code data-ln-start-from data-line-numbers=""><script type="text/template">
             // From C++ standard [basic.scope.scope]
             struct X {
                 void g();
@@ -167,7 +167,7 @@ Question archetype
 <section my-columns>
     <h2>Examples of function overloading</h2>
     <div style="width:100%;">
-        <pre class="cpp"><code data-line-numbers=""><script type="text/template">
+        <pre class="cpp"><code data-ln-start-from data-line-numbers=""><script type="text/template">
             struct X {
                 void g() &;
                 void g() &&;

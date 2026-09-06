@@ -1,17 +1,17 @@
 <section my-columns>
     <h2>Constructors</h2>
     <div style="width:100%;">
-        <pre class="cpp fragment"><code hide-line-numbers data-line-numbers=""><script type="text/template">
+        <pre class="cpp fragment"><code data-line-numbers=""><script type="text/template">
             // Desired syntax
             auto a = unique_ptr<int>(new int(123));
             auto b = unique_ptr<int>();
         </script></code></pre>
-        <pre class="cpp fragment"><code hide-line-numbers data-line-numbers=""><script type="text/template">
+        <pre class="cpp fragment"><code data-line-numbers=""><script type="text/template">
             // Why not just do ...?
             template <class T>
             constexpr auto unique_ptr = unique_ptr_impl<T>;
         </script></code></pre>
-        <pre class="cpp fragment"><code hide-line-numbers data-line-numbers=""><script type="text/template">
+        <pre class="cpp fragment"><code data-line-numbers=""><script type="text/template">
             // Only 1 constructor!
             unique_ptr<int>(int*);
         </script></code></pre>
@@ -21,7 +21,7 @@
 <section my-columns="90%">
     <h2>Constructors</h2>
     <div style="width:100%;">
-        <pre class="cpp"><code hide-line-numbers data-line-numbers="|3,6"><script type="text/template">
+        <pre class="cpp"><code data-line-numbers="|3,6"><script type="text/template">
             // What if...
             template <class T>
             constexpr auto unique_ptr_impl = []<class... CtorArgs>(CtorArgs&&...) static {
@@ -33,11 +33,11 @@
                     };
             }
         </script></code></pre>
-        <pre class="cpp fragment"><code hide-line-numbers data-line-numbers=""><script type="text/template">
+        <pre class="cpp fragment"><code data-line-numbers=""><script type="text/template">
             auto p1 = unique_ptr_impl<int>();
             auto p2 = unique_ptr_impl<int>(nullptr);
         </script></code></pre>
-        <pre class="cpp fragment"><code hide-line-numbers data-line-numbers=""><script type="text/template">
+        <pre class="cpp fragment"><code data-line-numbers=""><script type="text/template">
             static_assert(not is_same_v<decltype(p1), decltype(p2)>); // !!
         </script></code></pre>
         <div class="fragment" style="position:absolute; top:10%; left:27%; font-size:1000%;">
@@ -49,7 +49,7 @@
 <section my-columns="45%">
     <h2>Constructors</h2>
     <div style="width:100%;">
-        <pre class="cpp"><code hide-line-numbers data-line-numbers="|3"><script type="text/template">
+        <pre class="cpp"><code data-line-numbers="|3"><script type="text/template">
             template <class T>
             constexpr auto unique_ptr = overloaded(
 
@@ -69,7 +69,7 @@
 <section my-columns="45%">
     <h2>Constructors</h2>
     <div style="width:100%;">
-        <pre class="cpp"><code hide-line-numbers data-line-numbers="3-5"><script type="text/template">
+        <pre class="cpp"><code data-line-numbers="3-5"><script type="text/template">
             template <class T>
             constexpr auto unique_ptr = overloaded(
                 []() static {
@@ -89,7 +89,7 @@
 <section my-columns="45%">
     <h2>Constructors</h2>
     <div style="width:100%;">
-        <pre class="cpp"><code hide-line-numbers data-line-numbers="6-8"><script type="text/template">
+        <pre class="cpp"><code data-line-numbers="6-8"><script type="text/template">
             template <class T>
             constexpr auto unique_ptr = overloaded(
                 []() static {
@@ -109,7 +109,7 @@
 <section my-columns="45%">
     <h2>Constructors</h2>
     <div style="width:100%;">
-        <pre class="cpp"><code hide-line-numbers data-line-numbers="9-11|"><script type="text/template">
+        <pre class="cpp"><code data-line-numbers="9-11|"><script type="text/template">
             template <class T>
             constexpr auto unique_ptr = overloaded(
                 []() static {
@@ -129,11 +129,11 @@
 <section my-columns>
     <h2>Constructors</h2>
     <div style="width:100%;">
-        <pre class="cpp"><code hide-line-numbers data-line-numbers=""><script type="text/template">
+        <pre class="cpp"><code data-line-numbers=""><script type="text/template">
             auto p1 = unique_ptr<int>();
             auto p2 = unique_ptr<int>(nullptr);
         </script></code></pre>
-        <pre class="cpp fragment"><code hide-line-numbers data-line-numbers=""><script type="text/template">
+        <pre class="cpp fragment"><code data-line-numbers=""><script type="text/template">
             static_assert(is_same_v<decltype(p1), decltype(p2)>);
         </script></code></pre>
         <div class="fragment" style="position:absolute; top:10%; left:27%; font-size:1000%;">

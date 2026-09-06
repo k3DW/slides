@@ -1,12 +1,12 @@
 <section my-columns>
     <h2>Destructor</h2>
     <div style="width:100%;">
-        <pre class="cpp fragment"><code hide-line-numbers data-line-numbers=""><script type="text/template">
+        <pre class="cpp fragment"><code data-line-numbers=""><script type="text/template">
             auto lambda = [cap1 = data, cap2 = make_dtor_for(cap1)] {
                 // ...
             };
         </script></code></pre>
-        <pre class="cpp fragment"><code hide-line-numbers data-line-numbers=""><script type="text/template">
+        <pre class="cpp fragment"><code data-line-numbers=""><script type="text/template">
             // error: use of undeclared identifier 'cap1'
         </script></code></pre>
     </div>
@@ -59,7 +59,7 @@
 <section my-columns>
     <h2>Destructor</h2>
     <div style="width:100%;">
-        <pre class="cpp fragment"><code hide-line-numbers data-line-numbers="|1|3|7-8|9-11|"><script type="text/template">
+        <pre class="cpp fragment"><code data-line-numbers="|1|3|7-8|9-11|"><script type="text/template">
             template <class T, auto dtor>
             struct dtor_wrapper {
                 T value;
@@ -79,7 +79,7 @@
 <section my-columns="100%">
     <h2>Destructor</h2>
     <div style="width:100%;">
-        <pre class="cpp"><code hide-line-numbers data-line-numbers=""><script type="text/template">
+        <pre class="cpp"><code data-line-numbers=""><script type="text/template">
             //
 
 
@@ -98,7 +98,7 @@
 <section my-columns="100%">
     <h2>Destructor</h2>
     <div style="width:100%;">
-        <pre class="cpp"><code hide-line-numbers data-line-numbers="1-5"><script type="text/template">
+        <pre class="cpp"><code data-line-numbers="1-5"><script type="text/template">
             constexpr auto dtor = [](T* p) static {
                 if (p) {
                     delete p;
@@ -117,7 +117,7 @@
 <section my-columns="100%">
     <h2>Destructor</h2>
     <div style="width:100%;">
-        <pre class="cpp"><code hide-line-numbers data-line-numbers="6|8,10"><script type="text/template">
+        <pre class="cpp"><code data-line-numbers="6|8,10"><script type="text/template">
             constexpr auto dtor = [](T* p) static {
                 if (p) {
                     delete p;
@@ -136,7 +136,7 @@
 <section my-columns="100%">
     <h2>Destructor</h2>
     <div style="width:100%;">
-        <pre class="cpp"><code hide-line-numbers data-line-numbers="8,10|"><script type="text/template">
+        <pre class="cpp"><code data-line-numbers="8,10|"><script type="text/template">
             constexpr auto dtor = [](T* p) static {
                 if (p) {
                     delete p;
@@ -155,7 +155,7 @@
 <section my-columns>
     <h2>Destructor</h2>
     <div style="width:100%;">
-        <pre class="cpp"><code hide-line-numbers data-line-numbers=""><script type="text/template">
+        <pre class="cpp"><code data-line-numbers=""><script type="text/template">
             {
                 auto p1 = unique_ptr<int>(new int(5));
             } // Destructs p1

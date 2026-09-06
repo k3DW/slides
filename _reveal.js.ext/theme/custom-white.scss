@@ -420,7 +420,7 @@
    max-height: 100% !important;
  }
 
- .reveal code[hide-line-numbers] .hljs-ln-numbers {
+ .reveal code:not([data-ln-start-from]) .hljs-ln-numbers {
    display: none;
  }
 

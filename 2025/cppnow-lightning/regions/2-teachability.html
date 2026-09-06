@@ -4,7 +4,7 @@
         <div class="fragment" style="font-size: 50%;">
             https://blog.ganets.ky/SfinaeApply/
         </div>
-        <pre class="cpp fragment" style="font-size: 40%;"><code hide-line-numbers data-line-numbers="|3|5-9|11-15|17-21|"><script type="text/template">
+        <pre class="cpp fragment" style="font-size: 40%;"><code data-line-numbers="|3|5-9|11-15|17-21|"><script type="text/template">
             template <class F, class Tup>
             requires requires {    std::tuple_size<std::decay_t<Tup>>{}; }
             constexpr auto apply(F&& f, Tup&& tup)
@@ -37,7 +37,7 @@
 <section my-columns>
     <h2>Teachability</h2>
     <div style="width:100%;">
-        <pre class="cpp fragment"><code hide-line-numbers data-line-numbers=""><script type="text/template">
+        <pre class="cpp fragment"><code data-line-numbers=""><script type="text/template">
             auto lambda =
                 [&, x = foo(x), ...values = calculate(ts)] () {
                     // ...

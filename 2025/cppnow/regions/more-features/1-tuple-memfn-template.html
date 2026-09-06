@@ -1,7 +1,7 @@
 <section my-columns="93%">
     <h2>Member function template</h2>
     <div style="width:100%;">
-        <pre class="cpp fragment"><code hide-line-numbers data-line-numbers=""><script type="text/template">
+        <pre class="cpp fragment"><code data-line-numbers=""><script type="text/template">
             template <class... Ts>
             constexpr auto tuple_impl = [](Ts... ts) static {
 
@@ -21,7 +21,7 @@
 <section my-columns="93%">
     <h2>Member function template</h2>
     <div style="width:100%;">
-        <pre class="cpp"><code hide-line-numbers data-line-numbers="3-5"><script type="text/template">
+        <pre class="cpp"><code data-line-numbers="3-5"><script type="text/template">
             template <class... Ts>
             constexpr auto tuple_impl = [](Ts... ts) static {
                 using Impl = decltype(overloaded(
@@ -41,7 +41,7 @@
 <section my-columns="93%">
     <h2>Member function template</h2>
     <div style="width:100%;">
-        <pre class="cpp"><code hide-line-numbers data-line-numbers="6-7"><script type="text/template">
+        <pre class="cpp"><code data-line-numbers="6-7"><script type="text/template">
             template <class... Ts>
             constexpr auto tuple_impl = [](Ts... ts) static {
                 using Impl = decltype(overloaded(
@@ -61,7 +61,7 @@
 <section my-columns="93%">
     <h2>Member function template</h2>
     <div style="width:100%;">
-        <pre class="cpp"><code hide-line-numbers data-line-numbers="7-11"><script type="text/template">
+        <pre class="cpp"><code data-line-numbers="7-11"><script type="text/template">
             template <class... Ts>
             constexpr auto tuple_impl = [](Ts... ts) static {
                 using Impl = decltype(overloaded(
@@ -81,7 +81,7 @@
 <section my-columns="93%">
     <h2>Member function template</h2>
     <div style="width:100%;">
-        <pre class="cpp"><code hide-line-numbers data-line-numbers="9-10"><script type="text/template">
+        <pre class="cpp"><code data-line-numbers="9-10"><script type="text/template">
             template <class... Ts>
             constexpr auto tuple_impl = [](Ts... ts) static {
                 using Impl = decltype(overloaded(
@@ -101,7 +101,7 @@
 <section my-columns="95%">
     <h2>Member function template</h2>
     <div style="width:100%;">
-        <pre class="cpp"><code hide-line-numbers data-line-numbers="4-13"><script type="text/template">
+        <pre class="cpp"><code data-line-numbers="4-13"><script type="text/template">
             using Impl = decltype(overloaded(
                 // ...
 
@@ -133,19 +133,19 @@
 <section my-columns>
     <h2>Member function template</h2>
     <div style="width:100%;">
-        <pre class="cpp"><code hide-line-numbers data-line-numbers=""><script type="text/template">
+        <pre class="cpp"><code data-line-numbers=""><script type="text/template">
             template <class T>
             using ttag = decltype([]{});
         </script></code></pre>
-        <pre class="cpp fragment"><code hide-line-numbers data-line-numbers=""><script type="text/template">
+        <pre class="cpp fragment"><code data-line-numbers=""><script type="text/template">
             template <class T>
             void foo(ttag<T>) {}
         </script></code></pre>
         <br>
-        <pre class="cpp fragment"><code hide-line-numbers data-line-numbers=""><script type="text/template">
+        <pre class="cpp fragment"><code data-line-numbers=""><script type="text/template">
             foo(ttag<int>{});
         </script></code></pre>
-        <pre class="none fragment"><code hide-line-numbers data-line-numbers=""><script type="text/template">
+        <pre class="none fragment"><code data-line-numbers=""><script type="text/template">
             note: candidate template ignored: couldn't infer template argument 'T'
               | void foo(ttag<T>) {}
               |      ^
@@ -156,11 +156,11 @@
 <section my-columns>
     <h2>Member function template</h2>
     <div style="width:100%;">
-        <pre class="cpp"><code hide-line-numbers data-line-numbers=""><script type="text/template">
+        <pre class="cpp"><code data-line-numbers=""><script type="text/template">
             template <size_t I>
             constexpr auto tget_memfn_tag_f = []{ return I; };
         </script></code></pre>
-        <pre class="cpp fragment"><code hide-line-numbers data-line-numbers=""><script type="text/template">
+        <pre class="cpp fragment"><code data-line-numbers=""><script type="text/template">
             template <size_t I>
             using tget_memfn_tag = decltype(auto(tget_memfn_tag_f<I>));
         </script></code></pre>
@@ -170,7 +170,7 @@
 <section my-columns="95%">
     <h2>Member function template</h2>
     <div style="width:100%;">
-        <pre class="cpp"><code hide-line-numbers data-line-numbers="4-16"><script type="text/template">
+        <pre class="cpp"><code data-line-numbers="4-16"><script type="text/template">
             using Impl = decltype(overloaded(
                 // ...
 
@@ -197,7 +197,7 @@
 <section my-columns="95%">
     <h2>Member function template</h2>
     <div style="width:100%;">
-        <pre class="cpp"><code hide-line-numbers data-line-numbers="5|6|10"><script type="text/template">
+        <pre class="cpp"><code data-line-numbers="5|6|10"><script type="text/template">
             using Impl = decltype(overloaded(
                 // ...
 
@@ -224,7 +224,7 @@
 <section my-columns="95%">
     <h2>Member function template</h2>
     <div style="width:100%;">
-        <pre class="cpp"><code hide-line-numbers data-line-numbers="8-15"><script type="text/template">
+        <pre class="cpp"><code data-line-numbers="8-15"><script type="text/template">
             using Impl = decltype(overloaded(
                 // ...
 
@@ -251,7 +251,7 @@
 <section my-columns="95%">
     <h2>Member function template</h2>
     <div style="width:100%;">
-        <pre class="cpp"><code hide-line-numbers data-line-numbers="10-12"><script type="text/template">
+        <pre class="cpp"><code data-line-numbers="10-12"><script type="text/template">
             using Impl = decltype(overloaded(
                 // ...
 
@@ -278,7 +278,7 @@
 <section my-columns="95%">
     <h2>Member function template</h2>
     <div style="width:100%;">
-        <pre class="cpp"><code hide-line-numbers data-line-numbers="12-14|"><script type="text/template">
+        <pre class="cpp"><code data-line-numbers="12-14|"><script type="text/template">
             using Impl = decltype(overloaded(
                 // ...
 
@@ -305,7 +305,7 @@
 <section my-columns="">
     <h2>Member function template</h2>
     <div style="width:100%;">
-        <pre class="cpp"><code hide-line-numbers data-line-numbers=""><script type="text/template">
+        <pre class="cpp"><code data-line-numbers=""><script type="text/template">
             template <size_t I>
             constexpr auto get = []<class T>(T&& t) {
                 return forward<T>(t)(tget_memfn_tag<I>{});

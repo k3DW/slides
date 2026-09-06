@@ -1,14 +1,14 @@
 <section my-columns="90%">
     <h2>Testing a <code>tok3n</code> parser</h2>
     <div style="width:100%;">
-        <pre class="cpp"><code hide-line-numbers
+        <pre class="cpp"><code
             data-line-numbers
         ><script type="text/template">
             using Single = any_of_parser<'a'>;
 
             FIXTURE("any_of_parser");
         </script></code></pre>
-        <pre class="cpp fragment"><code hide-line-numbers
+        <pre class="cpp fragment"><code
             data-line-numbers="1-9|3-4|5-6|7-8|"
             data-line-hide=   "3-8|5-8|7-8|   |"
         ><script type="text/template">
@@ -28,7 +28,7 @@
 <section my-columns="90%">
     <h2>Reusability and compile-time</h2>
     <div style="width:100%;">
-        <pre class="cpp"><code hide-line-numbers
+        <pre class="cpp"><code
             data-line-numbers
         ><script type="text/template">
             template <class P>
@@ -42,7 +42,7 @@
                     << std::format("P::parse({}) did not have {} remaining", in, rem);
             }
         </script></code></pre>
-        <pre class="cpp fragment"><code hide-line-numbers
+        <pre class="cpp fragment"><code
             data-line-numbers
         ><script type="text/template">
             TEST("any_of_parser", "slideware")
@@ -66,7 +66,7 @@
 <section my-columns="100%">
     <h2>Reusability and compile-time</h2>
     <div style="width:100%;">
-        <pre class="cpp"><code hide-line-numbers
+        <pre class="cpp"><code
             data-line-numbers="1-15    |2-4 |6-14|8-9  |10-11|12-13|"
             data-line-hide=   "2-4,6-14|6-14|8-13|10-13|12-13|     |"
         ><script type="text/template">
@@ -94,7 +94,7 @@
 <section my-columns="100%">
     <h2>Reusability and compile-time</h2>
     <div style="width:100%;">
-        <pre class="cpp"><code hide-line-numbers
+        <pre class="cpp"><code
             data-line-numbers="|6"
         ><script type="text/template">
             template <class P,
@@ -118,7 +118,7 @@
 <section my-columns="100%">
     <h2>Reusability and compile-time</h2>
     <div style="width:100%;">
-        <pre class="cpp"><code hide-line-numbers
+        <pre class="cpp"><code
             data-line-numbers="6|8-13"
         ><script type="text/template">
             template <class P,
@@ -142,7 +142,7 @@
 <section my-columns="100%">
     <h2>Reusability and compile-time</h2>
     <div style="width:100%;">
-        <pre class="cpp"><code hide-line-numbers
+        <pre class="cpp"><code
             data-line-numbers="8-13|"
         ><script type="text/template">
             template <class P,
@@ -165,7 +165,7 @@
 
 <section my-columns="80%">
     <div style="width:100%;">
-        <pre class="cpp"><code hide-line-numbers
+        <pre class="cpp"><code
             data-line-numbers
         ><script type="text/template">
             template <class P,
@@ -183,7 +183,7 @@
                   << std::format("P::parse({}) did not have {} remaining", in(), rem());
             }
         </script></code></pre>
-        <pre class="cpp fragment"><code hide-line-numbers
+        <pre class="cpp fragment"><code
             data-line-numbers
         ><script type="text/template">
             TEST("any_of_parser", "slideware")
@@ -202,7 +202,7 @@
 <section my-columns>
     <h2>Reusability and compile-time</h2>
     <div style="width:100%;">
-        <pre class="cpp"><code hide-line-numbers
+        <pre class="cpp"><code
             data-line-numbers
         ><script type="text/template">
             #define CHECK_PARSE_SUCCESS(PARSER, INPUT, RESULT, REMAINING) \
@@ -213,7 +213,7 @@
                     ([]() constexpr { return REMAINING; })                \
                 )
         </script></code></pre>
-        <pre class="cpp fragment"><code hide-line-numbers
+        <pre class="cpp fragment"><code
             data-line-numbers="1-7|5-6|"
             data-line-hide=   "5-6|   |"
         ><script type="text/template">
@@ -231,7 +231,7 @@
 <section my-columns>
     <h2>Reusability and compile-time</h2>
     <div style="width:100%;">
-        <pre class="text"><code hide-line-numbers
+        <pre class="text"><code
             data-line-numbers="|12,15|"
         ><script type="text/template">
             Running fixture "any_of_parser"

@@ -6,13 +6,13 @@
         <div style="font-weight: normal !important;">
             The range-based <code>for</code> statement
         </div>
-        <pre class="cpp" style="width:100% !important;"><code hide-line-numbers data-line-numbers=""><script type="text/template">
+        <pre class="cpp" style="width:100% !important;"><code data-line-numbers=""><script type="text/template">
             for ( init-statement_opt for-range-declaration : for-range-initializer ) statement
         </script></code></pre>
         <div style="font-weight: normal !important;">
             is equivalent to
         </div>
-        <pre class="cpp" style="width:100% !important;"><code hide-line-numbers data-line-numbers="|4-5|6-7"><script type="text/template">
+        <pre class="cpp" style="width:100% !important;"><code data-line-numbers="|4-5|6-7"><script type="text/template">
             {
                 init-statement_opt
                 auto &&range = for-range-initializer ;
@@ -30,14 +30,14 @@
 <section my-columns>
     <h2>Range-based for loop</h2>
     <div style="width:100%;">
-        <pre class="cpp"><code hide-line-numbers data-line-numbers=""><script type="text/template">
+        <pre class="cpp"><code data-line-numbers=""><script type="text/template">
             auto vec = vector<int>({1,2,3,4,5});
         </script></code></pre>
-        <pre class="cpp fragment"><code hide-line-numbers data-line-numbers=""><script type="text/template">
+        <pre class="cpp fragment"><code data-line-numbers=""><script type="text/template">
             auto begin = vec(begin_memfn_tag{});
             auto end = vec(end_memfn_tag{});
         </script></code></pre>
-        <pre class="cpp fragment"><code hide-line-numbers data-line-numbers=""><script type="text/template">
+        <pre class="cpp fragment"><code data-line-numbers=""><script type="text/template">
             for ( ; not op_equals(begin, end); begin(operator_pre_incr_tag{}) ) {
                 use(begin(operator_star_tag{}));
             }

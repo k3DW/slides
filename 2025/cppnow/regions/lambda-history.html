@@ -15,7 +15,7 @@
 
 <section my-columns>
     <h2>Lambdas in C++11</h2>
-    <pre class="cpp"><code data-line-numbers="|1,11|9-10|2-3,8|4-6|"><script type="text/template">
+    <pre class="cpp"><code data-ln-start-from data-line-numbers="|1,11|9-10|2-3,8|4-6|"><script type="text/template">
         struct S {
             template <class... Ts>
             int foo(int x, Ts&... ts) {
@@ -43,7 +43,7 @@
 
 <section my-columns="75%">
     <h2>Lambdas in C++14</h2>
-    <pre class="cpp"><code data-line-numbers="|4"><script type="text/template">
+    <pre class="cpp"><code data-ln-start-from data-line-numbers="|4"><script type="text/template">
         struct S {
             template <class... Ts>
             int foo(int x, Ts&... ts) {
@@ -60,7 +60,7 @@
 
 <section my-columns="75%">
     <h2>Lambdas in C++14</h2>
-    <pre class="cpp"><code data-line-numbers="4|4-5"><script type="text/template">
+    <pre class="cpp"><code data-ln-start-from data-line-numbers="4|4-5"><script type="text/template">
         struct S {
             template <class... Ts>
             int foo(int x, Ts&... ts) {
@@ -77,7 +77,7 @@
 
 <section my-columns="75%">
     <h2>Lambdas in C++14</h2>
-    <pre class="cpp"><code data-line-numbers="4-5"><script type="text/template">
+    <pre class="cpp"><code data-ln-start-from data-line-numbers="4-5"><script type="text/template">
         struct S {
             template <class... Ts>
             int foo(int x, Ts&... ts) {
@@ -94,7 +94,7 @@
 
 <section my-columns="75%">
     <h2>Lambdas in C++14</h2>
-    <pre class="cpp"><code data-line-numbers="4-5|3,7"><script type="text/template">
+    <pre class="cpp"><code data-ln-start-from data-line-numbers="4-5|3,7"><script type="text/template">
         struct S {
             template <class... Ts>
             int foo(int x, Ts&... ts) {
@@ -111,7 +111,7 @@
 
 <section my-columns="75%">
     <h2>Lambdas in C++14</h2>
-    <pre class="cpp"><code data-line-numbers="3,7|"><script type="text/template">
+    <pre class="cpp"><code data-ln-start-from data-line-numbers="3,7|"><script type="text/template">
         struct S {
             template <class... Ts>
             auto foo(int x, Ts&... ts) {
@@ -136,7 +136,7 @@
 
 <section my-columns="90%">
     <h2>Lambdas in C++17</h2>
-    <pre class="cpp"><code data-line-numbers="|4"><script type="text/template">
+    <pre class="cpp"><code data-ln-start-from data-line-numbers="|4"><script type="text/template">
         struct S {
             template <class... Ts>
             auto foo(int x, Ts&... ts) {
@@ -153,7 +153,7 @@
 
 <section my-columns="90%">
     <h2>Lambdas in C++17</h2>
-    <pre class="cpp"><code data-line-numbers="4"><script type="text/template">
+    <pre class="cpp"><code data-ln-start-from data-line-numbers="4"><script type="text/template">
         struct S {
             template <class... Ts>
             auto foo(int x, Ts&... ts) {
@@ -170,7 +170,7 @@
 
 <section my-columns="90%">
     <h2>Lambdas in C++17</h2>
-    <pre class="cpp"><code data-line-numbers="4|5"><script type="text/template">
+    <pre class="cpp"><code data-ln-start-from data-line-numbers="4|5"><script type="text/template">
         struct S {
             template <class... Ts>
             auto foo(int x, Ts&... ts) {
@@ -187,7 +187,7 @@
 
 <section my-columns="90%">
     <h2>Lambdas in C++17</h2>
-    <pre class="cpp"><code data-line-numbers="5|"><script type="text/template">
+    <pre class="cpp"><code data-ln-start-from data-line-numbers="5|"><script type="text/template">
         struct S {
             template <class... Ts>
             auto foo(int x, Ts&... ts) {
@@ -217,18 +217,18 @@
 <section my-columns>
     <h2>Lambdas in C++20</h2>
     <div style="width:100%;">
-        <pre class="cpp"><code hide-line-numbers data-line-numbers=""><script type="text/template">
+        <pre class="cpp"><code data-line-numbers=""><script type="text/template">
             using foo = decltype([]{});
         </script></code></pre>
-        <pre class="cpp fragment"><code hide-line-numbers data-line-numbers=""><script type="text/template">
+        <pre class="cpp fragment"><code data-line-numbers=""><script type="text/template">
             constexpr auto bar = sizeof([x, y, z]{});
         </script></code></pre>
-        <pre class="cpp fragment"><code hide-line-numbers data-line-numbers="1-2|3|"><script type="text/template">
+        <pre class="cpp fragment"><code data-line-numbers="1-2|3|"><script type="text/template">
             template <auto value>
             struct baz {};
             using qux = baz<[]{}>;
         </script></code></pre>
-        <pre class="cpp fragment"><code hide-line-numbers data-line-numbers=""><script type="text/template">
+        <pre class="cpp fragment"><code data-line-numbers=""><script type="text/template">
             auto quux = [](int x, int y) consteval {
                 return x + y;
             };
@@ -239,14 +239,14 @@
 <section my-columns="85%">
     <h2>Lambdas in C++20</h2>
     <div style="width:100%;">
-        <pre class="cpp"><code hide-line-numbers data-line-numbers="|1|2|"><script type="text/template">
+        <pre class="cpp"><code data-line-numbers="|1|2|"><script type="text/template">
             auto foo = []<class T> requires std::integral<T>
                 (const T& t, const auto& u) requires requires { t + u; }
             {
                 return t + u;
             };
         </script></code></pre>
-        <!-- <pre class="cpp fragment"><code hide-line-numbers data-line-numbers="|1-2,6|3|4|"><script type="text/template">
+        <!-- <pre class="cpp fragment"><code data-line-numbers="|1-2,6|3|4|"><script type="text/template">
             template <class... Ts>
             auto bar(Ts&&... ts) {
                 return [...args = std::forward<Ts>(ts)] <class F> (F&& f) -> decltype(auto) {
@@ -271,7 +271,7 @@
 <section my-columns="85%">
     <h2>Lambdas in C++20</h2>
     <div style="width:100%;">
-        <pre class="cpp"><code hide-line-numbers data-line-numbers="|1,5|2|4|3|"><script type="text/template">
+        <pre class="cpp"><code data-line-numbers="|1,5|2|4|3|"><script type="text/template">
             void enumerate_pack(auto f, auto... args) {
                 [&]<std::size_t... Idxs>(std::index_sequence<Idxs...>) {
                     (f(Idxs, args), ...);
@@ -279,7 +279,7 @@
             }
         </script></code></pre>
         <br>
-        <pre class="cpp fragment"><code hide-line-numbers data-line-numbers="1-4|5-7|"><script type="text/template">
+        <pre class="cpp fragment"><code data-line-numbers="1-4|5-7|"><script type="text/template">
             template <std::size_t... Idxs>
             void enumerate_pack_impl(std::index_sequence<Idxs...>, auto f, auto... args) {
                 (f(Idxs, args), ...);
@@ -304,19 +304,19 @@
 <section my-columns="85%">
     <h2>Lambdas in C++23</h2>
     <div style="width:100%;">
-        <pre class="cpp"><code hide-line-numbers data-line-numbers=""><script type="text/template">
+        <pre class="cpp"><code data-line-numbers=""><script type="text/template">
             auto throw_ = []<class E> [[noreturn]] static {
                 throw E{};
             };
         </script></code></pre>
         <br>
-        <pre class="cpp fragment"><code hide-line-numbers data-line-numbers="2-5|2|3|2-5"><script type="text/template">
+        <pre class="cpp fragment"><code data-line-numbers="2-5|2|3|2-5"><script type="text/template">
             // From cppreference
             auto nth_fibonacci3 = [](this auto self, int n, int a = 0, int b = 1) -> int {
                 return n ? self(n - 1, a + b, a) : b;
             };
         </script></code></pre>
-        <pre class="cpp fragment"><code hide-line-numbers data-line-numbers="2-5|3|2-5"><script type="text/template">
+        <pre class="cpp fragment"><code data-line-numbers="2-5|3|2-5"><script type="text/template">
             // From cppreference
             auto nth_fibonacci2 = [](auto self, int n, int a = 0, int b = 1) -> int {
                 return n ? self(self, n - 1, a + b, a) : b;

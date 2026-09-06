@@ -171,7 +171,7 @@ thank-you:
             <li class="fragment">https://docs.openssl.org/master/man3/SSL_library_init/</li>
             <li class="fragment"><i>"The SSL_library_init() and OpenSSL_add_ssl_algorithms() functions were deprecated in OpenSSL 1.1.0 by OPENSSL_init_ssl()."</i></li>
         </ul>
-        <pre class="cpp fragment"><code hide-line-numbers data-line-numbers=""><script type="text/template">
+        <pre class="cpp fragment"><code data-line-numbers=""><script type="text/template">
             // in "openssl/ssl.h"
             #  define SSL_library_init() OPENSSL_init_ssl(0, NULL)
         </script></code></pre>
@@ -214,7 +214,7 @@ thank-you:
 <section my-columns>
     <h2>Setup</h2>
     <div style="width:100%;">
-        <pre class="cmake fragment"><code hide-line-numbers data-line-numbers="1|2|3|4|"><script type="text/template">
+        <pre class="cmake fragment"><code data-line-numbers="1|2|3|4|"><script type="text/template">
             # in CMakeLists.txt
             add_library(openssl_shims STATIC openssl_shims.cpp)
             # ...
@@ -226,7 +226,7 @@ thank-you:
 <section my-columns>
     <h2>As a macro</h2>
     <div style="width:100%;">
-        <pre class="cpp fragment"><code hide-line-numbers data-line-numbers="1|2|4,6|5|"><script type="text/template">
+        <pre class="cpp fragment"><code data-line-numbers="1|2|4,6|5|"><script type="text/template">
             // openssl_shims.cpp
             #include "openssl/ssl.h"
 
@@ -243,7 +243,7 @@ thank-you:
 <section my-columns>
     <h2>As a function</h2>
     <div style="width:100%;">
-        <pre class="cpp fragment"><code hide-line-numbers data-line-numbers="|4|4,5,9|6-8|"><script type="text/template">
+        <pre class="cpp fragment"><code data-line-numbers="|4|4,5,9|6-8|"><script type="text/template">
             // openssl_shims.cpp
             #include "openssl/ssl.h"
 

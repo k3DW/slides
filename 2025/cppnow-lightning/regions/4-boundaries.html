@@ -1,15 +1,15 @@
 <section my-columns>
     <h2>TUs and boundaries</h2>
     <div style="width:100%;">
-        <pre class="cpp fragment"><code hide-line-numbers data-line-numbers=""><script type="text/template">
+        <pre class="cpp fragment"><code data-line-numbers=""><script type="text/template">
             extern const auto lambda;
         </script></code></pre>
-        <pre class="cpp fragment"><code hide-line-numbers data-line-numbers=""><script type="text/template">
+        <pre class="cpp fragment"><code data-line-numbers=""><script type="text/template">
             const auto lambda = [](int x) {
                 // ...
             };
         </script></code></pre>
-        <pre class="none fragment"><code hide-line-numbers data-line-numbers=""><script type="text/template">
+        <pre class="none fragment"><code data-line-numbers=""><script type="text/template">
             error: declaration of variable 'lambda' with
             deduced type 'const auto' requires an initializer
                 1 | extern const auto lambda;
@@ -21,7 +21,7 @@
 <section my-columns>
     <h2>TUs and boundaries</h2>
     <div style="width:100%;">
-        <pre class="cpp"><code hide-line-numbers data-line-numbers="|3-5|6|"><script type="text/template">
+        <pre class="cpp"><code data-line-numbers="|3-5|6|"><script type="text/template">
             // header.hpp
             struct S {
                 static constexpr auto fn = [](auto x) {
@@ -30,13 +30,13 @@
                 static const std::type_info& get();
             };
         </script></code></pre>
-        <pre class="cpp fragment"><code hide-line-numbers data-line-numbers=""><script type="text/template">
+        <pre class="cpp fragment"><code data-line-numbers=""><script type="text/template">
             // 1.cpp
             const std::type_info& S::get() {
                 return typeid(fn);
             }
         </script></code></pre>
-        <pre class="cpp fragment"><code hide-line-numbers data-line-numbers=""><script type="text/template">
+        <pre class="cpp fragment"><code data-line-numbers=""><script type="text/template">
             // 2.cpp
             assert(typeid(S::fn) == S::get());
         </script></code></pre>
