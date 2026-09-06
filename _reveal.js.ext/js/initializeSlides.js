@@ -48,7 +48,7 @@ export function setHoriCenter() {
 
         let leftDiv = document.createElement('DIV');
         leftDiv.setAttribute("style", "flex: 1 1 auto;");
-        
+
         let rightDiv = document.createElement('DIV');
         rightDiv.setAttribute("style", "flex: 1 1 auto;");
 
@@ -59,10 +59,10 @@ export function setHoriCenter() {
 }
 
 export function setColumns() {
-    document.querySelectorAll("section[my-columns]").forEach(slide => {				
+    document.querySelectorAll("section[my-columns]").forEach(slide => {
         let mainDiv = document.createElement('DIV');
         mainDiv.setAttribute("style", "display: flex; flex-flow: column; height: 100%;");
-        
+
         if (slide.children[0].tagName == 'H2') {
             let h2 = slide.children[0];
             slide.removeChild(h2);
@@ -73,7 +73,7 @@ export function setColumns() {
             beginDiv.setAttribute("style", `flex: 0 1 0;`);
             mainDiv.appendChild(beginDiv);
         }
-        
+
         let widths = [];
         let attr = slide.getAttribute("my-columns");
         if (attr) {
@@ -108,7 +108,7 @@ export function setColumns() {
             if (column.tagName == 'PRE' && column.classList.length == 0) {
                 column.classList.add("cpp");
             }
-            
+
             let innerDiv = document.createElement('DIV');
             if (slide.getAttribute("my-columns-align") == 'left') {
                 innerDiv.setAttribute("style", `flex: 1 1 ${widths[0]}; display:flex; align-items: top; text-align: left;`);
@@ -142,11 +142,11 @@ export function setFooters(leftSideText, rightSideText, useSubFooter) {
         let leftFooterDiv = document.createElement('DIV');
         leftFooterDiv.setAttribute("style", `font-size:40%; color:#999; position:absolute; bottom:-${moveVert}px; left:-45px;`);
         slide.appendChild(leftFooterDiv);
-        
+
         let rightFooterDiv = document.createElement('DIV');
         rightFooterDiv.setAttribute("style", `font-size:40%; color:#999; position:absolute; bottom:-${moveVert}px; right:30px;`);
         slide.appendChild(rightFooterDiv);
-        
+
         if (useSubFooter) {
             leftFooterDiv.innerText = `${leftSideText} - ${subFooter}`;
         }
