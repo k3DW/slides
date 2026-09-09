@@ -11,6 +11,7 @@ const URL_ATTRIBUTES = {
     OBJECT: ["data"],
     TRACK: ["src"],
     INCLUDE: ["src"], // so nested <include> tags get fixed too
+    SECTION: ["data-background-image"],
 };
 
 function isRelativeUrl(value) {
@@ -40,6 +41,16 @@ function resolveCssUrls(cssText, baseUrl) {
     );
 }
 
+function resolveMarkdownUrls(markdownText, baseUrl) {
+    // Matches inline Markdown links and images, such as `![label](./path/to/relative/image.jpg)`.
+    return markdownText.replace(/(!?\[[^\]]*\]\(\s*)(<[^>]+>|[^)\s]+)/g, (match, prefix, url) => {
+        const angleBrackets = url.startsWith("<") && url.endsWith(">");
+        const value = angleBrackets ? url.slice(1, -1) : url;
+        const resolvedValue = isRelativeUrl(value) ? resolveUrl(value, baseUrl) : value;
+        return prefix + (angleBrackets ? `<${resolvedValue}>` : resolvedValue);
+    });
+}
+
 function rewriteRelativeUrls(root, baseUrl) {
     for (const [tagName, attrs] of Object.entries(URL_ATTRIBUTES)) {
         for (const el of root.getElementsByTagName(tagName)) {
@@ -59,6 +70,9 @@ function rewriteRelativeUrls(root, baseUrl) {
     }
     for (const styleEl of root.getElementsByTagName("style")) {
         styleEl.textContent = resolveCssUrls(styleEl.textContent, baseUrl);
+    }
+    for (const textarea of root.querySelectorAll("textarea[data-markdown], textarea[data-template]")) {
+        textarea.textContent = resolveMarkdownUrls(textarea.textContent, baseUrl);
     }
 }
 
