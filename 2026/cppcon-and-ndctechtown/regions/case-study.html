@@ -1,0 +1,25 @@
+<section data-markdown class="list-fade-in-then-semi-out">
+    <textarea data-template>
+        ## Case study: a complex pretty-printer
+        * Boost.Unordered "FOA"
+        * Open addressed hash maps
+        * `{unordered|concurrent}_{node|flat}_{map|set}`
+        * "Visualizing boost::unordered_map in GDB, with pretty-printer customization points"
+        * https://blog.ganets.ky/PrettyPrinter/
+    </textarea>
+</section>
+
+<section data-markdown class="list-fade-in-then-semi-out">
+    <textarea data-template>
+        ## Case study: Boost.Unordered FOA
+        * Overall structure of the printout
+        * Iterating over the hashmap
+        * Customization points and user-injected behaviour
+        * Synthesized member functions: GDB xmethods
+    </textarea>
+</section>
+
+<include src="./case-study/1-structure.html"></include>
+<include src="./case-study/2-iterating.html"></include>
+<include src="./case-study/3-cpo.html"></include>
+<include src="./case-study/4-xmethods.html"></include>

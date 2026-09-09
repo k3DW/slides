@@ -1,0 +1,83 @@
+<section data-markdown class="list-fade-in-then-semi-out">
+    <textarea data-template>
+        ## Overall structure of the printout
+        * Make it match the format of the `std` containers
+    </textarea>
+</section>
+
+<section my-columns="90%">
+    <h2>Overall structure of the printout</h2>
+    <div style="width:100%;">
+        <pre class="text fragment"><code data-line-reveal="1|1-2|3|3-4|1-4"><script type="text/template">
+            (gdb) print my_example_map
+            $1 = boost::any_given_map with 3 elements = {["C"] = "c", ["B"] = "b", ["A"] = "a"}
+            (gdb) print my_example_set
+            $2 = boost::any_given_set with 3 elements = {[0] = "c", [1] = "b", [2] = "a"}
+        </script></code></pre>
+        <pre class="text fragment"><code data-line-reveal="1|1-2|3|3-4|5|5-6|7|7-8|1-8"><script type="text/template">
+            (gdb) print my_example_map_begin
+            $1 = iterator = { {first = "C", second = "c"} }
+            (gdb) print my_example_map_end
+            $2 = iterator = { end iterator }
+            (gdb) print my_example_set_begin
+            $3 = iterator = { "c" }
+            (gdb) print my_example_set_end
+            $4 = iterator = { end iterator }
+        </script></code></pre>
+    </div>
+</section>
+
+<section data-markdown class="list-fade-in-then-semi-out">
+    <textarea data-template>
+        ## Overall structure of the printout
+        * "`boost::any_given_map with N elements`"
+        * "`{[key] = value, ...}`" for maps
+        * "`{[index] = value, ...}`" for sets
+    </textarea>
+</section>
+
+<section my-columns>
+    <h2>Overall structure of the printout</h2>
+    <div style="width:100%;">
+        <pre class="python"><code data-line-reveal="1|2|3-5|1-6"><script type="text/template">
+            def __init__(self, val):
+                self.table = val["table_"]
+                self.name = f"{val.type.strip_typedefs()}".split("<")[0]
+                self.name = self.name.replace("boost::unordered::", "boost::")
+                self.is_map = self.name.endswith("map")
+                # ...
+        </script></code></pre>
+        <pre class="python fragment"><code data-line-reveal="1,3|2"><script type="text/template">
+            def to_string(self):
+                size = maybe_unwrap_atomic(self.table["size_ctrl"]["size"])
+                return f"{self.name} with {size} elements"
+        </script></code></pre>
+    </div>
+</section>
+
+<section data-markdown class="list-fade-in-then-semi-out">
+    <textarea data-template>
+        ## Versatility and polymorphism
+        * In the regular "unordered" containers...
+        * `table_.size_ctrl.size` is a `std::size_t`
+        * In the "concurrent" containers...
+        * `table_.size_ctrl.size` is a `std::atomic<std::size_t>`
+        * But we have Python!
+    </textarea>
+</section>
+
+<section my-columns>
+    <h2>Versatility and polymorphism</h2>
+    <div style="width:100%;">
+        <pre class="python"><code
+            data-line-reveal="1|2|3-4|5-6|1-6"
+        ><script type="text/template">
+            def maybe_unwrap_atomic(n: gdb.Value):
+                if f"{n.type.strip_typedefs()}".startswith("std::atomic<"):
+                    underlying_type = n.type.template_argument(0)
+                    return n.cast(underlying_type)
+                else:
+                    return n
+        </script></code></pre>
+    </div>
+</section>

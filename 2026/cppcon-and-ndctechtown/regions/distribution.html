@@ -1,0 +1,71 @@
+<section my-columns="40%">
+    <h2>Distributing your pretty-printers</h2>
+    <div style="width:100%;">
+        <pre class="cpp"><code data-line-numbers=""><script type="text/template">
+            #include <boost/unordered_set.hpp>
+            int main() {
+                boost::unordered_set<int> set{ 11, 22, 33 };
+            }
+        </script></code></pre>
+        <pre class="text" style="font-size: 40%;"><code data-line-numbers=""><script type="text/template">
+            (gdb) print set
+            $1 = {
+              table_ = {
+                <boost::unordered::detail::functions<boost::hash<int>, std::equal_to<int> >> = {
+                  static nothrow_move_assignable = true,
+                  static nothrow_move_constructible = true,
+                  static nothrow_swappable = true,
+                  current_ = 0 '\000',
+                  funcs_ = {{
+                      t_ = {
+                        <boost::unordered::detail::compressed_base<boost::hash<int>, 1>> = {
+                          <boost::empty_::empty_value<boost::hash<int>, 0u, true>> = {
+                            <boost::hash<int>> = {<No data fields>}, <No data fields>}, <No data fields>},
+                        <boost::unordered::detail::compressed_base<std::equal_to<int>, 2>> = {
+                          <boost::empty_::empty_value<std::equal_to<int>, 0u, true>> = {
+                            <std::equal_to<int>> = {
+                              <std::binary_function<int, int, bool>> = {<No data fields>}, <No data fields>}, <No data fields>}, <No data fields>}, <No data fields>}
+                    }, {
+                      t_ = {
+                        <boost::unordered::detail::compressed_base<boost::hash<int>, 1>> = {
+                          <boost::empty_::empty_value<boost::hash<int>, 0u, true>> = {
+                            <boost::hash<int>> = {<No data fields>}, <No data fields>}, <No data fields>},
+                        <boost::unordered::detail::compressed_base<std::equal_to<int>, 2>> = {
+                          <boost::empty_::empty_value<std::equal_to<int>, 0u, true>> = {
+                            <std::equal_to<int>> = {
+                              <std::binary_function<int, int, bool>> = {<No data fields>}, <No data fields>}, <No data fields>}, <No data fields>}, <No data fields>}
+                    }}
+                },
+                members of boost::unordered::detail::table<boost::unordered::detail::set<std::allocator<int>, int, boost::hash<int>, std::equal_to<int> > >:
+                size_ = 3,
+                mlf_ = 1,
+                max_load_ = 13,
+                buckets_ = {
+                  <boost::empty_::empty_value<std::allocator<boost::unordered::detail::node<int, void*> >, 0u, true>> = {
+                    <std::allocator<boost::unordered::detail::node<int, void*> >> = {
+                      <__gnu_cxx::new_allocator<boost::unordered::detail::node<int, void*> >> = {<No data fields>}, <No data fields>}, <No data fields>},
+                  members of boost::unordered::detail::grouped_bucket_array<boost::unordered::detail::bucket<boost::unordered::detail::node<int, void*>, void*>, std::allocator<int>, boost::unordered::detail::prime_fmod_size<void> >:
+                  size_index_ = 0,
+                  size_ = 13,
+                  buckets = 0x55555556feb0,
+                  groups = 0x55555556ff30
+                }
+              }
+            }
+        </script></code></pre>
+    </div>
+</section>
+
+<section data-markdown class="list-fade-in-then-semi-out">
+    <textarea data-template>
+        ## Distributing your pretty-printers
+        * Add to your library's install rules
+        * Even then, user must run `source printer.py`
+        * Ideally should be simpler, no steps for the user
+        * Enter: "auto-loading"
+    </textarea>
+</section>
+
+
+<include src="./distribution/1-auto-loading.html"></include>
+<include src="./distribution/2-embedding.html"></include>

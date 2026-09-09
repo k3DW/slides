@@ -1,0 +1,54 @@
+<section my-columns="75%">
+    <h2>Plumbing the pretty-printers</h2>
+    <div style="width:100%;">
+        <pre class="python fragment"><code data-line-reveal="1|3-8|9|10|11|12|13|9-14|15,18|16+17|17|1-18"><script type="text/template">
+            import gdb.printing
+
+            class MyTypePrinter:
+                def __init__(self, val):
+                    pass
+                def to_string(self):
+                    return "Hello, printer!"
+
+            def build_pretty_printer():
+                pp = gdb.printing.RegexpCollectionPrettyPrinter("my_printers")
+                pp.add_printer("MyType", "^MyType$", MyTypePrinter)
+                pp.add_printer("MyTemplateType", "^MyTemplateType<.*>$", MyTypePrinter)
+                return pp
+
+            gdb.printing.register_pretty_printer(
+                gdb.current_objfile(),
+                build_pretty_printer()
+            )
+        </script></code></pre>
+    </div>
+</section>
+
+<section my-columns="40%">
+    <h2>Plumbing the pretty-printers</h2>
+    <div style="width:100%;">
+        <pre class="bash fragment"><code data-line-numbers=""><script type="text/template">
+            $ gdb
+        </script></code></pre>
+        <pre class="text fragment"><code data-line-reveal="4+1-3|4-7|8|9|9-15"><script type="text/template">
+            GNU gdb (GDB) 14.0.50.20221220-git
+            Copyright (C) 2022 Free Software Foundation, Inc.
+            ...etc...
+            (gdb) info pretty-printer
+            global pretty-printers:
+              builtin
+                mpx_bound128
+            (gdb) source MyTypePrinter.py
+            (gdb) info pretty-printer
+            global pretty-printers:
+              builtin
+                mpx_bound128
+              my_printers
+                MyTemplateType
+                MyType
+        </script></code></pre>
+        <div class="fragment emoji-format">
+            ✔️
+        </div>
+    </div>
+</section>

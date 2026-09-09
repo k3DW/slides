@@ -1,0 +1,294 @@
+<section my-columns="80% 20%">
+    <h2>Constructor and <code>to_string()</code></h2>
+    <div style="width:100%;">
+        <pre class="python"><code data-line-numbers=""><script type="text/template">
+            class MyTypePrinter:
+                def __init__(self, val):
+                    pass
+                def to_string(self):
+                    return "Hello, printer!"
+
+            def build_pretty_printer():
+                pp = gdb.printing.RegexpCollectionPrettyPrinter("my_printers")
+                pp.add_printer("MyType", "^MyType$", MyPrinter)
+                pp.add_printer("MyTemplateType", "^MyTemplateType<.*>$", MyPrinter)
+                return pp
+
+            gdb.printing.register_pretty_printer(
+                gdb.current_objfile(),
+                build_pretty_printer()
+            )
+        </script></code></pre>
+    </div>
+    <div style="width:100%;">
+        <pre class="cpp fragment"><code data-line-numbers=""><script type="text/template">
+            struct Line {
+                int left;
+                int right;
+            };
+        </script></code></pre>
+    </div>
+</section>
+
+<section my-columns="80% 20%">
+    <h2>Constructor and <code>to_string()</code></h2>
+    <div style="width:100%;">
+        <pre class="python"><code data-line-numbers=""><script type="text/template">
+            class LinePrinter:
+                def __init__(self, val):
+                    pass
+                def to_string(self):
+                    return "Hello, printer!"
+
+            def build_pretty_printer():
+                pp = gdb.printing.RegexpCollectionPrettyPrinter("my_printers")
+                pp.add_printer("Line", "^Line$", LinePrinter)
+
+                return pp
+
+            gdb.printing.register_pretty_printer(
+                gdb.current_objfile(),
+                build_pretty_printer()
+            )
+        </script></code></pre>
+    </div>
+    <div style="width:100%;">
+        <pre class="cpp"><code data-line-numbers=""><script type="text/template">
+            struct Line {
+                int left;
+                int right;
+            };
+        </script></code></pre>
+    </div>
+</section>
+
+<section my-columns="50%">
+    <h2>Constructor</h2>
+    <div style="width:100%;">
+        <pre class="python"><code
+            data-line-numbers=" |2-3"
+            data-line-hide=   "8|8  "
+        ><script type="text/template">
+            class LinePrinter:
+                def __init__(self, val):
+                    pass
+
+                def to_string(self):
+                    return "Hello, printer!"
+
+            #
+        </script></code></pre>
+    </div>
+</section>
+
+<section my-columns="50%">
+    <h2>Constructor</h2>
+    <div style="width:100%;">
+        <pre class="python"><code
+            data-line-numbers="2-3| "
+            data-line-hide=   "8  |8"
+        ><script type="text/template">
+            class LinePrinter:
+                def __init__(self, val):
+                    self.val = val
+
+                def to_string(self):
+                    return "Hello, printer!"
+
+            #
+        </script></code></pre>
+    </div>
+</section>
+
+<section my-columns="50%">
+    <h2><code>to_string()</code> method</h2>
+    <div style="width:100%;">
+        <pre class="python"><code
+            data-line-numbers=" |5-6"
+            data-line-hide=   "8|8  "
+        ><script type="text/template">
+            class LinePrinter:
+                def __init__(self, val):
+                    self.val = val
+
+                def to_string(self):
+                    return "Hello, printer!"
+
+            #
+        </script></code></pre>
+    </div>
+</section>
+
+<section my-columns="50%">
+    <h2><code>to_string()</code> method</h2>
+    <div style="width:100%;">
+        <pre class="python"><code
+            data-line-reveal="5-6+1-4|7|8|5-8"
+        ><script type="text/template">
+            class LinePrinter:
+                def __init__(self, val):
+                    self.val = val
+
+                def to_string(self):
+                    left = self.val["left"]
+                    right = self.val["right"]
+                    return f"{{{left}, {right}}}"
+        </script></code></pre>
+    </div>
+</section>
+
+<section my-columns="50%">
+    <h2><code>to_string()</code> method</h2>
+    <div style="width:100%;">
+        <pre class="python"><code data-line-numbers=""><script type="text/template">
+            class LinePrinter:
+                def __init__(self, val):
+                    self.val = val
+
+                def to_string(self):
+                    left = self.val["left"]
+                    right = self.val["right"]
+                    return f"{{{left}, {right}}}"
+        </script></code></pre>
+        <br/>
+        <pre class="cpp fragment"><code data-line-numbers=""><script type="text/template">
+            Line line{ 100, 600 };
+        </script></code></pre>
+        <pre class="text fragment"><code data-line-numbers=""><script type="text/template">
+            (gdb) print line
+            $1 = {100, 600}
+        </script></code></pre>
+    </div>
+</section>
+
+<section my-columns="65%">
+    <h2>Types in Python</h2>
+    <div style="width:100%;">
+        <pre class="python fragment"><code data-line-reveal="1-4|5-6|1-6"><script type="text/template">
+            class LinePrinter:
+                def __init__(self, val):
+                    self.val = val
+
+                def to_string(self):
+                    return f"{type(self.val)}"
+        </script></code></pre>
+        <pre class="text fragment"><code data-line-reveal="1|1-2"><script type="text/template">
+            (gdb) print line
+            $1 = <class 'gdb.Value'>
+        </script></code></pre>
+        <div class="fragment" style="font-size: 75%;">
+            <a>https://sourceware.org/gdb/current/onlinedocs/gdb.html/Values-From-Inferior.html</a>
+        </div>
+    </div>
+</section>
+
+<section my-columns="65%">
+    <h2>Types in Python</h2>
+    <div style="width:100%;">
+        <pre class="python"><code data-line-reveal="1-4|5-7|8"><script type="text/template">
+            class LinePrinter:
+                def __init__(self, val):
+                    self.val = val
+
+                def to_string(self):
+                    left = self.val["left"]
+                    right = self.val["right"]
+                    return f"left is a {type(left)}, right is a {type(right)}"
+        </script></code></pre>
+        <pre class="text fragment"><code data-line-reveal="1|1-2"><script type="text/template">
+            (gdb) print line
+            $1 = left is a <class 'gdb.Value'>, right is a <class 'gdb.Value'>
+        </script></code></pre>
+    </div>
+</section>
+
+<section my-columns="40% 40%">
+    <h2>Types in Python</h2>
+    <div style="width:100%;">
+        <pre class="python"><code data-line-numbers="5-6"><script type="text/template">
+            class LinePrinter:
+                def __init__(self, val):
+                    self.val = val
+
+                def to_string(self):
+                    return f"{type(self.val)}"
+        </script></code></pre>
+        <pre class="text"><code><script type="text/template">
+            (gdb) print line
+            $1 = <class 'gdb.Value'>
+        </script></code></pre>
+    </div>
+    <div style="width:100%;">
+        <pre class="python fragment"><code data-line-numbers="5-6"><script type="text/template">
+            class LinePrinter:
+                def __init__(self, val):
+                    self.val = val
+
+                def to_string(self):
+                    return f"{self.val.type}"
+        </script></code></pre>
+        <pre class="text fragment"><code data-line-reveal="1|1-2"><script type="text/template">
+            (gdb) print line
+            $1 = Line
+        </script></code></pre>
+    </div>
+</section>
+
+<section my-columns="40% 40%">
+    <h2>Types in Python</h2>
+    <div style="width:100%;">
+        <pre class="python"><code data-line-numbers="5-6"><script type="text/template">
+            class LinePrinter:
+                def __init__(self, val):
+                    self.val = val
+
+                def to_string(self):
+                    return f"{self.val.type}"
+        </script></code></pre>
+        <pre class="text"><code><script type="text/template">
+            (gdb) print line
+            $1 = Line
+        </script></code></pre>
+    </div>
+    <div style="width:100%;">
+        <pre class="python fragment"><code data-line-numbers="5-6"><script type="text/template">
+            class LinePrinter:
+                def __init__(self, val):
+                    self.val = val
+
+                def to_string(self):
+                    return f"{type(self.val.type)}"
+        </script></code></pre>
+        <pre class="text fragment"><code data-line-reveal="1|1-2"><script type="text/template">
+            (gdb) print line
+            $1 = <class 'gdb.Type'>
+        </script></code></pre>
+    </div>
+</section>
+
+<section my-columns="65%">
+    <h2>Types in Python</h2>
+    <div style="width:100%;">
+        <pre class="python"><code data-line-numbers="8"><script type="text/template">
+            class LinePrinter:
+                def __init__(self, val):
+                    self.val = val
+
+                def to_string(self):
+                    left = self.val["left"]
+                    right = self.val["right"]
+                    return f"left is an {left.type}, right is an {right.type}"
+        </script></code></pre>
+        <pre class="text fragment"><code data-line-reveal="1|1-2"><script type="text/template">
+            (gdb) print line
+            $1 = left is an int, right is an int
+        </script></code></pre>
+    </div>
+</section>
+
+<section data-markdown class="list-fade-in-then-semi-out">
+    <textarea data-template>
+        ## Documentation - "Python API"
+        * https://sourceware.org/gdb/current/onlinedocs/gdb.html/Python-API.html <!-- .element style="word-break: break-all;" -->
+    </textarea>
+</section>

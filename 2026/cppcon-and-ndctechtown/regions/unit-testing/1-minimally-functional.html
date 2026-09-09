@@ -1,0 +1,161 @@
+<section my-columns>
+    <h2>Unit testing goal</h2>
+    <div style="width:100%;">
+        <pre class="cpp"><code data-line-numbers="|3|4|"><script type="text/template">
+            // main.cpp
+            int main() {
+                Line line{ 100, 600 };
+                expect_prints(line, "Hello, printer!");
+            }
+        </script></code></pre>
+        <pre class="text fragment"><code data-line-numbers="2|3|4"><script type="text/template">
+            # .gdbinit
+            source LinePrinter.py
+            file a.out
+            source framework.py
+            run
+        </script></code></pre>
+    </div>
+</section>
+
+<section my-columns>
+    <h2>Breakpoints</h2>
+    <div style="width:100%;">
+        <pre class="cpp fragment"><code data-line-reveal="1|2-3|4-5|2-9|10-12|13-16"><script type="text/template">
+            // framework.hpp
+            #if defined(__clang__)
+            #define NO_INLINE __attribute__((noinline, optnone))
+            #elif defined(__GNUC__)
+            #define NO_INLINE __attribute__((noinline, optimize("O0"), noclone))
+            #else
+            #error "Unsupported compiler"
+            #endif
+
+            template <class... Ts>
+            NO_INLINE void _breakpoint_do_not_call_this_directly(const Ts&...) {}
+
+            template <class T>
+            NO_INLINE void expect_prints(const T& actual, const char* expected) {
+                _breakpoint_do_not_call_this_directly(actual, expected);
+            }
+        </script></code></pre>
+        <pre class="python fragment"><code data-line-reveal="1|2|3|4|2-4"><script type="text/template">
+            # framework.py
+            breakpoint = gdb.Breakpoint("_breakpoint_do_not_call_this_directly")
+            breakpoint.commands = "my_command\ncontinue"
+            breakpoint.silent = True
+        </script></code></pre>
+    </div>
+</section>
+
+<section my-columns>
+    <h2>Custom GDB command</h2>
+    <div style="width:100%;">
+        <pre class="python fragment"><code data-line-reveal="1-4|5|6|7-10|11|12-13|14|15-16|17-21"><script type="text/template">
+            class MyCommand(gdb.Command):
+                def __init__(self):
+                    super().__init__("my_command", gdb.COMMAND_DATA)
+
+                def invoke(self, arg, from_tty):
+                    breakpoint_frame = gdb.newest_frame()
+                    frame = breakpoint_frame.older()
+                    frame.select()
+                    source_loc = frame.older().find_sal()
+
+                    if frame.name().startswith("expect_prints<"):
+                        actual = f"{frame.read_var('actual').referenced_value()}"
+                        expected = f"{frame.read_var('expected')}"
+                        if actual != expected:
+                            file = source_loc.symtab.filename
+                            line = source_loc.line
+                            errors.append(
+                                f"  Error at {file}:{line}\n"
+                                f"    Expected: {expected}\n"
+                                f"    Actual:   {actual}"
+                            )
+        </script></code></pre>
+    </div>
+</section>
+
+<section my-columns>
+    <h2>Exit handler</h2>
+    <div style="width:100%;">
+        <pre class="python fragment"><code data-line-reveal="1|2-4|5-9|1-9"><script type="text/template">
+            def exit_handler(event):
+                if len(errors) == 0:
+                    print("Passed all checks")
+                    sys.exit(0)
+                else:
+                    print(f"Saw {len(errors)} errors:")
+                    for e in errors:
+                        print(e)
+                    sys.exit(1)
+        </script></code></pre>
+    </div>
+</section>
+
+<section my-columns>
+    <h2>Necessary details</h2>
+    <div style="width:100%;">
+        <pre class="python fragment"><code data-line-reveal="1|2-3|5|7-8|10|1-10"><script type="text/template">
+            # At the bottom of file
+            gdb.execute("set height 0")
+            gdb.execute("set python print-stack full")
+
+            MyCommand()
+
+            gdb.events.exited.connect(exit_handler)
+            gdb.execute("run")
+
+            exit_handler(None)
+        </script></code></pre>
+    </div>
+</section>
+
+<section my-columns>
+    <h2>Running the tests</h2>
+    <div style="width:100%;">
+        <pre class="bash fragment"><code data-line-reveal="1|2-5|6-8|9|10-13"><script type="text/template">
+            $ clang++ main.cpp -g
+            $ gdb -batch \
+            > -ex "source LinePrinter.py" \
+            > -ex "file a.out" \
+            > -ex "source framework.py"
+            Breakpoint 1 at 0x119c: file main.cpp, line 11.
+            [Thread debugging using libthread_db enabled]
+            Using host libthread_db library "path/to/libthread_db.so.1".
+            [Inferior 1 (process 1314) exited normally]
+            Saw 1 errors:
+              Error at main.cpp:25
+                Expected: 0x55555555600c "Hello, printer!"
+                Actual:   Hello, printer!
+        </script></code></pre>
+    </div>
+</section>
+
+<section my-columns>
+    <h2>Printing a <code>const char*</code></h2>
+    <div style="width:100%;">
+        <pre class="python fragment"><code data-line-reveal="1|2|3|4|1-4"><script type="text/template">
+            expected = f"{frame.read_var('expected')}"
+            match = re.search(r"0x[A-Fa-f0-9]+ (\".*\")$", expected)
+            assert match is not None
+            expected = json.loads(match.group(1))
+        </script></code></pre>
+        <pre class="bash fragment"><code data-line-reveal="1-5|10+6-9"><script type="text/template">
+            $ clang++ main.cpp -g
+            $ gdb -batch \
+            > -ex "source LinePrinter.py" \
+            > -ex "file a.out" \
+            > -ex "source framework.py"
+            Breakpoint 1 at 0x119c: file main.cpp, line 11.
+            [Thread debugging using libthread_db enabled]
+            Using host libthread_db library "/lib/x86_64-linux-gnu/libthread_db.so.1".
+            [Inferior 1 (process 1430) exited normally]
+            Passed all checks
+        </script></code></pre>
+        <div class="fragment emoji-format">
+            ✔️
+        </div>
+    </div>
+</section>

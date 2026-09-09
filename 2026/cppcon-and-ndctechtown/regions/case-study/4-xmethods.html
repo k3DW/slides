@@ -1,0 +1,134 @@
+<section data-markdown class="list-fade-in-then-semi-out">
+    <textarea data-template>
+        ## Synthesized member functions
+        * In the C++, `{container}.get_stats()`
+        * Summary based on `{container}.table_.cstats`
+        * Therefore, in Python, `{container}.get_stats()`
+        * Then write another pretty-printer for the type of `cstats`
+    </textarea>
+</section>
+
+<section data-markdown class="list-fade-in-then-semi-out">
+    <textarea data-template>
+        ## GDB xmethods
+        * `import gdb.xmethod`
+        * 3 parts: matcher, method, worker
+        * https://sourceware.org/gdb/current/onlinedocs/gdb.html/Writing-an-Xmethod.html <!-- .element style="word-break: break-all;" -->
+    </textarea>
+</section>
+
+<section my-columns="90%">
+    <!-- <h2>GDB xmethod matcher</h2> -->
+    <div style="width:100%;">
+        <pre class="python fragment"><code data-line-reveal="1|2-5|6|7|8|9-11|12-18|1-18"><script type="text/template">
+            class BoostUnorderedFoaMatcher(gdb.xmethod.XMethodMatcher):
+                def __init__(self):
+                    gdb.xmethod.XMethodMatcher.__init__(self, 'BoostUnorderedFoaMatcher')
+                    self.methods = [BoostUnorderedFoaGetStatsMethod()]
+
+                def match(self, class_type: gdb.Type, method_name: str):
+                    template_name = f"{class_type.strip_typedefs()}".split("<")[0]
+                    regex = "^boost::unordered::(unordered|concurrent)_(flat|node)_(map|set)$"
+                    if not re.match(regex, template_name):
+                        return None
+
+                    workers = []
+                    for method in self.methods:
+                        if method.enabled:
+                            worker = method.get_worker(method_name)
+                            if worker:
+                                workers.append(worker)
+                    return workers
+        </script></code></pre>
+        <pre class="text fragment"><code><script type="text/template">
+            (gdb) disable xmethod BoostUnorderedFoaMatcher
+            (gdb) enable xmethod BoostUnorderedFoaMatcher
+        </script></code></pre>
+    </div>
+</section>
+
+<section my-columns>
+    <h2>GDB xmethod method</h2>
+    <div style="width:100%;">
+        <pre class="python fragment"><code data-line-reveal="1|2-4|5-7"><script type="text/template">
+            class BoostUnorderedFoaGetStatsMethod(gdb.xmethod.XMethod):
+                def __init__(self):
+                    gdb.xmethod.XMethod.__init__(self, "get_stats")
+
+                def get_worker(self, method_name: str):
+                    if method_name == "get_stats":
+                        return BoostUnorderedFoaGetStatsWorker()
+        </script></code></pre>
+    </div>
+</section>
+
+<section my-columns>
+    <h2>GDB xmethod worker</h2>
+    <div style="width:100%;">
+        <pre class="python fragment"><code data-line-reveal="1|2-4|5-8|9,11|9-14"><script type="text/template">
+            class BoostUnorderedFoaGetStatsWorker(gdb.xmethod.XMethodWorker):
+                def get_arg_types(self):
+                    return None
+
+                def get_result_type(self, obj):
+                    return gdb.lookup_type(
+                        "boost::unordered::detail::foa::table_core_cumulative_stats")
+
+                def __call__(self, obj):
+                    try:
+                        return obj["table_"]["cstats"]
+                    except gdb.error:
+                        print("Error: Binary was compiled without stats.")
+                        return
+        </script></code></pre>
+    </div>
+</section>
+
+<section my-columns>
+    <h2>GDB xmethod result</h2>
+    <div style="width:100%;">
+        <pre class="python fragment"><code data-line-reveal="1|1-7"><script type="text/template">
+            (gdb) print my_example_map.get_stats()
+            $1 = {insertion = {<boost::unordered::detail::foa::cumulative_stats<1>> = {n = 5, data = {_M_elems = {{m = 1, m_prior = 1, s = 0}}}}, mut = {static locked_exclusive_mask = 2147483648,
+                static writer_pending_mask = 1073741824, static reader_lock_count_mask = 1073741823, state_ = std::atomic<unsigned int> = { 0 }}},
+            successful_lookup = {<boost::unordered::detail::foa::cumulative_stats<2>> = {n = 0, data = {_M_elems = {{m = 0, m_prior = 0, s = 0}, {m = 0, m_prior = 0, s = 0}}}}, mut = {
+                static locked_exclusive_mask = 2147483648, static writer_pending_mask = 1073741824, static reader_lock_count_mask = 1073741823, state_ = std::atomic<unsigned int> = { 0 }}},
+            unsuccessful_lookup = {<boost::unordered::detail::foa::cumulative_stats<2>> = {n = 5, data = {_M_elems = {{m = 1, m_prior = 1, s = 0}, {m = 0, m_prior = 0, s = 0}}}}, mut = {
+                static locked_exclusive_mask = 2147483648, static writer_pending_mask = 1073741824, static reader_lock_count_mask = 1073741823, state_ = std::atomic<unsigned int> = { 0 }}}}
+        </script></code></pre>
+    </div>
+</section>
+
+<section my-columns>
+    <h2>GDB xmethod result</h2>
+    <div style="width:100%;">
+        <span class="fragment" style="font-size: 75%;">After implementing <code>table_core_cumulative_stats</code> pretty-printer...</span>
+        <pre class="python fragment"><code data-line-reveal="1|1-17"><script type="text/template">
+            (gdb) print my_example_map.get_stats()
+            $1 = [stats] = {
+                [insertion] = {
+                    [count] = 5,
+                    [probe_length] = {avg = 1.0, var = 0.0, dev = 0.0}
+                },
+                [successful_lookup] = {
+                    [count] = 0,
+                    [probe_length] = {avg = 0.0, var = 0.0, dev = 0.0},
+                    [num_comparisons] = {avg = 0.0, var = 0.0, dev = 0.0}
+                },
+                [unsuccessful_lookup] = {
+                    [count] = 5,
+                    [probe_length] = {avg = 1.0, var = 0.0, dev = 0.0},
+                    [num_comparisons] = {avg = 0.0, var = 0.0, dev = 0.0}
+                }
+            }
+        </script></code></pre>
+    </div>
+</section>
+
+<section data-markdown class="list-fade-in-then-semi-out">
+    <textarea data-template>
+        ## GDB xmethods
+        * Synthesize any member function
+        * Full versatility of Python
+    </textarea>
+</section>

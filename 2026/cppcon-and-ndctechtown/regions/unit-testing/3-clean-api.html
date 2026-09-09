@@ -1,0 +1,41 @@
+<section my-columns="45% 55%">
+    <h2>Making a clean API</h2>
+    <div style="width:100%;">
+        <pre class="cpp fragment"><code data-line-reveal="1-8|9-15|1-18"><script type="text/template">
+            TEST("test 1") {
+                Line line{ 100, 600 };
+                assert_prints(
+                    line,
+                    "Hei, printer!");
+                expect_prints(0, "123");
+            }
+
+            TEST("test 2") {
+                Line line{ 100, 600 };
+                expect_prints(
+                    line,
+                    "Hi, printer!");
+            }
+
+            int main() {
+                gdb_main();
+            }
+        </script></code></pre>
+    </div>
+    <div style="width:100%;">
+        <pre class="bash fragment"><code data-line-numbers="5-12"><script type="text/template">
+            $ clang++ main.cpp -g
+            $ gdb -batch -ex "source LinePrinter.py" \
+            > -ex "file a.out" -ex "source framework.py"
+            ...
+            Saw 1 errors in test test 1:
+              Error at main.cpp:41
+                Expected: Hei, printer!
+                Actual:   Hello, printer!
+            Saw 1 errors in test test 2:
+              Error at main.cpp:49
+                Expected: Hi, printer!
+                Actual:   Hello, printer!
+        </script></code></pre>
+    </div>
+</section>

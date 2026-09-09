@@ -1,0 +1,107 @@
+<section my-columns>
+    <h2>Test names and early return</h2>
+    <div style="width:100%;">
+        <pre class="cpp fragment"><code data-line-reveal="1-8|9-13|1-17"><script type="text/template">
+            NO_INLINE void test_start(const char* name) {
+                _breakpoint_do_not_call_this_directly(name);
+            }
+
+            NO_INLINE void test_finish(const char* name) {
+                _breakpoint_do_not_call_this_directly(name);
+            }
+
+            template <class T>
+            NO_INLINE void assert_prints(const T& actual, const char* expected) {
+                _breakpoint_do_not_call_this_directly(actual, expected);
+            }
+
+            template <class T>
+            NO_INLINE void expect_prints(const T& actual, const char* expected) {
+                _breakpoint_do_not_call_this_directly(actual, expected);
+            }
+        </script></code></pre>
+    </div>
+</section>
+
+<section my-columns>
+    <!-- <h2>Test names and early return</h2> -->
+    <div style="width:100%;">
+        <pre class="python fragment"><code data-line-reveal=""><script type="text/template">
+            current_test : str = ""
+            errors : dict[str, list[str]] = {}
+            skip_to_next_test : bool = False
+        </script></code></pre>
+        <!-- <pre class="python fragment"><code data-line-reveal=""><script type="text/template">
+            def read_char_ptr(frame: gdb.Frame, identifier: str) -> str:
+                value = frame.read_var(identifier)
+                assert f"{value.type}" == "const char *"
+                match = re.search(r"0x[A-Fa-f0-9]+ (\".*\")$", f"{value}")
+                assert match is not None
+                return json.loads(match.group(1))
+        </script></code></pre> -->
+        <pre class="python fragment"><code data-line-reveal="1-4|5-6|7-8|9-12|13-14|15|16-17|16-19"><script type="text/template">
+            class MyCommand(gdb.Command):
+                # ...
+                def invoke(self, arg, from_tty):
+                    # ...
+                    if frame.name() == "test_start":
+                        # ... bookkeeping ...
+                    elif frame.name() == "test_finish":
+                        # ... bookkeeping ...
+                    elif (
+                      frame.name().startswith("expect_prints<")
+                      or frame.name().startswith("assert_prints<")
+                    ):
+                        if skip_to_next_test:
+                            return
+                        # ... actual and expected ...
+                        if actual != expected:
+                            # ... save error ...
+                            if frame.name().startswith("assert_prints<"):
+                                skip_to_next_test = True
+        </script></code></pre>
+    </div>
+</section>
+
+<section my-columns="45% 55%">
+    <h2>Test names and early return</h2>
+    <div style="width:100%;">
+        <pre class="cpp fragment"><code data-line-reveal="1,19|2-3,9-10|2-10|11-18"><script type="text/template">
+            int main() {
+                test_start("test 1");
+                {
+                    Line line{ 100, 600 };
+                    assert_prints(
+                        line,
+                        "Hei, printer!");
+                    expect_prints(0, "123");
+                }
+                test_finish("test 1");
+                test_start("test 2");
+                {
+                    Line line{ 100, 600 };
+                    expect_prints(
+                        line,
+                        "Hi, printer!");
+                }
+                test_finish("test 2");
+            }
+        </script></code></pre>
+    </div>
+    <div style="width:100%;">
+        <pre class="bash fragment"><code data-line-reveal="1|2-3|5-12+4"><script type="text/template">
+            $ clang++ main.cpp -g
+            $ gdb -batch -ex "source LinePrinter.py" \
+            > -ex "file a.out" -ex "source framework.py"
+            ...
+            Saw 1 errors in test test 1:
+              Error at main.cpp:41
+                Expected: Hei, printer!
+                Actual:   Hello, printer!
+            Saw 1 errors in test test 2:
+              Error at main.cpp:48
+                Expected: Hi, printer!
+                Actual:   Hello, printer!
+        </script></code></pre>
+    </div>
+</section>

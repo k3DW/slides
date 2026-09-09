@@ -1,0 +1,88 @@
+<section data-markdown class="list-fade-in-then-semi-out">
+    <textarea data-template>
+        ## Using GDB from VSCode
+        * Take advantage of VSCode's GUI
+        * Uses GDB/MI mode
+        * Cannot use ".gdbinit" file
+        * Requires GDB 14.1 otherwise `to_string()` is broken
+    </textarea>
+</section>
+
+<section my-columns="40%">
+    <h2>Using GDB from VSCode</h2>
+    <div style="width:100%;">
+        <pre class="json"><code data-line-reveal="1-6,10-12|1-12"><script type="text/template">
+            // .vscode/launch.json
+            {
+                "version": "0.2.0",
+                "configurations": [
+                    {
+                        // ... your normal config ...
+                        "setupCommands": [
+                            // ...
+                        ]
+                    }
+                ]
+            }
+        </script></code></pre>
+    </div>
+</section>
+
+<section my-columns>
+    <h2>Using GDB from VSCode</h2>
+    <div style="width:100%;">
+        <div style="margin-inline: auto;">
+            <img src="../../img/gdb/vscode-1.png" />
+        </div>
+    </div>
+</section>
+
+<section my-columns>
+    <h2>Using GDB from VSCode</h2>
+    <div style="width:100%;">
+        <div style="margin-inline: auto;">
+            <img src="../../img/gdb/vscode-2.png" />
+        </div>
+    </div>
+</section>
+
+<section my-columns>
+    <h2>Using GDB from VSCode</h2>
+    <div style="width:100%;">
+        <div style="margin-inline: auto;">
+            <img src="../../img/gdb/vscode-3.png" width="100%" />
+        </div>
+    </div>
+</section>
+
+<section my-columns="65%">
+    <h2>Using GDB from VSCode</h2>
+    <div style="width:100%;">
+        <pre class="json"><code data-line-reveal="1,12|2-6|7-11|1-12"><script type="text/template">
+            "setupCommands": [
+                {
+                    "description": "Enable pretty-printing for gdb",
+                    "text": "-enable-pretty-printing",
+                    "ignoreFailures": false
+                },
+                {
+                    "description": "Load pretty printers",
+                    "text": "source ${workspaceFolder}/LinePrinter.py",
+                    "ignoreFailures": false
+                }
+            ]
+        </script></code></pre>
+    </div>
+</section>
+
+<section my-columns>
+    <h2>Using GDB from VSCode</h2>
+    <div style="width:100%;">
+        <div style="margin-inline: auto;">
+            <img src="../../img/gdb/vscode-4.png" width="100%" />
+        </div>
+        <div class="fragment emoji-format">
+            ✔️
+        </div>
+    </div>
+</section>

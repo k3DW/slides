@@ -1,0 +1,169 @@
+<section data-markdown class="list-fade-in-then-semi-out">
+    <textarea data-template>
+        ## Iterating over the hashmap
+        1. Emulate creating iterator with `begin()`
+        2. Output the next item
+        3. Emulate iterator's `operator++()`
+        4. Loop until complete
+    </textarea>
+</section>
+
+<section my-columns>
+    <h2>Iterating over the hashmap</h2>
+    <div style="width:100%;">
+        <pre class="cpp fragment"><code data-line-numbers="1-7|4-5"><script type="text/template">
+            iterator begin()noexcept
+            {
+              iterator it{this->arrays.groups(),0,this->arrays.elements()};
+              if(this->arrays.elements()&&
+                 !(this->arrays.groups()[0].match_occupied()&0x1))++it;
+              return it;
+            }
+        </script></code></pre>
+        <pre class="python fragment"><code
+            data-line-reveal="1-2,12|3-4|5-7|8-10|1-12"
+        ><script type="text/template">
+            def children(self):
+                def generator():
+                    # ... create iterator's members ...
+
+                    if "condition-in-begin-function":
+                        # ... emulate operator++() ...
+
+                    while "still-looping":
+                        # ... output the elements ...
+                        # ... emulate operator++() ...
+
+                return generator()
+        </script></code></pre>
+    </div>
+</section>
+
+<!-- <section my-columns>
+    <div style="width:100%;">
+        <pre class="cpp fragment"><code data-line-numbers="1-7|4-5"><script type="text/template">
+            iterator begin()noexcept
+            {
+              iterator it{this->arrays.groups(),0,this->arrays.elements()};
+              if(this->arrays.elements()&&
+                 !(this->arrays.groups()[0].match_occupied()&0x1))++it;
+              return it;
+            }
+        </script></code></pre>
+        <pre class="python fragment"><code
+            data-line-reveal="1-2,14|3-5|6|7-9|10-11|12-13|1-14"
+        ><script type="text/template">
+            def children(self):
+                def generator():
+                    # Create iterator's members
+                    first_time = True
+
+                    while "still-looping":
+                        if (not first_time) or "negated-condition-in-begin-function":
+                            # Output the elements
+
+                        first_time = False
+
+                        # Emulate operator++()
+
+                return generator()
+        </script></code></pre>
+    </div>
+</section> -->
+
+<section my-columns="25% 55%">
+    <h2>Iterating over the hashmap</h2>
+    <div style="width:100%;">
+        <pre class="python"><code><script type="text/template">
+            def display_hint(self):
+                return "map"
+        </script></code></pre>
+    </div>
+    <div style="width:100%;">
+        <pre class="text fragment"><code><script type="text/template">
+            $1 = boost::unordered_node_map with 5 elements = {
+              "2" = 11,
+              "6" = 33,
+              "8" = 44,
+              "0" = 0,
+              "4" = 22
+            }
+        </script></code></pre>
+        <span class="fragment">versus</span>
+        <pre class="text fragment"><code><script type="text/template">
+            $1 = boost::unordered_node_map with 5 elements = {
+              ["2"] = 11,
+              ["6"] = 33,
+              ["8"] = 44,
+              ["0"] = 0,
+              ["4"] = 22
+            }
+        </script></code></pre>
+    </div>
+</section>
+
+<!-- <section my-columns="30% 50%">
+    <h2>Iterating over the hashmap</h2>
+    <div style="width:100%;">
+        <pre class="python"><code><script type="text/template">
+            def display_hint(self):
+                return "map"
+        </script></code></pre>
+    </div>
+    <div style="width:100%;">
+        <pre class="python fragment"><code
+            data-line-reveal="1-6,15-16|7|8-10|8-14"
+        ><script type="text/template">
+            def generator():
+                # Setup
+
+                count = 0
+                while "still-looping":
+                    if (not first_time) or ...:
+                        value = # ...
+                        if self.is_map:
+                            yield "", value["first"]
+                            yield "", value["second"]
+                        else:
+                            yield "", count
+                            yield "", value
+                        count += 1
+
+                    # Emulate operator++()
+        </script></code></pre>
+    </div>
+</section> -->
+
+<section my-columns="25% 55%">
+    <h2>Iterating over the hashmap</h2>
+    <div style="width:100%;">
+        <pre class="python"><code><script type="text/template">
+            def display_hint(self):
+                return "map"
+        </script></code></pre>
+    </div>
+    <div style="width:100%;">
+        <pre class="python fragment"><code
+            data-line-reveal="1-6|8-9,18|10-12|13-15|7,13-16|1-18"
+        ><script type="text/template">
+            def generator():
+                # ... create iterator's members ...
+
+                if "condition-in-begin-function":
+                    # ... emulate operator++() ...
+
+                count = 0
+                while "still-looping":
+                    value = # ...
+                    if self.is_map:
+                        yield "", value["first"]
+                        yield "", value["second"]
+                    else:
+                        yield "", count
+                        yield "", value
+                    count += 1
+
+                    # ... emulate operator++() ...
+        </script></code></pre>
+    </div>
+</section>

@@ -1,0 +1,163 @@
+<section data-markdown class="list-fade-in-then-semi-out">
+    <textarea data-template>
+        ## User-injected behaviour
+        * Sometimes the hashmap use fancy pointers
+        * E.g. `boost::interprocess::offset_ptr`
+        * You may have your own allocator with its own fancy pointer
+    </textarea>
+</section>
+
+<section my-columns>
+    <h2>Fancy pointers</h2>
+    <div style="width:100%;">
+        <pre class="cpp fragment"><code data-line-reveal="1-3,12|4-7|8-11"><script type="text/template">
+            template <class Key, class T>
+            using shared_memory_node_map =
+                boost::unordered_node_map<
+                    Key,
+                    T,
+                    boost::hash<Key>,
+                    std::equal_to<Key>,
+                    boost::interprocess::allocator<
+                        std::pair<const Key, T>,
+                        boost::interprocess::managed_shared_memory::segment_manager
+                    >
+                >;
+        </script></code></pre>
+        <pre class="cpp fragment"><code data-line-reveal="2|3+1,4"><script type="text/template">
+            static_assert(std::is_same_v<
+                std::allocator_traits< /*...*/ >::pointer,
+                boost::interprocess::offset_ptr< std::pair<const Key, T> >
+            >);
+        </script></code></pre>
+    </div>
+</section>
+
+<section my-columns>
+    <div style="width:100%;">
+        <pre class="python"><code data-line-reveal="1-2|3-4"><script type="text/template">
+            def __init__(self, val):
+                # ...
+                self.groups = self.table["arrays"]["groups_"]
+                self.elements = self.table["arrays"]["elements_"]
+        </script></code></pre>
+        <span></span>
+        <pre class="cpp fragment"><code data-line-reveal="2-5,17+1|15-16|6-12+13-14"><script type="text/template">
+            // namespace boost::unordered::detail::foa
+            template<...>
+            struct table_arrays
+            {
+              // ...
+
+              using value_type_pointer=
+                typename boost::allocator_pointer<allocator_type>::type;
+              using group_type_pointer=
+                typename boost::pointer_traits<value_type_pointer>::template
+                  rebind<group_type>;
+
+              // ...
+
+              group_type_pointer groups_;
+              value_type_pointer elements_;
+            };
+        </script></code></pre>
+    </div>
+</section>
+
+<section my-columns="85%">
+    <div style="width:100%;">
+        <pre class="cpp fragment"><code data-line-reveal=""><script type="text/template">
+            // boost/interprocess/offset_ptr.hpp
+            // namespace boost::interprocess
+            template <...>
+            class offset_ptr
+            {
+               ipcdetail::offset_ptr_internal<OffsetType, OffsetAlignment> internal;
+
+            public:
+               BOOST_INTERPROCESS_FORCEINLINE pointer get() const BOOST_NOEXCEPT
+               {  return static_cast<pointer>(
+                   ipcdetail::offset_ptr_to_raw_pointer(this, this->internal.m_offset));   }
+
+               BOOST_INTERPROCESS_FORCEINLINE reference operator*() const BOOST_NOEXCEPT
+               {
+                  pointer p = this->get();
+                  reference r = *p;
+                  return r;
+               }
+            };
+        </script></code></pre>
+    </div>
+</section>
+
+<section data-markdown class="list-fade-in-then-semi-out">
+    <textarea data-template>
+        ## Fancy pointers
+        * `operator*()` can be arbitrary code
+        * "Fancy pointer types" is an open set
+        * How do I support every possible fancy pointer?
+        * Either don't support them in the pretty-printers...
+        * ...or allow user-injected behaviour
+    </textarea>
+</section>
+
+<section data-markdown class="list-fade-in-then-semi-out">
+    <textarea data-template>
+        ## User-injected behaviour
+        * In Python create a "customization point" object
+        * If the pointer type has a pretty-printer, use it
+        * Otherwise fallback
+    </textarea>
+</section>
+
+<section my-columns="80%">
+    <h2>Customization points</h2>
+    <div style="width:100%;">
+        <pre class="python fragment"><code
+            data-line-reveal="1|2-3|4-6|7-8|9"
+        ><script type="text/template">
+            class BoostUnorderedPointerCustomizationPoint:
+                def __init__(self, any_ptr):
+                    vis = gdb.default_visualizer(any_ptr)
+                    if vis is None:
+                        self.to_address = lambda ptr: ptr
+                        self.next = lambda ptr, offset: ptr + offset
+                    else:
+                        self.to_address = lambda ptr: type(vis).boost_to_address(ptr)
+                        self.next = lambda ptr, offset: type(vis).boost_next(ptr, offset)
+        </script></code></pre>
+    </div>
+</section>
+
+<section data-markdown class="list-fade-in-then-semi-out">
+    <textarea data-template>
+        ## User-injected behaviour
+        * The user can add functionality to their pretty-printer
+        * Then we can hook into it
+        * Necessary to be fully generic
+    </textarea>
+</section>
+
+<section my-columns="96%">
+    <h2>Customization points</h2>
+    <div style="width:100%;">
+        <pre class="python fragment"><code data-line-reveal="1+2|3|4|5|1,3-5"><script type="text/template">
+            def __init__(self, val):
+                # ...
+                self.cpo = BoostUnorderedPointerCustomizationPoint(self.table["arrays"]["groups_"])
+                self.groups = self.cpo.to_address(self.table["arrays"]["groups_"])
+                self.elements = self.cpo.to_address(self.table["arrays"]["elements_"])
+        </script></code></pre>
+        <pre class="python fragment"><code data-line-reveal="1-2+3|4-6|7|8+9"><script type="text/template">
+                def generator():
+                    pc_ = self.groups.cast(gdb.lookup_type("unsigned char").pointer())
+                    # ...
+
+                    while "still-looping":
+                        # ...
+                        n0 = # ... calculation from pc_ ...
+                        pc_ = self.cpo.next(pc_, -n0)
+                        # ...
+        </script></code></pre>
+    </div>
+</section>

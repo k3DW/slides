@@ -1,0 +1,43 @@
+<section data-markdown class="list-fade-in-then-semi-out">
+    <textarea data-template>
+        ## Unit testing GDB pretty-printers
+        * For Boost.Unordered, manual testing
+        * File "visualization_tests.cpp"
+        * Break at the prescribed breakpoint
+        * Check every object's printout manually
+        * Potential point of failure
+    </textarea>
+</section>
+
+<section data-markdown class="list-fade-in-then-semi-out">
+    <textarea data-template>
+        ## Unit testing GDB pretty-printers
+        * Can we make it automated?
+        * libc++ does it 👀
+        * Let's adapt their approach
+    </textarea>
+</section>
+
+<section data-markdown class="list-fade-in-then-semi-out">
+    <textarea data-template>
+        ## Writing a GDB unit testing library
+        * Minimally functional automated testing
+        * Test names and early return
+        * Making a clean API
+        * CTest compatibility
+    </textarea>
+</section>
+
+<include src="./unit-testing/1-minimally-functional.html"></include>
+<include src="./unit-testing/2-test-names.html"></include>
+<include src="./unit-testing/3-clean-api.html"></include>
+<include src="./unit-testing/4-ctest.html"></include>
+
+<section data-markdown class="list-fade-in-then-semi-out">
+    <textarea data-template>
+        ## `k3::gdb`
+        * Follow along at https://github.com/k3DW/gdb
+        * Still a work in progress
+        * Very easy to use, integrate into CI
+    </textarea>
+</section>
