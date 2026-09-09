@@ -63,7 +63,9 @@ let RevealCodeLineReveal = (() => {
     // override explicitly with data-line-total="N" on the <code> tag.
     const override = code.getAttribute('data-line-total');
     if (override) return parseInt(override, 10);
-    return code.textContent.replace(/^\n/, '').replace(/\n\s*$/, '').split('\n').length;
+    const script = code.querySelector('script[type="text/template"]');
+    const text = script ? script.textContent : code.textContent;
+    return text.replace(/^\n/, '').replace(/\n\s*$/, '').split('\n').length;
   }
 
   function expandCode(code) {
